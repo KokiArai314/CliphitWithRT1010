@@ -1,0 +1,3 @@
+../drivers/fsl_pit.c:60:6:PIT_Init	8	static
+../drivers/fsl_pit.c:84:6:PIT_Deinit	8	static
+../drivers/fsl_pit.c:99:10:PIT_GetLifetimeTimerCount	0	static

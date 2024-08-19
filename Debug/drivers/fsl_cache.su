@@ -1,0 +1,5 @@
+../drivers/fsl_cache.c:497:6:L1CACHE_InvalidateICacheByRange	4	static
+../drivers/fsl_cache.c:528:6:ICACHE_InvalidateByRange	4	static
+../drivers/fsl_cache.c:551:6:DCACHE_InvalidateByRange	4	static
+../drivers/fsl_cache.c:573:6:DCACHE_CleanByRange	4	static
+../drivers/fsl_cache.c:595:6:DCACHE_CleanInvalidateByRange	4	static

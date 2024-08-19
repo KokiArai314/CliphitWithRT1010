@@ -1,0 +1,7 @@
+../source/midi_player.c:136:14:USB_DeviceMidiCallback	0	static
+../source/midi_player.c:182:14:USB_DeviceMidiSetConfigure	8	static
+../source/midi_player.c:211:14:USB_DeviceMidiPlayerInit	8	static
+../source/midi_player.c:535:6:USB_setMidiInTimeoutCount	0	static
+../source/midi_player.c:608:9:WriteData4	4	static
+../source/midi_player.c:641:9:Send2USB	48	static
+../source/midi_player.c:726:6:USB_MIDI_IDLE	48	static

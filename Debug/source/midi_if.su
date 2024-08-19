@@ -1,0 +1,7 @@
+../source/midi_if.c:306:13:analyzeSysExMessage.part.0	40	static
+../source/midi_if.c:135:6:LPUART1_IRQHandler	48	static
+../source/midi_if.c:522:6:midi_IF_TxInit	8	static
+../source/midi_if.c:545:6:midi_IF_TxProc_SysEx	4	static
+../source/midi_if.c:551:6:midi_IF_TxProc_ReceiveByte	4	static
+../source/midi_if.c:556:6:midi_IF_RxInit	4	static
+../source/midi_if.c:568:6:MIDI_IF_IDLE	40	static

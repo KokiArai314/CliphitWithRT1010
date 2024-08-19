@@ -1,0 +1,2 @@
+../drivers/fsl_dmamux.c:72:6:DMAMUX_Init	8	static
+../drivers/fsl_dmamux.c:86:6:DMAMUX_Deinit	8	static

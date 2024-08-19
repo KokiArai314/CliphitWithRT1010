@@ -1,0 +1,16 @@
+../codec/fsl_wm8960.c:149:10:WM8960_Deinit	24	static
+../codec/fsl_wm8960.c:161:6:WM8960_SetMasterSlave	24	static
+../codec/fsl_wm8960.c:173:10:WM8960_SetModule	32	static
+../codec/fsl_wm8960.c:236:10:WM8960_SetDataRoute	32	static
+../codec/fsl_wm8960.c:304:10:WM8960_SetLeftInput	24	static
+../codec/fsl_wm8960.c:356:10:WM8960_SetRightInput	24	static
+../codec/fsl_wm8960.c:408:10:WM8960_SetProtocol	32	static
+../codec/fsl_wm8960.c:39:10:WM8960_Init	32	static
+../codec/fsl_wm8960.c:443:10:WM8960_SetVolume	32	static
+../codec/fsl_wm8960.c:497:10:WM8960_GetVolume	0	static
+../codec/fsl_wm8960.c:525:10:WM8960_SetMute	24	static
+../codec/fsl_wm8960.c:584:10:WM8960_ConfigDataFormat	32	static
+../codec/fsl_wm8960.c:673:10:WM8960_SetJackDetect	24	static
+../codec/fsl_wm8960.c:694:10:WM8960_WriteReg	24	static
+../codec/fsl_wm8960.c:715:10:WM8960_ReadReg	0	static
+../codec/fsl_wm8960.c:727:10:WM8960_ModifyReg	24	static
