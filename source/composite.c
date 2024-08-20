@@ -37,6 +37,7 @@
 #include "fsl_lpuart.h"
 #include "midi_if.h"
 #include "midi_player.h"
+#include "audio_task/audio_task.h"
 
 /*******************************************************************************
  * Definitions
@@ -332,6 +333,7 @@ void APPInit(void)
     }
 
     Init_Board_Sai_Codec();
+    audio_task_init();
 
     /* LPUART */
     {

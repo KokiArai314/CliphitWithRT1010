@@ -1,5 +1,5 @@
 /*
-	egCurve.cpp
+	egCurve.cpp to .c
 	copy from x19850
 */
 

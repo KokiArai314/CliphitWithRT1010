@@ -24,6 +24,8 @@ device \
 drivers \
 osa \
 source \
+source/audio_task \
+source/oscillator \
 startup \
 usb/device/class/audio \
 usb/device/class/midi \

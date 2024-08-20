@@ -1,0 +1,16 @@
+../source/oscillator/oscillatorProcess.c:166:13:oscSetup	8	static
+../source/oscillator/oscillatorProcess.c:244:12:oscillatorProcessSub	16	static
+../source/oscillator/oscillatorProcess.c:367:13:egProcessSub	24	static
+../source/oscillator/../utilities/numericUtil.h:26:9:uint8Clip	0	static
+../source/oscillator/oscillatorProcess.c:61:7:getEgTimeValueF	0	static
+../source/oscillator/oscillatorProcess.c:73:10:chkFreeMemVcb	0	static
+../source/oscillator/oscillatorProcess.c:88:10:chkFreeDrvVcb	0	static
+../source/oscillator/oscillatorProcess.c:156:6:oscillatorProcessAmpEgReset	4	static
+../source/oscillator/oscillatorProcess.c:476:6:oscillatorProcess	64	static
+../source/oscillator/oscillatorProcess.c:510:6:oscillatorStart	16	static
+../source/oscillator/oscillatorProcess.c:547:6:oscillatorStop	4	static
+../source/oscillator/oscillatorProcess.c:582:6:oscillatorPauseTgl	0	static
+../source/oscillator/oscillatorProcess.c:621:6:oscillatorPauseGet	0	static
+../source/oscillator/oscillatorProcess.c:638:6:oscillatorPauseSet	0	static
+../source/oscillator/oscillatorProcess.c:676:5:oscillatorSeek	24	static
+../source/oscillator/oscillatorProcess.c:738:8:getVcbPtr	0	static

@@ -1,5 +1,5 @@
 /*
-	oscillatorManager.hpp
+	oscillatorManager.hpp to .h
 	copy from x19850
 */
 #ifndef OSCILLATORMANAGER_HPP_

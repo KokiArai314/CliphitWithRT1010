@@ -9,9 +9,7 @@
 #ifndef NURSE_NUMERIC_UTIL_H_
 #define NURSE_NUMERIC_UTIL_H_
 
-#include <algorithm>
-namespace numericUtility
-{
+//#include <algorithm>
 /**
  * 上限、下限の値でクリップします。ポインタ版
  * @note blackfinの時はこっちのほうが重いので使わないほうがいいです。
@@ -19,12 +17,16 @@ namespace numericUtility
  * @param min
  * @param max
  */
+/*
 template<typename Type>
 void clip(Type* x, const Type min, const Type max)
 {
 	*x = (*x < min) ? min : (*x> max) ? max : *x;
+}*/
+uint8_t uint8Clip(uint8_t x, const uint8_t min, const uint8_t max)
+{
+	return (x < min) ? min : (x> max) ? max : x;
 }
-
 
 /**
  * 上限、下限の値でサイクルします。
@@ -32,10 +34,10 @@ void clip(Type* x, const Type min, const Type max)
  * @param min
  * @param max
  */
+/*
 template<typename Type>
 Type cycle(Type x, const Type min, const Type max)
 {
-	/* clip */
 	x -= min;
 	x %= (max - min) + 1;
 	x += min;
@@ -46,7 +48,7 @@ Type cycle(Type x, const Type min, const Type max)
 		x = ((min - 1) + (x - max));
 	}
 	return x;
-}
+}*/
 
 /**
  * 上限、下限の値でクリップします。仮引数版
@@ -55,6 +57,7 @@ Type cycle(Type x, const Type min, const Type max)
  * @param max
  * @return
  */
+/*
 template<typename Type>
 Type clip(Type x, const Type& min, const Type& max)
 {
@@ -62,7 +65,7 @@ Type clip(Type x, const Type& min, const Type& max)
 	x = (x > max) ? max : x;
 
 	return x;
-}
+}*/
 /**
  * 入力値の再マッピングをします。ポインタ版
  * @param x
@@ -72,11 +75,12 @@ Type clip(Type x, const Type& min, const Type& max)
  * @param toHigh
  * @return
  */
+/*
 template<typename Type>
 void map(Type* x, const Type& fromLow, const Type& fromHigh, const Type& toLow, const Type& toHigh)
 {
 	 return (*x - fromLow) * (toHigh - toLow) / (fromHigh - fromLow) + toLow;
-}
+}*/
 
 /**
  * 入力値の再マッピングをします。仮引数版
@@ -87,11 +91,12 @@ void map(Type* x, const Type& fromLow, const Type& fromHigh, const Type& toLow, 
  * @param toHigh
  * @return
  */
+/*
 template< typename Type >
 Type map(Type x, const Type& fromLow, const Type& fromHigh, const Type& toLow, const Type& toHigh)
 {
 	 return (x - fromLow) * (toHigh - toLow) / (fromHigh - fromLow) + toLow;
-}
+}*/
 
 /**
  * 入力値の再マッピングをします。仮引数版 ... ADとかで0~127を0~2みたいにマッピングするとき均等割にする用
@@ -102,6 +107,7 @@ Type map(Type x, const Type& fromLow, const Type& fromHigh, const Type& toLow, c
  * @param toHigh
  * @return
  */
+/*
 template<typename Type>
 Type mapEvenly(Type x, const Type& fromLow, const Type& fromHigh, const Type& toLow, const Type& toHigh)
 {
@@ -112,7 +118,7 @@ Type mapEvenly(Type x, const Type& fromLow, const Type& fromHigh, const Type& to
 		return toLow - ( ((x - fromLow) * (toLow - toHigh + 1)) / (fromHigh - fromLow + 1) );
 	}
 	return (x - fromLow) * (toHigh - toLow + 1) / (fromHigh - fromLow + 1) + toLow;
-}
+}*/
 
 /**
  * bitIndexFromLeft番目をbitValue(0 / 1)にセットします。
@@ -121,11 +127,12 @@ Type mapEvenly(Type x, const Type& fromLow, const Type& fromHigh, const Type& to
  * @param bitValue 1 or 0
  * @return セットしたやつ
  */
+/*
 template<typename Type>
 inline int setBit(const Type value, const Type bitIndexFromLeft, const Type bitValue)
 {
     return ((value & ~(1 << bitIndexFromLeft)) | (bitValue << bitIndexFromLeft));
-}
+}*/
 
 
 /**
@@ -134,22 +141,22 @@ inline int setBit(const Type value, const Type bitIndexFromLeft, const Type bitV
  * @param bitIndexFromLeft　何番目？
  * @return 知りたいビット
  */
+/*
 template<typename Type>
 inline int getBit(const Type value, const Type bitIndexFromLeft)
 {
 	return (value >> bitIndexFromLeft) & 1;
-}
+}*/
 
 /**
  * 符号を返します
  * @param x
  * @return 1/0/-1
  */
+/*
 template <typename T> inline
 int sign(T x) {
     return (x > 0) ? 1 : ((x < 0) ? -1 : 0);
-}
-
-}
+}*/
 
 #endif

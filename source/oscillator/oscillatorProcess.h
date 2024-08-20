@@ -8,6 +8,7 @@
 
 #include "fader.h"
 #include "oscillator.h"
+#include <stdbool.h>
 
 //trans plant to CLIPHIT2
 //#define MEMVOICEMAX	(32)
@@ -16,6 +17,8 @@
 #define DRVVOICEMAX	(0)
 
 #define AMPEG_ZERO_CLIP		(0.000002f)	//-114dB!!
+
+struct vcb_;
 
 typedef enum {
 	eAmpEgPhaseStop = 0,
@@ -89,6 +92,10 @@ typedef struct vcb_ {
 	OscSetup_t	runOscParam;
 	OscSetup_t	nxtOscParam;
 } Vcb_t;
+
+
+
+
 
 float getEgTimeValueF(int value);
 uint32_t chkFreeMemVcb(void);

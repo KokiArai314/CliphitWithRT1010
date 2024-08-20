@@ -1,10 +1,11 @@
 /*
-	oscillatorProcess.cpp
+	oscillatorProcess.cpp to .c
 	copy from x19850
 	FsMsecTask.hのシュリンク
 */
 
 #include <stdint.h>
+#include <stdio.h>
 #include "../utilities/numericUtil.h"
 //#include "wave/wavesampleplayer.h"
 //#include "assigner/assigner.h"
@@ -120,7 +121,7 @@ static void init_ampeg_coef(sAmpEGCoef* egP, const int attack, const int decay, 
 		}
 		else {
 			egP->phase = eAmpEgPhaseDecay;
-			egP->decay = numericUtility::clip< int >(decay, 0, 100);
+			egP->decay = uint8Clip(decay, 0, 100);
 			if (length)
 			{
 				length = (uint32_t)(length * (decay / 100.0f));
@@ -141,9 +142,9 @@ static void init_ampeg_coef(sAmpEGCoef* egP, const int attack, const int decay, 
 			egP->decay = 255;
 		}
 		else {
-			egP->decay = numericUtility::clip< int >(decay, 0, 100);
+			egP->decay = uint8Clip(decay, 0, 100);
 		}
-		egP->attack = numericUtility::clip< int >(attack, 0, 100);
+		egP->attack = uint8Clip(attack, 0, 100);
 		egP->TimeIncValue = INTERRUPT_TIME / decaytbl[egP->attack];
 		egP->decayLength = 0;
 	}
@@ -232,7 +233,7 @@ static int oscEnd(Vcb_t *pVcb)
 		}
 		//assignerInstVoiceRelease(pVcb->vcbNum);
 	}
-	
+
 
 	return stp;
 }
@@ -242,7 +243,7 @@ static int oscEnd(Vcb_t *pVcb)
 */
 static int oscillatorProcessSub(Vcb_t *pVcb, float **ppfDst)
 {
-	const int workSamples = 4;
+	const int workSamples = 1;
 	int stp = 0;
 
 	if (pVcb->flag.active)
@@ -450,31 +451,20 @@ static void egProcessSub(Vcb_t *pVcb)
 }
 
 /*
-	EG process called @ 4fs
+	EG process called @ 1fs //4fs
+	4fs to 1fs(MPS-10 to ClipHit)
 */
 static void egProcess(void)
 {
-	static int fsCnt = 0;	// 0,4,8,...40
-	static int vcbNum = 0;
-
-	for (int i = 0; i < 6; i++)	// 6 * 11 = 66 (> VOICEMAX)
+	for (int i = 0; i < 6; i++)
 	{
-		if (vcbNum < VOICEMAX)
+		if (i < VOICEMAX)
 		{	// valid
-			if ((vcb[vcbNum].flag.active) && (!vcb[vcbNum].flag.egMute) && (!vcb[vcbNum].flag.pause))
+			if ((vcb[i].flag.active) && (!vcb[i].flag.egMute) && (!vcb[i].flag.pause))
 			{	// active && not mute && not pause
-				egProcessSub(&vcb[vcbNum]);
+				egProcessSub(&vcb[i]);
 			}
-			vcbNum++;
 		}
-	}
-
-	fsCnt += 4;
-	if (fsCnt >= 44)
-	{	// reset
-		fsCnt = 0;
-		vcbNum = 0;
-		//FsMsecTask_wup();
 	}
 
 	return;
@@ -489,7 +479,7 @@ void oscillatorProcess(float **ppfOut, int fs)
 	{
 		if ((vcb[i].flag.active || vcb[i].flag.onReq) && (!vcb[i].flag.pause))
 		{
-			const int workSamples = 4;
+			const int workSamples = 1;
 			volatile Vcb_t *pVcb = &vcb[i];
 
 			for (int cnt = 0; cnt < fs; cnt += workSamples)
@@ -505,10 +495,10 @@ void oscillatorProcess(float **ppfOut, int fs)
 			}
 		}
 	}
-	while (fs >= 4)
+	while (fs >= 1)
 	{
 		egProcess();
-		fs -= 4;
+		fs -= 1;
 	}
 
 	return;
@@ -747,7 +737,7 @@ int oscillatorSeek(uint8_t oscNum, int32_t seekSample)
 
 Vcb_t *getVcbPtr(int num)
 {
-	Vcb_t *pVcb = nullptr;
+	Vcb_t *pVcb = NULL;
 
 	if ((num >= 0) && (num < VOICEMAX))
 	{

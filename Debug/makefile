@@ -17,6 +17,8 @@ RM := rm -rf
 -include usb/device/class/audio/subdir.mk
 -include usb/device/class/subdir.mk
 -include startup/subdir.mk
+-include source/oscillator/subdir.mk
+-include source/audio_task/subdir.mk
 -include source/subdir.mk
 -include osa/subdir.mk
 -include drivers/subdir.mk

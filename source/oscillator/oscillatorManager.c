@@ -1,13 +1,15 @@
 /*
-	oscillatorManager.cpp
+	oscillatorManager.cpp to .c
 	copy from x19850
 	移植時にMidiDebugMonitorをシュリンク
+	cpp -> c ： nullptrをNULLに変更 ちょっと怖い
 */
 
 #include <stdint.h>
+#include <stdio.h>
 #include "oscillator.h"
 #include "oscillatorProcess.h"
-#include "oscillatorManager.hpp"
+#include "oscillatorManager.h"
 
 
 static OnMemOsc_t osc[MEMVOICEMAX];
@@ -47,7 +49,12 @@ static void onmemoscSetup(Vcb_t *pVcb)
 
 void onmemoryoscillatorstart(OscSetup_t *psOscSetup, int voiceNum)
 {
-	psOscSetup->oscFunc = {onmemoscSetup,nullptr,onmemoscTell,nullptr,onmemoscExec};
+	//psOscSetup->oscFunc = {onmemoscSetup,NULL,onmemoscTell,NULL,onmemoscExec};
+	psOscSetup->oscFunc.setup = onmemoscSetup;
+	psOscSetup->oscFunc.end = NULL;
+	psOscSetup->oscFunc.tell= onmemoscTell;
+	psOscSetup->oscFunc.seek = NULL;
+	psOscSetup->oscFunc.exec = onmemoscExec;
 	psOscSetup->oscObject = &osc[voiceNum];
 
 	oscillatorStart(voiceNum, psOscSetup);

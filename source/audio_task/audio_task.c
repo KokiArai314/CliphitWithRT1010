@@ -1,7 +1,7 @@
 
 #include "audio_task.h"
 #include "../utilities/testSample.h"
-#include "../Oscillator/oscillatorManager.hpp"
+#include "../Oscillator/oscillatorManager.h"
 
 static float pfWork[6*2][NumOfSlot];
 

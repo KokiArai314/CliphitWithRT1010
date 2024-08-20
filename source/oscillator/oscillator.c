@@ -1,5 +1,5 @@
 /*
-	oscillator.cpp
+	oscillator.cpp to .c
 	copy from x19850
 
 	x19850 -> ClipHit2移植
@@ -279,7 +279,7 @@ void OnMemoryOscillatorSetup(OnMemOsc_t *ps, SampleData_t *psSampleData)
 
 /*
 	ストレッチ再生
-	　＿＿＿　
+	　＿＿＿
 	／　　　＼
 	　　　　　＿＿＿
 	　　　　／　　　＼
@@ -540,7 +540,7 @@ static int OscStreamStereo(Oscillator_t *ps, float **ppfDst, int samples)
 			int32_t		sb = ps->SampleByte;
 			float		fPanL = ps->fLevel * (ps->fPan > 0.5f ? 1.0f - ps->fPan : 0.5f) * 2.0f;
 			float		fPanR = ps->fLevel * (ps->fPan > 0.5f ? 0.5f : ps->fPan) * 2.0f;
-			
+
 			for (int i = 0; i < samples; i++)
 			{
 				int32_t dt[4];
@@ -639,7 +639,7 @@ static int OscStreamMono(Oscillator_t *ps, float **ppfDst, int samples)
 			int32_t		sb = ps->SampleByte;
 			float		fPanL = ps->fLevel * (ps->fPan > 0.5f ? 1.0f - ps->fPan : 0.5f) * 2.0f;
 			float		fPanR = ps->fLevel * (ps->fPan > 0.5f ? 0.5f : ps->fPan) * 2.0f;
-			
+
 			for (int i = 0; i < samples; i++)
 			{
 				int32_t dt[2];
@@ -731,7 +731,7 @@ static int OscStreamStereoF(Oscillator_t *ps, float **ppfDst, int samples)
 			int32_t		sb = ps->SampleByte;
 			float		fPanL = ps->fLevel * (ps->fPan > 0.5f ? 1.0f - ps->fPan : 0.5f) * 2.0f;
 			float		fPanR = ps->fLevel * (ps->fPan > 0.5f ? 0.5f : ps->fPan) * 2.0f;
-			
+
 			for (int i = 0; i < samples; i++)
 			{
 				float dt[4];
@@ -828,7 +828,7 @@ static int OscStreamMonoF(Oscillator_t *ps, float **ppfDst, int samples)
 			int32_t		sb = ps->SampleByte;
 			float		fPanL = ps->fLevel * (ps->fPan > 0.5f ? 1.0f - ps->fPan : 0.5f) * 2.0f;
 			float		fPanR = ps->fLevel * (ps->fPan > 0.5f ? 0.5f : ps->fPan) * 2.0f;
-			
+
 			for (int i = 0; i < samples; i++)
 			{
 				float dt[2];

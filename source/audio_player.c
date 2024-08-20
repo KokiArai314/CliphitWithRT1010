@@ -4,7 +4,7 @@
  *  Created on: 2020/02/06
  *      Author: higuchi
  */
-
+#include "audio_task/audio_task.h"
 #include "usb_device_config.h"
 #include "usb.h"
 #include "usb_device.h"
@@ -21,6 +21,7 @@
 #include "fsl_device_registers.h"
 #include "clock_config.h"
 #include "board.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -588,7 +589,6 @@ volatile float cycct_avg = 0;
 	}
 #endif
 
-#if 0	/// @note [SAI] test tone
 //----------------------------------
 // Sin
 //----------------------------------
@@ -619,7 +619,6 @@ int32_t fsfunc_sin(int32_t data)
 	static uint32_t sawbuf;
 	return(((int32_t)func_sin(SIN_ADDER, &sawbuf) * osclvl) << 1);
 }
-#endif
 
 #if 1	/// @note [SAI] Implement Amp/Effects
 //----------------------------------
@@ -659,7 +658,8 @@ void HC_AudioSetCallback(void (*callback)(int32_t *data_l, int32_t *data_r))
 }
 #endif	// #if 1	/// @note [SAI] Implement Amp/Effects
 
-int32_t saidata[FSL_FEATURE_SAI_FIFO_COUNT];
+//int32_t saidata[FSL_FEATURE_SAI_FIFO_COUNT];
+float *saidata[FSL_FEATURE_SAI_FIFO_COUNT];
 int32_t saiRxdata[FSL_FEATURE_SAI_FIFO_COUNT];
 #if 1	/// @note [SAI] enable RX
 void SAI_UserIRQHandler(void)
@@ -681,27 +681,32 @@ void SAI_UserTxIRQHandler(void)
     {
 		/* Read from USB audio rx buffer and mix to SAI tx buffer */
 	    LRClockCount++;
-	    if (g_deviceComposite->audioPlayer.startPlayHalfFull)
-	    {
+	    //if (g_deviceComposite->audioPlayer.startPlayHalfFull)
+	    //{
+        /*
 	        for (i = 0; i < FSL_FEATURE_SAI_FIFO_COUNT; i++) {
 	        	/// @note audioPlayDataBuff 32bit align
 	        	/// @note in case of "+=" -> loopback USB Audio
 //?		        saidata[i] += ((int32_t*)audioPlayDataBuff)[g_deviceComposite->audioPlayer.tdWriteNumberPlay / 4] >> 9;
-		        saidata[i] = ((int32_t*)audioPlayDataBuff)[g_deviceComposite->audioPlayer.tdWriteNumberPlay / 4] >> 8;	//!
-		        g_deviceComposite->audioPlayer.tdWriteNumberPlay += 4;
+		        //saidata[i] = ((int32_t*)audioPlayDataBuff)[g_deviceComposite->audioPlayer.tdWriteNumberPlay / 4] >> 8;	//!
+		        int32_t fsfunc_sin(int32_t data);
+			    saidata[i] = 0x00FFFFFF & (fsfunc_sin(0) >> 8);
+                g_deviceComposite->audioPlayer.tdWriteNumberPlay += 4;
 	            if (g_deviceComposite->audioPlayer.tdWriteNumberPlay >= PLAY_DATA_BUFF_SIZE)
 	            {
 	            	g_deviceComposite->audioPlayer.tdWriteNumberPlay = 0;
 	            }
-	        }
-		}
+	        }*/
+		//}
+        /*
 	    else {
 	        for (i = 0; i < FSL_FEATURE_SAI_FIFO_COUNT; i++) {
 	        	saidata[i] = 0;
 	        }
-	    }
+	    }*/
 
 		/* SAI out */
+        audio_task(saidata, 1);
         for (i = 0; i < FSL_FEATURE_SAI_FIFO_COUNT; i++)
         {
             SAI_WriteData(BOARD_DEMO_SAI, DEMO_SAI_CHANNEL, (uint32_t)saidata[i]);
