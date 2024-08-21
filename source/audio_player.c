@@ -110,6 +110,21 @@
 #define USB_AUDIO_EXIT_CRITICAL() USB_OSA_EXIT_CRITICAL()
 
 /*******************************************************************************
+ * Code
+ ******************************************************************************/
+
+static inline float convertInput(const int32_t iData)
+{
+	return ((float)iData / 0x80000000ul);
+}
+
+static inline int32_t convertOutput(float fData)
+{
+	fData = fData < -1.0f ? -1.0f : fData > 1.0f ? 1.0f : fData;
+	return (int32_t)(fData * 0x7ffffffful);
+}
+
+/*******************************************************************************
  * Prototypes
  ******************************************************************************/
 void BOARD_InitHardware(void);
@@ -709,7 +724,7 @@ void SAI_UserTxIRQHandler(void)
         audio_task(saidata, 1);
         for (i = 0; i < FSL_FEATURE_SAI_FIFO_COUNT; i++)
         {
-            SAI_WriteData(BOARD_DEMO_SAI, DEMO_SAI_CHANNEL, (uint32_t)saidata[i]);
+            SAI_WriteData(BOARD_DEMO_SAI, DEMO_SAI_CHANNEL, (uint32_t)convertOutput(*saidata[i]));
         }
     }
 
