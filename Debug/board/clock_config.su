@@ -1,2 +1,11 @@
-../board/clock_config.c:146:6:BOARD_BootClockRUN	16	static
-../board/clock_config.c:49:6:BOARD_InitBootClocks	0	static
+C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\drivers/fsl_clock.h:708:20:CLOCK_SetMux	24	static
+C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\drivers/fsl_clock.h:745:20:CLOCK_SetDiv	24	static
+C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\drivers/fsl_clock.h:781:20:CLOCK_ControlGate	32	static
+C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\drivers/fsl_clock.h:808:20:CLOCK_DisableClock	16	static
+C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\drivers/fsl_clock.h:935:20:CLOCK_SetXtalFreq	16	static
+C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\drivers/fsl_clock.h:945:20:CLOCK_SetRtcXtalFreq	16	static
+C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\drivers/fsl_clock.h:989:20:CLOCK_SetPllBypass	24	static
+C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\drivers/fsl_iomuxc.h:516:20:IOMUXC_SetSaiMClkClockSource	24	static
+C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\drivers/fsl_iomuxc.h:576:20:IOMUXC_MQSConfig	24	static
+../board/clock_config.c:49:6:BOARD_InitBootClocks	8	static
+../board/clock_config.c:146:6:BOARD_BootClockRUN	8	static

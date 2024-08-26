@@ -1,4 +1,4 @@
 ../codec/fsl_codec_common.c:18:10:CODEC_I2C_WriteReg	40	static
-../codec/fsl_codec_common.c:49:10:CODEC_I2C_ReadReg	32	static
+../codec/fsl_codec_common.c:49:10:CODEC_I2C_ReadReg	48	static
 ../codec/fsl_codec_common.c:73:10:CODEC_I2C_ModifyReg	40	static
 ../codec/fsl_codec_common.c:97:10:CODEC_Init	16	static

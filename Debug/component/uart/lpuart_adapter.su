@@ -1,4 +1,5 @@
-../component/uart/lpuart_adapter.c:223:19:HAL_UartInit	40	static
-../component/uart/lpuart_adapter.c:295:19:HAL_UartDeinit	8	static
-../component/uart/lpuart_adapter.c:316:19:HAL_UartReceiveBlocking	8	static
-../component/uart/lpuart_adapter.c:338:19:HAL_UartSendBlocking	8	static
+../component/uart/lpuart_adapter.c:123:26:HAL_UartGetStatus	16	static
+../component/uart/lpuart_adapter.c:223:19:HAL_UartInit	48	static
+../component/uart/lpuart_adapter.c:295:19:HAL_UartDeinit	24	static
+../component/uart/lpuart_adapter.c:316:19:HAL_UartReceiveBlocking	32	static
+../component/uart/lpuart_adapter.c:338:19:HAL_UartSendBlocking	32	static

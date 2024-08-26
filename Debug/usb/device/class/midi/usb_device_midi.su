@@ -1,9 +1,11 @@
-../usb/device/class/midi/usb_device_midi.c:91:14:USB_DeviceMidiBulkOut	0	static
-../usb/device/class/midi/usb_device_midi.c:116:14:USB_DeviceMidiBulkIn	0	static
+../usb/device/class/midi/usb_device_midi.c:56:21:USB_DeviceMidiAllocateHandle	24	static
+../usb/device/class/midi/usb_device_midi.c:76:21:USB_DeviceMidiFreeHandle	24	static
+../usb/device/class/midi/usb_device_midi.c:91:14:USB_DeviceMidiBulkOut	32	static
+../usb/device/class/midi/usb_device_midi.c:116:14:USB_DeviceMidiBulkIn	32	static
 ../usb/device/class/midi/usb_device_midi.c:141:14:USB_DeviceMidiStreamEndpointsInit	56	static
-../usb/device/class/midi/usb_device_midi.c:228:14:USB_DeviceMidiStreamEndpointsDeinit	16	static
-../usb/device/class/midi/usb_device_midi.c:248:14:USB_DeviceMidiEvent	24	static
+../usb/device/class/midi/usb_device_midi.c:228:14:USB_DeviceMidiStreamEndpointsDeinit	24	static
+../usb/device/class/midi/usb_device_midi.c:248:14:USB_DeviceMidiEvent	48	static
 ../usb/device/class/midi/usb_device_midi.c:347:14:USB_DeviceMidiInit	32	static
 ../usb/device/class/midi/usb_device_midi.c:388:14:USB_DeviceMidiDeinit	24	static
-../usb/device/class/midi/usb_device_midi.c:405:14:USB_DeviceMidiSend	0	static
-../usb/device/class/midi/usb_device_midi.c:421:14:USB_DeviceMidiRecv	0	static
+../usb/device/class/midi/usb_device_midi.c:405:14:USB_DeviceMidiSend	32	static
+../usb/device/class/midi/usb_device_midi.c:421:14:USB_DeviceMidiRecv	32	static

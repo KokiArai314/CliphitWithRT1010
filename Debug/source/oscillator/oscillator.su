@@ -1,4 +1,6 @@
-../source/oscillator/oscillator.c:17:12:OscStereo	56	static
-../source/oscillator/oscillator.c:112:12:OscMono	48	static
-../source/oscillator/oscillator.c:198:13:oscSetup	4	static
-../source/oscillator/oscillator.c:266:6:OnMemoryOscillatorSetup	0	static
+../source/oscillator/oscillator.c:17:12:OscStereo	96	static
+../source/oscillator/oscillator.c:112:12:OscMono	96	static
+../source/oscillator/oscillator.c:198:13:oscSetup	40	static
+../source/oscillator/oscillator.c:219:15:GetOscillatorSetupFunc	16	static
+../source/oscillator/oscillator.c:242:14:GetOscillatorExecFunc	16	static
+../source/oscillator/oscillator.c:266:6:OnMemoryOscillatorSetup	24	static

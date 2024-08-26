@@ -1,5 +1,5 @@
-../usb/phy/usb_phy.c:14:7:USB_EhciPhyGetBase	8	static
-../usb/phy/usb_phy.c:73:10:USB_EhciPhyInit	16	static
-../usb/phy/usb_phy.c:136:10:USB_EhciLowPowerPhyInit	16	static
-../usb/phy/usb_phy.c:195:6:USB_EhciPhyDeinit	8	static
-../usb/phy/usb_phy.c:223:6:USB_EhcihostPhyDisconnectDetectCmd	8	static
+../usb/phy/usb_phy.c:14:7:USB_EhciPhyGetBase	48	static
+../usb/phy/usb_phy.c:73:10:USB_EhciPhyInit	32	static
+../usb/phy/usb_phy.c:136:10:USB_EhciLowPowerPhyInit	32	static
+../usb/phy/usb_phy.c:195:6:USB_EhciPhyDeinit	24	static
+../usb/phy/usb_phy.c:223:6:USB_EhcihostPhyDisconnectDetectCmd	24	static

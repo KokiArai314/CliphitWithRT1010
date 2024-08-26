@@ -1,5 +1,5 @@
-../source/oscillator/oscillatorManager.c:17:12:onmemoscExec	8	static
-../source/oscillator/oscillatorManager.c:25:17:onmemoscTell	0	static
-../source/oscillator/oscillatorManager.c:32:13:onmemoscSetup	40	static
-../source/oscillator/oscillatorManager.c:50:6:onmemoryoscillatorstart	8	static
+../source/oscillator/oscillatorManager.c:17:12:onmemoscExec	32	static
+../source/oscillator/oscillatorManager.c:25:17:onmemoscTell	24	static
+../source/oscillator/oscillatorManager.c:32:13:onmemoscSetup	64	static
+../source/oscillator/oscillatorManager.c:50:6:onmemoryoscillatorstart	16	static
 ../source/oscillator/oscillatorManager.c:70:6:onmemoryoscillatortest	104	static

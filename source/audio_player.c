@@ -120,8 +120,10 @@ static inline float convertInput(const int32_t iData)
 
 static inline int32_t convertOutput(float fData)
 {
+	//float to uint32_t
 	fData = fData < -1.0f ? -1.0f : fData > 1.0f ? 1.0f : fData;
-	return (int32_t)(fData * 0x7ffffffful);
+	//fData = (fData + 1.0f)/2.0f;
+	return (int32_t)(fData * 0x007ffffful) & 0x00ffffff;
 }
 
 /*******************************************************************************
@@ -674,7 +676,8 @@ void HC_AudioSetCallback(void (*callback)(int32_t *data_l, int32_t *data_r))
 #endif	// #if 1	/// @note [SAI] Implement Amp/Effects
 
 //int32_t saidata[FSL_FEATURE_SAI_FIFO_COUNT];
-float *saidata[FSL_FEATURE_SAI_FIFO_COUNT];
+static float saidata[FSL_FEATURE_SAI_FIFO_COUNT];
+static float *pSaidata[2] = {&(saidata[0]),  &(saidata[1])};
 int32_t saiRxdata[FSL_FEATURE_SAI_FIFO_COUNT];
 #if 1	/// @note [SAI] enable RX
 void SAI_UserIRQHandler(void)
@@ -720,11 +723,16 @@ void SAI_UserTxIRQHandler(void)
 	        }
 	    }*/
 
+	    for (i = 0; i < FSL_FEATURE_SAI_FIFO_COUNT; i++) {
+			saidata[i] = 0;
+		}
+
 		/* SAI out */
-        audio_task(saidata, 1);
+        audio_task(pSaidata, 1);
         for (i = 0; i < FSL_FEATURE_SAI_FIFO_COUNT; i++)
         {
-            SAI_WriteData(BOARD_DEMO_SAI, DEMO_SAI_CHANNEL, (uint32_t)convertOutput(*saidata[i]));
+        	int32_t out = convertOutput(saidata[i]);
+            SAI_WriteData(BOARD_DEMO_SAI, DEMO_SAI_CHANNEL,(uint32_t)out);
         }
     }
 
