@@ -334,6 +334,7 @@ void APPInit(void)
 
     Init_Board_Sai_Codec();
     audio_task_init();
+    trigger_init();
 
     /* LPUART */
     {
@@ -420,6 +421,9 @@ void APPInit(void)
 	    /* Start channel 0 */
 	    PIT_StartTimer(PIT, kPIT_Chnl_0);
 	}
+
+	trigger_init();
+
 }
 
 static uint8_t keepAttachedDevice;
@@ -507,5 +511,7 @@ void main(void)
 #if USB_DEVICE_CONFIG_USE_TASK
 		USB_DeviceTaskFn(g_composite.deviceHandle);
 #endif
+
+		trigger_idle();
 	}
 }
