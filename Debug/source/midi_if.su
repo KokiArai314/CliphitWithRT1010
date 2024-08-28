@@ -17,4 +17,4 @@ C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_
 ../source/midi_if.c:545:6:midi_IF_TxProc_SysEx	16	static
 ../source/midi_if.c:551:6:midi_IF_TxProc_ReceiveByte	16	static
 ../source/midi_if.c:556:6:midi_IF_RxInit	8	static
-../source/midi_if.c:568:6:MIDI_IF_IDLE	40	static
+../source/midi_if.c:681:6:MIDI_IF_IDLE	40	static

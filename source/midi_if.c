@@ -559,6 +559,119 @@ void midi_IF_RxInit()
 	LPUART_EnableInterrupts(LPUART1, kLPUART_RxDataRegFullFlag);
 }
 
+
+#ifdef LOCAL_DEBUG_ENABLE
+void composite_idle(void);
+void midi_IF_send_usb_blocking(uint8_t *str, uint16_t cnt)
+{
+	while (cnt)
+	{
+		int send = cnt < USBTXBUFSIZ ? cnt : USBTXBUFSIZ -1;
+
+		if (cnt < send)
+		{
+			send = cnt;
+		}
+		while (getccrcnt(&usbtxccrbuf))
+		{
+			composite_idle();
+		}
+		cnt -= send;
+		while (send--)
+		{
+			putccrbuf(&usbtxccrbuf, *str++);
+			if ((send > 0) && (*str == 0xf0))
+			{
+				cnt += send;
+				break;
+			}
+		}
+	}
+
+	return;
+}
+
+void midi_IF_send_uart_blocking(uint8_t *str, uint16_t cnt)
+{
+
+	while (cnt)
+	{
+		int send = cnt < EXTBUFSIZ ? cnt : EXTBUFSIZ -1;
+
+		while (s_MidiIfTxNumOfDataEx)
+		{
+			composite_idle();
+		}
+		cnt -= send;
+		s_MidiIfTxBuffPosEx = -1;	// disable
+		while (send--)
+		{
+			s_MidiIfTxBuffEx[s_MidiIfTxNumOfDataEx++] = *str++;
+		}
+		s_MidiIfTxBuffPosEx = 0;	// enable
+#ifdef UART_LANE_ENABLE_R2
+		startSendtoUartTxEx();
+#else	//UART_LANE_ENABLE_R2
+		if ((LPUART_GetEnabledInterrupts(BOARD_UART_BASEADDR) & kLPUART_TransmissionCompleteFlag) == 0)
+		{
+			if (s_MidiIfTxNumOfDataEx)
+			{
+				startSendtoUartTxEx();
+			}
+		}
+#endif	//UART_LANE_ENABLE_R2
+	}
+
+	return;
+}
+
+void midi_IF_senc_command_blocking(uint8_t *str, uint16_t cnt)
+{
+	while (cnt)
+	{
+		int send = cnt < EXTBUFSIZ ? cnt : EXTBUFSIZ -1;
+
+		while (s_ControlIfTxNumOfDataEx)
+		{
+			composite_idle();
+		}
+		cnt -= send;
+		s_ControlIfTxBuffPosEx = -1;	// disable
+		while (send--)
+		{
+			s_ControlIfTxBuffEx[s_ControlIfTxNumOfDataEx++] = *str++;
+		}
+		s_ControlIfTxBuffPosEx = 0;		// enable
+		uartexif_enablecontrol(1);
+	}
+
+	return;
+}
+
+void midi_IF_senc_command_blocking2(uint8_t *str, uint16_t cnt)
+{
+	while (cnt)
+	{
+		int send = cnt < EXTBUFSIZ ? cnt : EXTBUFSIZ -1;
+
+		while (s_ControlIfTxNumOfDataEx2)
+		{
+			composite_idle();
+		}
+		cnt -= send;
+		s_ControlIfTxBuffPosEx2 = -1;	// disable
+		while (send--)
+		{
+			s_ControlIfTxBuffEx2[s_ControlIfTxNumOfDataEx2++] = *str++;
+		}
+		s_ControlIfTxBuffPosEx2 = 0;	// enable
+		uartexif_enablecontrol2(1);
+	}
+
+	return;
+}
+#endif	//LOCAL_DEBUG_ENABLE
+
 /**
  * MIDI IN => USB MIDI IN
  * check : 送信用バッファが用意されていたら送信
@@ -574,6 +687,94 @@ void MIDI_IF_IDLE()
 		volatile uint8_t midiShortEventCount;
 		volatile uint8_t midiSysExEventCount;
 		volatile uint8_t setCount;
+
+#ifdef LOCAL_DEBUG_ENABLE
+		extern int isMidiInOpen(void);
+		/*
+		 * txDataTransmissionCompleted	attach	MidiInOpen
+		 * 1							0		1			execute	: default
+		 * 1							1		1			execute	: open ready
+		 * 1							*		*			execute	: other
+		 * 0							1		0			execute	: close
+		 * 0							1		1			wait	: open busy
+		 * 0							*		*			execute	: other
+		 */
+		int attachOpen = g_deviceComposite->midiPlayer.attach && isMidiInOpen();
+		if ((g_deviceComposite->midiPlayer.txDataTransmissionCompleted == 1) || !attachOpen)
+		{
+			int send = (g_deviceComposite->midiPlayer.speed == USB_SPEED_HIGH) ? HS_TXBUFSIZ : FS_TXBUFSIZ;
+
+			if (getccrcnt(&usbtxccrbuf))
+			{
+				int count = getccrcnt(&usbtxccrbuf);
+
+				if (count > send)
+				{
+					count = send;
+				}
+				while (count--)
+				{
+					int data = getccrbuf(&usbtxccrbuf);
+
+					if (data < 0)
+					{
+						break;
+					}
+					if (attachOpen)
+					{
+						real_midi_received_sub(data);
+					}
+				}
+			}
+			else
+			{
+				int count = getccrcnt(&rxccrbuf);
+
+				if (count > send)
+				{
+					count = send;
+				}
+				while (count--)
+				{
+					int data = getccrbuf(&rxccrbuf);
+
+					if (data < 0)
+					{
+						break;
+					}
+#ifdef BOARD_PROTO1
+					if (txchange && attachOpen)
+					{
+						real_midi_received_sub(data);
+					}
+#else	//BOARD_PROTO1
+//*					real_midi_received_sub(data);
+					midi_hook_entry(data, real_midi_received_sub, g_deviceComposite->midiPlayer.attach);	//*
+#endif	//BOARD_PROTO1
+				}
+#ifdef BOARD_PROTO1
+				count = getccrcnt(&rxccrbuf2);
+				if (count > send)
+				{
+					count = send;
+				}
+				while (count--)
+				{
+					int data = getccrbuf(&rxccrbuf2);
+
+					if (data < 0)
+					{
+						break;
+					}
+					if (!txchange && attachOpen)
+					{
+						real_midi_received_sub(data);
+					}
+				}
+#endif	//BOARD_PROTO1
+			}
+		}
+#endif	//LOCAL_DEBUG_ENABLE
 
 		 DisableIRQ(LPUART1_IRQn);
 		 midiShortEventCount = setMidiShortEvent;
@@ -629,3 +830,16 @@ void MIDI_IF_IDLE()
 		}
 	}
 }
+
+
+#ifdef LOCAL_DEBUG_ENABLE
+uint32_t getrxoverrun(void)
+{
+	return rxoverrun;
+}
+uint32_t getrxbuffovr(void)
+{
+	return rxbuffovr;
+}
+#endif
+

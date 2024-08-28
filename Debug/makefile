@@ -20,6 +20,7 @@ RM := rm -rf
 -include source/trigger/parameter/subdir.mk
 -include source/trigger/subdir.mk
 -include source/oscillator/subdir.mk
+-include source/midi_debug_monitor/subdir.mk
 -include source/audio_task/subdir.mk
 -include source/subdir.mk
 -include osa/subdir.mk

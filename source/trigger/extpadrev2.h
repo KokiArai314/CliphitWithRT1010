@@ -4,7 +4,7 @@
  *  Created on: 2021/06/03
  *      Author: akino
  */
-//#include "extpad.h"
+#include "extpad.h"
 
 #ifndef APPLICATION_TRIGGER_EXTPADREV2_H_
 #define APPLICATION_TRIGGER_EXTPADREV2_H_

@@ -4,7 +4,7 @@
  *  Created on: 2020/02/06
  *      Author: higuchi
  */
-
+#include "definitions.h"
 #include "usb_device_config.h"
 #include "usb.h"
 #include "usb_device.h"
@@ -39,6 +39,11 @@
 #include "midi_player.h"
 #include "audio_task/audio_task.h"
 
+#ifdef ADC_ENABLE
+#include "trigger/adc.h"
+#include "trigger/trigger.h"
+#endif	//ADC_ENABLE
+
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
@@ -51,6 +56,11 @@
 #define PIT_SOURCE_CLOCK CLOCK_GetFreq(kCLOCK_OscClk)
 #define CYCLE_TIMER_US_TIME	100000U	// 100ms
 
+#ifdef ADC_ENABLE
+#define NSEC_TO_COUNT(ns, clockFreqInHz) (uint64_t)(((uint64_t)(ns) * (clockFreqInHz)) / 1000000000U)
+#define CYCLE_TIMER_NS_TIME	62500U	// 62.5us
+#endif	//ADC_ENABLE
+
 
 /*******************************************************************************
  * Prototypes
@@ -61,6 +71,11 @@ void USB_DeviceIsrEnable(void);
 #if USB_DEVICE_CONFIG_USE_TASK
 void USB_DeviceTaskFn(void *deviceHandle);
 #endif
+
+#ifdef ADC_ENABLE
+#define NSEC_TO_COUNT(ns, clockFreqInHz) (uint64_t)(((uint64_t)(ns) * (clockFreqInHz)) / 1000000000U)
+#define CYCLE_TIMER_NS_TIME	62500U	// 62.5us
+#endif	//ADC_ENABLE
 
 extern usb_status_t USB_DeviceAudioCallback(class_handle_t handle, uint32_t event, void *param);
 extern usb_status_t USB_DeviceMidiCallback(class_handle_t handle, uint32_t event, void *param);
@@ -122,6 +137,23 @@ void USB_OTG1_IRQHandler(void)
 
 void PIT_CYCLE_TIMER_HANDLER(void)
 {
+#ifdef ADC_ENABLE
+	if (PIT_GetStatusFlags(PIT, kPIT_Chnl_0))
+	{
+	    /* Clear interrupt flag.*/
+	    PIT_ClearStatusFlags(PIT, kPIT_Chnl_0, kPIT_TimerFlag);
+	#if (defined(USB_DEVICE_CONFIG_EHCI) && (USB_DEVICE_CONFIG_EHCI > 0U))
+	    USB_DeviceEhciAttachedDevice(g_composite.deviceHandle);
+	#endif
+		USB_setMidiInTimeoutCount();	/// @note MIDI IN Timeout (100ms)
+	}
+	if (PIT_GetStatusFlags(PIT, kPIT_Chnl_1))
+	{
+	    /* Clear interrupt flag.*/
+	    PIT_ClearStatusFlags(PIT, kPIT_Chnl_1, kPIT_TimerFlag);
+	    adc_start(0);
+
+#else	//ADC_ENABLE
     /* Clear interrupt flag.*/
     PIT_ClearStatusFlags(PIT, kPIT_Chnl_0, kPIT_TimerFlag);
 #if (defined(USB_DEVICE_CONFIG_EHCI) && (USB_DEVICE_CONFIG_EHCI > 0U))
@@ -129,6 +161,7 @@ void PIT_CYCLE_TIMER_HANDLER(void)
 #endif
 	USB_setMidiInTimeoutCount();	/// @note MIDI IN Timeout (100ms)
 	__DSB();
+#endif	//ADC_ENABLE
 }
 
 void USB_DeviceIsrEnable(void)
@@ -420,6 +453,23 @@ void APPInit(void)
 
 	    /* Start channel 0 */
 	    PIT_StartTimer(PIT, kPIT_Chnl_0);
+
+#ifdef ADC_ENABLE
+
+	    adc_init();
+
+	    /* Set timer period for channel 1 */
+	    PIT_SetTimerPeriod(PIT, kPIT_Chnl_1, NSEC_TO_COUNT(CYCLE_TIMER_NS_TIME, PIT_SOURCE_CLOCK));
+
+	    /* Set timer chain mode for channel 1 */
+	    PIT_SetTimerChainMode(PIT, kPIT_Chnl_1, false);
+
+	    /* Enable timer interrupts for channel 1 */
+	    PIT_EnableInterrupts(PIT, kPIT_Chnl_1, kPIT_TimerInterruptEnable);
+
+	    /* Start channel 1 */
+	    PIT_StartTimer(PIT, kPIT_Chnl_1);
+#endif	//ADC_ENABLE
 	}
 
 	trigger_init();
@@ -496,6 +546,17 @@ void main(void)
 
 	while (1)
 	{
+#ifdef LOCAL_DEBUG_ENABLE
+		composite_idle();
+#ifdef ADC_ENABLE
+		trigger_idle();
+#endif	//ADC_ENABLE
+	}
+}
+void composite_idle(void)
+{
+	{
+#endif	//LOCAL_DEBUG_ENABLE
 		/* USBケーブルのconnect/disconnect状態を監視 */
 		checkAttachedDevice();
 
@@ -507,7 +568,16 @@ void main(void)
 		if (g_composite.midiPlayer.attach == 1) {
 			MIDI_IF_IDLE();
 			USB_MIDI_IDLE();
+			dprintf(SDIR_USBMIDI, "\n in main loop");
 		}
+
+#ifdef LOCAL_DEBUG_ENABLE
+		else
+		{	// for debug command
+			MIDI_IF_IDLE();
+		}
+		midi_hook_exec();
+#endif	//LOCAL_DEBUG_ENABLE
 #if USB_DEVICE_CONFIG_USE_TASK
 		USB_DeviceTaskFn(g_composite.deviceHandle);
 #endif

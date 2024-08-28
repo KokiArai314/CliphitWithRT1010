@@ -25,6 +25,7 @@ drivers \
 osa \
 source \
 source/audio_task \
+source/midi_debug_monitor \
 source/oscillator \
 source/trigger \
 source/trigger/parameter \

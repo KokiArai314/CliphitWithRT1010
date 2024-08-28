@@ -10,7 +10,7 @@
 #include "trigger.h"
 #include "extpad.h"
 
-//#include "../MidiDebugMonitor/MidiDebugMonitor.h"
+#include "../midi_debug_monitor/midi_debug_monitor.h"
 
 /*******************************************************************************
  * Definitions
@@ -303,8 +303,8 @@ void extPadRev2(TRIGSCN_t *ptrigscn)
 			}
 			if (trigger_debug_flag)
 			{
-				//dprintf(SDIR_USBMIDI, "\n %c ext pad on %1d, %3d(%4d)", ptrigscn->enable ? 'S' : '-', pExtPad->id,
-						//velocity, trigger);
+				dprintf(SDIR_USBMIDI, "\n %c ext pad on %1d, %3d(%4d)", ptrigscn->enable ? 'S' : '-', pExtPad->id,
+						velocity, trigger);
 			}
 			pExtPadWork->maskCount = pExtPad->mskTim * 3;	// scan cycle
 		}
@@ -315,7 +315,7 @@ void extPadRev2(TRIGSCN_t *ptrigscn)
 		{
 			if (trigger_debug_flag)
 			{
-				//dprintf(SDIR_USBMIDI, "\n %c ext pad off %d", ptrigscn->enable ? 'S' : '-', pExtPad->id);
+				dprintf(SDIR_USBMIDI, "\n %c ext pad off %d", ptrigscn->enable ? 'S' : '-', pExtPad->id);
 			}
 			pExtPadWork->flag = 0;
 		}

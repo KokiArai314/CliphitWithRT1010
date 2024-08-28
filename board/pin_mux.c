@@ -66,6 +66,8 @@ BOARD_InitPins:
 void BOARD_InitPins(void) {
 	CLOCK_EnableClock(kCLOCK_Iomuxc);           /* iomuxc clock (iomuxc_clk_enable): 0x03U */
 
+	IOMUXC_SetPinMux(IOMUXC_GPIO_AD_01_GPIOMUX_IO15, 0U);
+
 	IOMUXC_SetPinMux(
 		IOMUXC_GPIO_01_LPI2C1_SDA,              /* GPIO_01 is configured as LPI2C1_SDA */
 		1U);                                    /* Software Input On Field: Force input path of pad GPIO_01 */

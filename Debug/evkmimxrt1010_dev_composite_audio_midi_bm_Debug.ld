@@ -5,7 +5,7 @@
  * Generated linker script file for MIMXRT1011xxxxx
  * Created from linkscript.ldt by FMCreateLinkLibraries
  * Using Freemarker v2.3.30
- * MCUXpresso IDE v11.10.0 [Build 3148] [2024-07-03] on 2024/08/28 7:49:02
+ * MCUXpresso IDE v11.10.0 [Build 3148] [2024-07-03] on 2024/08/28 13:55:36
  */
 
 INCLUDE "evkmimxrt1010_dev_composite_audio_midi_bm_Debug_library.ld"

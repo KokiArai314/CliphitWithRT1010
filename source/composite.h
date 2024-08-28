@@ -10,6 +10,7 @@
 
 #include "audio_player.h"
 #include "midi_player.h"
+#include "midi_debug_monitor/midi_debug_monitor.h"
 
 /*******************************************************************************
 * Definitions
