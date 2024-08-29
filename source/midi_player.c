@@ -713,6 +713,11 @@ uint8_t Send2USB(void)
 	return ret;
 }
 
+int isMidiInOpen(void)
+{
+	return MidiInOpen;
+}
+
 /* Idle routine */
 static void USB_MIDI_IN_IDLE(void)
 {

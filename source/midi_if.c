@@ -14,14 +14,26 @@
 #include "composite.h"
 #include "usb_device_descriptor.h"
 
+#include "midi/midi_hook.h"
+
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
+
+#ifndef LOCAL_DEBUG_ENABLE
+#define LOCAL_DEBUG_ENABLE
+#endif
 
 /*******************************************************************************
  * Variables
  ******************************************************************************/
 extern usb_device_composite_struct_t *g_deviceComposite;
+
+#ifdef LOCAL_DEBUG_ENABLE
+#define EXTBUFSIZ	(512)
+#define HS_TXBUFSIZ	(384)
+#define FS_TXBUFSIZ	(48)
+#endif	//LOCAL_DEBUG_ENABLE
 
 /**
  * MIDI I/F TX
@@ -36,6 +48,19 @@ static uint16_t	s_MidiIfTxNumOfData;
 
 static uint8_t receiveSysExData;
 
+#ifdef LOCAL_DEBUG_ENABLE
+static uint8_t s_MidiIfTxBuffEx[EXTBUFSIZ];
+static volatile int16_t	s_MidiIfTxBuffPosEx = 0;
+static volatile uint16_t	s_MidiIfTxNumOfDataEx = 0;
+//#ifdef BOARD_PROTO1
+static uint8_t s_ControlIfTxBuffEx[EXTBUFSIZ];
+static volatile int16_t	s_ControlIfTxBuffPosEx = 0;
+static volatile uint16_t	s_ControlIfTxNumOfDataEx = 0;
+static uint8_t s_ControlIfTxBuffEx2[EXTBUFSIZ];
+static volatile int16_t	s_ControlIfTxBuffPosEx2 = 0;
+static volatile uint16_t	s_ControlIfTxNumOfDataEx2 = 0;
+//#endif	//BOARD_PROTO1
+#endif	//LOCAL_DEBUG_ENABLE
 
 /**
  * MIDI I/F RX
@@ -94,6 +119,43 @@ static uint16_t midiSysExMessageCurrentWriteBufPtr;
 static uint16_t midiSysExMessageBufWtPtr;
 static uint16_t midiSysExCurrentDataSize;
 static uint8_t UsbSysExMessageBuf[NUM_OF_USB_MIDI_SYSEX_EVENT_DATA_SIZE];
+
+#ifdef LOCAL_DEBUG_ENABLE
+/* デバッグモニタ対応の為、UART受信をバッファリングする */
+#include "../midi/circularbuffer.h"
+#include "../midi/midi_hook.h"
+
+#define RXBUFSIZ 512
+#define USBTXBUFSIZ	512
+
+static uint8_t rxbuf[RXBUFSIZ];
+static uint8_t usbtxbuf[USBTXBUFSIZ];
+
+static CCRBUF_t rxccrbuf = {{0}, sizeof(rxbuf), rxbuf};
+static CCRBUF_t usbtxccrbuf = {{0}, sizeof(usbtxbuf), usbtxbuf};
+
+/* 注意！ */
+#undef DisableIRQ
+#define DisableIRQ(aaa)
+#undef EnableIRQ
+#define EnableIRQ(aaa)
+
+static uint32_t rxoverrun = 0;
+static uint32_t	 rxbuffovr = 0;
+
+#ifdef BOARD_PROTO1
+static uint8_t	txchange = 0;	// 0:USB->ULZ2,1:USB->ULZ1
+
+static uint8_t rxbuf2[RXBUFSIZ];
+
+static CCRBUF_t rxccrbuf2 = {{0}, sizeof(rxbuf2), rxbuf2};
+
+static uint32_t rxoverrun2 = 0;
+static uint32_t	 rxbuffovr2 = 0;
+#endif	//BOARD_PROTO1
+
+#endif	//LOCAL_DEBUG_ENABLE
+
 
 
 /*******************************************************************************
@@ -591,6 +653,7 @@ void midi_IF_send_usb_blocking(uint8_t *str, uint16_t cnt)
 	return;
 }
 
+/*
 void midi_IF_send_uart_blocking(uint8_t *str, uint16_t cnt)
 {
 
@@ -623,7 +686,8 @@ void midi_IF_send_uart_blocking(uint8_t *str, uint16_t cnt)
 	}
 
 	return;
-}
+}*/
+
 
 void midi_IF_senc_command_blocking(uint8_t *str, uint16_t cnt)
 {
@@ -722,7 +786,7 @@ void MIDI_IF_IDLE()
 					}
 					if (attachOpen)
 					{
-						real_midi_received_sub(data);
+						real_midi_received(data);
 					}
 				}
 			}
@@ -745,11 +809,11 @@ void MIDI_IF_IDLE()
 #ifdef BOARD_PROTO1
 					if (txchange && attachOpen)
 					{
-						real_midi_received_sub(data);
+						real_midi_received(data);
 					}
 #else	//BOARD_PROTO1
 //*					real_midi_received_sub(data);
-					midi_hook_entry(data, real_midi_received_sub, g_deviceComposite->midiPlayer.attach);	//*
+					midi_hook_entry(data, real_midi_received, g_deviceComposite->midiPlayer.attach);
 #endif	//BOARD_PROTO1
 				}
 #ifdef BOARD_PROTO1
@@ -768,7 +832,7 @@ void MIDI_IF_IDLE()
 					}
 					if (!txchange && attachOpen)
 					{
-						real_midi_received_sub(data);
+						real_midi_received(data);
 					}
 				}
 #endif	//BOARD_PROTO1

@@ -162,6 +162,7 @@ void PIT_CYCLE_TIMER_HANDLER(void)
 	USB_setMidiInTimeoutCount();	/// @note MIDI IN Timeout (100ms)
 	__DSB();
 #endif	//ADC_ENABLE
+	}
 }
 
 void USB_DeviceIsrEnable(void)
@@ -401,6 +402,13 @@ void APPInit(void)
 
     USB_DeviceRun(g_composite.deviceHandle);
 
+
+#ifdef LOCAL_DEBUG_ENABLE
+        /* Enable RX interrupt. */
+        midi_IF_RxInit();
+        EnableIRQ(BOARD_UART_IRQ);
+#endif
+
 	/* PIT */
     {
     	/*
@@ -496,6 +504,11 @@ static void checkAttachedDevice(void)
 	keepAttachedDevice = attachedDevice;
 }
 
+#ifdef LOCAL_DEBUG_ENABLE
+void composite_idle(void);
+extern void midi_hook_exec(void);
+#endif	//LOCAL_DEBUG_ENABLE
+
 /*!
  * @brief Application task function.
  *
@@ -568,7 +581,6 @@ void composite_idle(void)
 		if (g_composite.midiPlayer.attach == 1) {
 			MIDI_IF_IDLE();
 			USB_MIDI_IDLE();
-			dprintf(SDIR_USBMIDI, "\n in main loop");
 		}
 
 #ifdef LOCAL_DEBUG_ENABLE

@@ -27,7 +27,10 @@ source/midi_if.o source/midi_if.d: ../source/midi_if.c \
  C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\usb\device\class/usb_device_class.h \
  ../source/usb_device_descriptor.h ../source/composite.h \
  ../source/audio_player.h \
- ../source/midi_debug_monitor/midi_debug_monitor.h
+ ../source/midi_debug_monitor/midi_debug_monitor.h \
+ ../source/midi/midi_hook.h \
+ C:/Users/koki_arai/Documents/MCUXpressoIDE_11.10.0_3148/workspace/evkmimxrt1010_dev_composite_audio_midi_bm/source/midi/circularbuffer.h \
+ C:/Users/koki_arai/Documents/MCUXpressoIDE_11.10.0_3148/workspace/evkmimxrt1010_dev_composite_audio_midi_bm/source/midi/midi_hook.h
 C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\drivers/fsl_lpuart.h:
 C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\drivers/fsl_common.h:
 C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\device/fsl_device_registers.h:
@@ -58,3 +61,6 @@ C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_
 ../source/composite.h:
 ../source/audio_player.h:
 ../source/midi_debug_monitor/midi_debug_monitor.h:
+../source/midi/midi_hook.h:
+C:/Users/koki_arai/Documents/MCUXpressoIDE_11.10.0_3148/workspace/evkmimxrt1010_dev_composite_audio_midi_bm/source/midi/circularbuffer.h:
+C:/Users/koki_arai/Documents/MCUXpressoIDE_11.10.0_3148/workspace/evkmimxrt1010_dev_composite_audio_midi_bm/source/midi/midi_hook.h:

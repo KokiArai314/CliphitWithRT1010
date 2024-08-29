@@ -12,5 +12,6 @@ C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_
 ../source/midi_player.c:590:17:INC_IN_BUF_POS	24	static
 ../source/midi_player.c:608:9:WriteData4	32	static
 ../source/midi_player.c:641:9:Send2USB	40	static
-../source/midi_player.c:717:13:USB_MIDI_IN_IDLE	8	static
-../source/midi_player.c:726:6:USB_MIDI_IDLE	8	static
+../source/midi_player.c:716:5:isMidiInOpen	4	static
+../source/midi_player.c:722:13:USB_MIDI_IN_IDLE	8	static
+../source/midi_player.c:731:6:USB_MIDI_IDLE	8	static

@@ -64,7 +64,7 @@ static struct OutBuf usbOutBuf = {0,0,{0}};
 #define SetChannel(aaa,bbb) ((aaa) == SDIR_UARTMIDI ? (uartOutBuf.channel = (bbb)) : (usbOutBuf.channel = (bbb)))
 
 extern void midi_IF_send_usb_blocking(uint8_t *str, uint16_t cnt);
-extern void midi_IF_send_uart_blocking(uint8_t *str, uint16_t cnt);
+//extern void midi_IF_send_uart_blocking(uint8_t *str, uint16_t cnt);
 
 /********************/
 /*	送信吐き出し	*/
@@ -82,7 +82,7 @@ void dputbuf_flush_local_sub(ESendDir eDir, int c, struct OutBuf *outbuf)
 			}
 			else if (eDir == SDIR_UARTMIDI)
 			{
-				midi_IF_send_uart_blocking(outbuf->buf, 7+outbuf->wcnt+1+1);
+				//midi_IF_send_uart_blocking(outbuf->buf, 7+outbuf->wcnt+1+1);
 			}
 			outbuf->wcnt = 0;
 		}
