@@ -49,7 +49,7 @@ typedef struct {
 //extern void midi_IF_send_usb_blocking(uint8_t *str, uint16_t cnt);
 //extern void midi_IF_send_uart_blocking(uint8_t *str, uint16_t cnt);
 
-//extern void AdcAudioSet(uint16_t value, uint8_t ch);	// for debug
+extern void AdcAudioSet(uint16_t value, uint8_t ch);	// for debug
 
 /*******************************************************************************
  * Variables
@@ -284,6 +284,7 @@ void extPadRev2(TRIGSCN_t *ptrigscn)
 		/* on check */
 		if (++pExtPadWork->flag == pExtPad->velWnd)
 		{	// on !
+
 			uint16_t velocity = trigger;
 			uint16_t sigmin = pExtPad->vel.smin * 4095 / pExtPad->vel.smax;
 

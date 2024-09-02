@@ -100,6 +100,11 @@ void BOARD_InitPins(void) {
 		0U);									  /* Software Input On Field: Input Path is determined by functionality */
 #endif	// LPUART TX/RX
 
+
+	IOMUXC_SetPinConfig(
+			IOMUXC_GPIO_AD_01_GPIOMUX_IO15,         /* GPIO_AD_01 PAD functional properties : */
+			0x0U);
+
 	IOMUXC_SetPinConfig(
 		IOMUXC_GPIO_01_LPI2C1_SDA,              /* GPIO_01 PAD functional properties : */
 		0xD8A0U);                               /* Slew Rate Field: Slow Slew Rate

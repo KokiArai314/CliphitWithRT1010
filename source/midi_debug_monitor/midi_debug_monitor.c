@@ -697,8 +697,8 @@ void HC_AudioSetCallback(void (*callback)(int32_t *data_l, int32_t *data_r));
 
 #define CCRBUFSIZ (4)
 
-static int LchAdcNo = -1;
-static int RchAdcNo = -1;
+static int LchAdcNo = 0;
+static int RchAdcNo = 0;
 static int LchAdcNo2 = -1;
 static int RchAdcNo2 = -1;
 
@@ -768,12 +768,15 @@ void AdcAudioSet(uint16_t value, uint8_t ch)
 		return;
 	}
 #endif	//TRIGAUDIO
-	val = (val << 19) | 0x100;	// 0x00000fff -> 0x7ff80100
-	if (ch == LchAdcNo)
-	{
+	//uint12 to int24
+	val = (val << 12);	// 0x00000fff -> 0x00fff000
+	val = (val + 0x00ffffff) & 0x00ffffff;
+	//if (ch == LchAdcNo)
+	//{/
 		putccrbuf(&ccrch1, &val);
-	}
-	else if (ch == RchAdcNo)
+		putccrbuf(&ccrch2, &val);
+	//}
+	/*else if (ch == RchAdcNo)
 	{
 		putccrbuf(&ccrch2, &val);
 	}
@@ -786,7 +789,7 @@ void AdcAudioSet(uint16_t value, uint8_t ch)
 	{
 		val *= -1;
 		putccrbuf(&ccrch2, &val);
-	}
+	}*/
 #else
 #if 1
 	value = value == 0 ? 1 : value;	// 0,1~4095 -> 0,1~4095
@@ -843,6 +846,11 @@ void AdcAudioGetLR(int32_t *pL, int32_t *pR)
 		getccrbuf(&ccrch2, pR);
 	}
 
+	return;
+}
+extern void AdcAudioDebugOn();
+void AdcAudioDebugOn(){
+	HC_AudioSetCallback(AdcAudioGetLR);
 	return;
 }
 

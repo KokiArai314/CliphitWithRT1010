@@ -38,8 +38,8 @@
 #ifdef BOARD_PROTO1
 #define ADSEL0PIN	(0)
 #else	//BOARD_PROTO1
-#define ADSEL0PIN	(18)
-#define ADSEL1PIN	(19)
+#define ADSEL0PIN	(15)
+#define ADSEL1PIN	(0)
 #endif	//BOARD_PROTO1
 
 typedef struct {
@@ -109,18 +109,8 @@ static ADSEL_t adsel[] = {
 #endif	//PADSW45CHANGE
 	{ 5, 2},	// 33 PadSw37
 #else	//BOARD_PROTO1
-	{14,0,0},
-	{ 7,0,0},
-	{ 7,0,0},
-	{14,0,1},
-	{ 7,0,1},
-	{ 7,0,1},
-	{14,1,0},
-	{ 7,1,0},
-	{ 7,1,0},
-	{14,1,1},
-	{ 7,1,1},
-	{ 7,1,1},
+	{ 0, 0},	//  0
+	{ 15,1}
 #endif	//BOARD_PROTO1
 };
 
@@ -448,14 +438,14 @@ void adc_start(int select)
 #else	//USE_ADC_ETC
 		adc_channel_config_t adcChannelConfigStruct;
 
-		GPIO_PinWrite(GPIO1, ADSEL0PIN, adsel[select].sel0);
+		//GPIO_PinWrite(GPIO1, ADSEL0PIN, adsel[select].sel0);
 #ifndef BOARD_PROTO1
-		GPIO_PinWrite(GPIO1, ADSEL1PIN, adsel[select].sel1);
+		//GPIO_PinWrite(GPIO1, ADSEL1PIN, adsel[select].sel1);
 #endif	//BOARD_PROTO1
 
 		/* Configure the user channel and interrupt. */
 //		adcChannelConfigStruct.channelNumber                        = ADC_USER_CHANNEL;
-		adcChannelConfigStruct.channelNumber                        = adsel[select].adchn;
+		adcChannelConfigStruct.channelNumber                        = adsel[select].sel0;
 		adcChannelConfigStruct.enableInterruptOnConversionCompleted = true;
 
 		ADC_SetChannelConfig(ADC_BASE, ADC_CHANNEL_GROUP, &adcChannelConfigStruct);

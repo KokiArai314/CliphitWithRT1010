@@ -728,12 +728,20 @@ void SAI_UserTxIRQHandler(void)
 		}
 
 		/* SAI out */
-        audio_task(pSaidata, 1);
-        for (i = 0; i < FSL_FEATURE_SAI_FIFO_COUNT; i++)
-        {
-        	int32_t out = convertOutput(saidata[i]);
-            SAI_WriteData(BOARD_DEMO_SAI, DEMO_SAI_CHANNEL,(uint32_t)out);
-        }
+        if (hcAudioCallback != NULL) {
+        	int32_t outL,outR;
+			hcAudioCallback(&outL, &outR);
+			SAI_WriteData(BOARD_DEMO_SAI, DEMO_SAI_CHANNEL,(uint32_t)outL);
+			SAI_WriteData(BOARD_DEMO_SAI, DEMO_SAI_CHANNEL,(uint32_t)outR);
+		}else{
+			audio_task(pSaidata, 1);
+			for (i = 0; i < FSL_FEATURE_SAI_FIFO_COUNT; i++)
+			{
+					int32_t out = convertOutput(saidata[i]);
+					SAI_WriteData(BOARD_DEMO_SAI, DEMO_SAI_CHANNEL,(uint32_t)out);
+			}
+		}
+
     }
 
     /// @note [SAI] enable RX
@@ -754,6 +762,8 @@ void SAI_UserTxIRQHandler(void)
             saiRxdata[i] = (int32_t)SAI_ReadData(BOARD_DEMO_SAI, DEMO_SAI_CHANNEL) << 8;
             saiRxdata[i] >>= 8;
         }
+
+
 
 	#if 0	/// @note [SAI] Implement Amp/Effects
 		// Callback

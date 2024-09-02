@@ -1,0 +1,8 @@
+../source/trigger/parameter/triggerParameterIO.c:29:16:pad_decode	32	static
+../source/trigger/parameter/triggerParameterIO.c:88:16:ccpad_decode	32	static
+../source/trigger/parameter/triggerParameterIO.c:151:16:extpad_decode	32	static
+../source/trigger/parameter/triggerParameterIO.c:213:16:switch_decode	32	static
+../source/trigger/parameter/triggerParameterIO.c:265:16:volume_decode	32	static
+../source/trigger/parameter/triggerParameterIO.c:338:16:velocityCurve_decode	24	static
+../source/trigger/parameter/triggerParameterIO.c:350:16:cmdans_decode	24	static
+../source/trigger/parameter/triggerParameterIO.c:401:6:triggerParameterIOEntry	16	static

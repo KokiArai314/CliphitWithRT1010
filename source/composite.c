@@ -59,6 +59,7 @@
 #ifdef ADC_ENABLE
 #define NSEC_TO_COUNT(ns, clockFreqInHz) (uint64_t)(((uint64_t)(ns) * (clockFreqInHz)) / 1000000000U)
 #define CYCLE_TIMER_NS_TIME	62500U	// 62.5us
+extern void AdcAudioDebugOn();
 #endif	//ADC_ENABLE
 
 
@@ -477,6 +478,9 @@ void APPInit(void)
 
 	    /* Start channel 1 */
 	    PIT_StartTimer(PIT, kPIT_Chnl_1);
+
+	    //AdcAudioDebugOn();
+
 #endif	//ADC_ENABLE
 	}
 
@@ -527,6 +531,7 @@ void main(void)
     BOARD_BootClockRUN();
     BOARD_AudioInitPllClock();
 //    BOARD_InitDebugConsole();
+    //systick_init();
 
 #if 0	/// @note RT1020-EVK debugPin (board J18:4pin) => RT1010-EVK???
     IOMUXC_SetPinMux(

@@ -19,7 +19,7 @@
 /*--- 必要に応じて定義する ---*/
 
 #define LOCAL_DEBUG_ENABLE	// 定義するとMIDIを傍受してデバッグモニタに入る
-#define GPIO_11_OUT_ENABLE	// 定義するとGPIO_11をOUT設定してデバッグで使う
+//#define GPIO_11_OUT_ENABLE	// 定義するとGPIO_11をOUT設定してデバッグで使う
 #define ADC_ENABLE			// 定義するとADC有効
 //#define UART_LANE_ENABLE_R2	// 定義すると対ULZでLANE release 2 が有効
 //#define TIMING_MEASURRING	// 定義するとtiming logが有効

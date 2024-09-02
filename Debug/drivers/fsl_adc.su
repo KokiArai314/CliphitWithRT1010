@@ -1,0 +1,17 @@
+../drivers/fsl_clock.h:781:20:CLOCK_ControlGate	32	static
+../drivers/fsl_clock.h:798:20:CLOCK_EnableClock	16	static
+../drivers/fsl_clock.h:808:20:CLOCK_DisableClock	16	static
+../drivers/fsl_adc.h:275:24:ADC_GetChannelConversionValue	16	static
+../drivers/fsl_adc.h:299:24:ADC_GetChannelStatusFlags	16	static
+../drivers/fsl_adc.h:355:20:ADC_EnableHardwareTrigger	16	static
+../drivers/fsl_adc.h:402:24:ADC_GetStatusFlags	16	static
+../drivers/fsl_adc.c:44:17:ADC_GetInstance	24	static
+../drivers/fsl_adc.c:68:6:ADC_Init	24	static
+../drivers/fsl_adc.c:118:6:ADC_Deinit	16	static
+../drivers/fsl_adc.c:146:6:ADC_GetDefaultConfig	16	static
+../drivers/fsl_adc.c:193:6:ADC_SetChannelConfig	32	static
+../drivers/fsl_adc.c:228:10:ADC_DoAutoCalibration	24	static
+../drivers/fsl_adc.c:288:6:ADC_SetOffsetConfig	24	static
+../drivers/fsl_adc.c:315:6:ADC_SetHardwareCompareConfig	24	static
+../drivers/fsl_adc.c:363:6:ADC_SetHardwareAverageConfig	24	static
+../drivers/fsl_adc.c:386:6:ADC_ClearStatusFlags	24	static

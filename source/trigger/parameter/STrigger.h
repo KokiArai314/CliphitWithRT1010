@@ -147,7 +147,7 @@ typedef struct {
 #define EXTPAD_MSK_TIME		(16*7/3)	// =7msec
 #define EXTPAD_CLS_CAN		(0)		// 0:off
 
-#define EXTPAD_46_VEL_MIN	 (50)
+#define EXTPAD_46_VEL_MIN	 (400)
 #define EXTPAD_46_VEL_MAX	(4095)
 #define EXTPAD_47_VEL_MIN	 (50)
 #define EXTPAD_47_VEL_MAX	(4095)

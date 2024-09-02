@@ -1,0 +1,10 @@
+C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\CMSIS/core_cm7.h:1902:22:__NVIC_EnableIRQ	16	static
+C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\drivers/fsl_common.h:442:28:EnableIRQ	16	static
+C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\drivers/fsl_adc.h:275:24:ADC_GetChannelConversionValue	16	static
+C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\drivers/fsl_adc.h:355:20:ADC_EnableHardwareTrigger	16	static
+../source/trigger/adc.c:227:6:ADC1_IRQHandler	8	static
+../source/trigger/adc.c:286:6:adc_init	24	static
+../source/trigger/adc.c:383:6:adc_start	24	static
+../source/trigger/adc.c:458:9:adc_getValue	24	static
+../source/trigger/adc.c:470:10:adc_getFlag	24	static
+../source/trigger/adc.c:490:6:adc_clrFlag	16	static

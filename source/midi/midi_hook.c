@@ -234,9 +234,9 @@ int midi_hook_usb_entry(uint8_t *bp, uint16_t size)
 
 void midi_hook_exec(void)
 {
-	static volatile int uart_exec = 0;
+	//static volatile int uart_exec = 0;
 	static volatile int usb_exec = 0;
-
+	/*
 	if (!uart_exec)
 	{
 		uart_exec = 1;	// 再入禁止
@@ -255,7 +255,7 @@ void midi_hook_exec(void)
 			}
 		}
 		uart_exec = 0;	// 再入許可
-	}
+	}*/
 	if (!usb_exec)
 	{
 		usb_exec = 1;	// 再入禁止

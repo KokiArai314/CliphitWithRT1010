@@ -40,7 +40,7 @@
  ******************************************************************************/
 static TRIGSCN_t trigscn[] = {
 #ifdef BOARD_RT1010TESTFORCLIPHIT
-	{EXTPAD_46_AD_CH,	-1,		1,	-1,	extPad,
+	{EXTPAD_46_AD_CH,	-1,		1,	-1,	extPadRev2,
 			{.extPad.id			= EXTPAD_46_ID,
 			 .extPad.onCnt		= EXTPAD_ON_COUNT,
 			 .extPad.velWnd		= EXTPAD_VEL_WINDOW,
@@ -51,7 +51,7 @@ static TRIGSCN_t trigscn[] = {
 #endif
 };
 
-int trigger_debug_flag = 0;
+int trigger_debug_flag = 1;
 
 #define VELOCITYNUMOF (15)
 #define VELOCITYCURVE (128)
