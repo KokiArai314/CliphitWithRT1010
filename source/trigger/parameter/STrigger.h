@@ -142,7 +142,7 @@ typedef struct {
 /* --- extpad --- */
 #define EXTPAD_ON_COUNT		(32)	// =2msec
 #define EXTPAD_ON_COUNT_MAX	(64)	// =4msec
-#define EXTPAD_ON_LEVEL		(300)
+#define EXTPAD_ON_LEVEL		(100)
 #define EXTPAD_VEL_WINDOW	(64)	// =4msec
 #define EXTPAD_MSK_TIME		(16*7/3)	// =7msec
 #define EXTPAD_CLS_CAN		(0)		// 0:off
