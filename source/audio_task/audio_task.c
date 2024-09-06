@@ -8,7 +8,7 @@ static float *ppfWork[2] = {&(pfWork[0][0]),  &(pfWork[1][0])};	// to main
 
 void audio_task_init(void)
 {
-	SampleData_t *sampleData = get_test_sin_tone();
+	SampleData_t *sampleData = get_test_sample();
 	onmemoryoscillatortest(sampleData, 0);
 	return;
 }

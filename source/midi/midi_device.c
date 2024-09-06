@@ -9,8 +9,7 @@
 
 #include "midi_message.h"
 
-#include "param.h"
-#include "edit.h"
+#include "../param.h"
 
 /*******************************************************************************
  * Definitions

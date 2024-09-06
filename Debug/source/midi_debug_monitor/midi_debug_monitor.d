@@ -2,7 +2,7 @@ source/midi_debug_monitor/midi_debug_monitor.o \
  source/midi_debug_monitor/midi_debug_monitor.d: \
  ../source/midi_debug_monitor/midi_debug_monitor.c \
  ../source/midi_debug_monitor/midi_debug_monitor.h \
- ../source/midi_debug_monitor/../midi_if.h \
+ ../source/midi_debug_monitor/../midi/midi_if.h \
  ../source/midi_debug_monitor/../trigger/adc.h \
  C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\codec/fsl_wm8960.h \
  C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\codec/fsl_codec_common.h \
@@ -19,7 +19,7 @@ source/midi_debug_monitor/midi_debug_monitor.o \
  C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\drivers/fsl_clock.h \
  C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\drivers/fsl_common.h
 ../source/midi_debug_monitor/midi_debug_monitor.h:
-../source/midi_debug_monitor/../midi_if.h:
+../source/midi_debug_monitor/../midi/midi_if.h:
 ../source/midi_debug_monitor/../trigger/adc.h:
 C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\codec/fsl_wm8960.h:
 C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\codec/fsl_codec_common.h:

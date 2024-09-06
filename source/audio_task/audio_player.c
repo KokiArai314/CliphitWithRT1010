@@ -4,8 +4,8 @@
  *  Created on: 2020/02/06
  *      Author: higuchi
  */
-#include "audio_task/audio_task.h"
-#include "usb_device_config.h"
+#include "audio_task.h"
+#include "../usb_device/usb_device_config.h"
 #include "usb.h"
 #include "usb_device.h"
 
@@ -13,9 +13,9 @@
 #include "usb_device_audio.h"
 
 #include "usb_device_ch9.h"
-#include "usb_device_descriptor.h"
+#include "usb_device/usb_device_descriptor.h"
 
-#include "composite.h"
+#include "../composite.h"
 #include "audio_player.h"
 
 #include "fsl_device_registers.h"
@@ -123,7 +123,8 @@ static inline int32_t convertOutput(float fData)
 	//float to uint32_t
 	fData = fData < -1.0f ? -1.0f : fData > 1.0f ? 1.0f : fData;
 	//fData = (fData + 1.0f)/2.0f;
-	return (int32_t)(fData * 0x007ffffful) & 0x00ffffff;
+	int32_t iData = (int32_t)(fData * 0x007ffffful) & 0x00ffffff;
+	return iData;
 }
 
 /*******************************************************************************
@@ -192,15 +193,12 @@ USB_DMA_NONINIT_DATA_ALIGN(USB_DATA_ALIGN_SIZE)
 /// @note memo: 24bit L/R data
 uint8_t audioRecDataBuff[REC_DATA_BUFF_SIZE] __attribute__ ((aligned (4)));
 
-#define AUDIO_REC_DATA_BUF_NUM 4
+#define AUDIO_REC_DATA_BUF_NUM 2
 USB_DMA_NONINIT_DATA_ALIGN(USB_DATA_ALIGN_SIZE)
 uint8_t audioRecDataBuf1[FS_ISO_IN_ENDP_PACKET_SIZE + AUDIO_IN_FORMAT_CHANNELS * AUDIO_FORMAT_SIZE] __attribute__ ((aligned (4)));
 USB_DMA_NONINIT_DATA_ALIGN(USB_DATA_ALIGN_SIZE)
 uint8_t audioRecDataBuf2[FS_ISO_IN_ENDP_PACKET_SIZE + AUDIO_IN_FORMAT_CHANNELS * AUDIO_FORMAT_SIZE] __attribute__ ((aligned (4)));
 USB_DMA_NONINIT_DATA_ALIGN(USB_DATA_ALIGN_SIZE)
-uint8_t audioRecDataBuf3[FS_ISO_IN_ENDP_PACKET_SIZE + AUDIO_IN_FORMAT_CHANNELS * AUDIO_FORMAT_SIZE] __attribute__ ((aligned (4)));
-USB_DMA_NONINIT_DATA_ALIGN(USB_DATA_ALIGN_SIZE)
-uint8_t audioRecDataBuf4[FS_ISO_IN_ENDP_PACKET_SIZE + AUDIO_IN_FORMAT_CHANNELS * AUDIO_FORMAT_SIZE] __attribute__ ((aligned (4)));
 
 uint16_t audioRecDataBufSize[AUDIO_REC_DATA_BUF_NUM];
 static uint8_t audioRecDataBufRdPtr;	// 0 - AUDIO_REC_DATA_BUF_NUM-1
@@ -272,18 +270,6 @@ static void initializeFeedbackValue(void)
 		history_index = 0;
 	}
 #endif
-#if 0	/// @note support 48000Hz
-	{
-//		volatile uint32_t mod;
-
-//		mod = 0;
-		for (int i = 1; i <= HISTORY_SIZE; i++) {
-			feedback_history[i-1] = 768;	/* 48 * 16 */	/// @note Feedback_EP_16ms_Interval
-		}
-		feedback_value = 0x0C0000;	/* 48 * 16384 = 786432 => C0000 */
-		history_index = 0;
-	}
-#endif
 	AUDIO_UPDATE_FEEDBACK_DATA(audioFeedBackBuffer, feedback_value);
 }
 
@@ -301,56 +287,19 @@ static uint8_t* getUsbAudioInBufPtr(uint8_t select)
 	case 1:
 		ret = audioRecDataBuf2;
 		break;
-	case 2:
-		ret = audioRecDataBuf3;
-		break;
-	case 3:
-		ret = audioRecDataBuf4;
-		break;
 	default:
 		break;
 	}
 	return ret;
 }
 
-#if 1	/// @note support 44100Hz
+/// @note support 44100Hz
 const clock_audio_pll_config_t audioPllConfig = {
     .loopDivider = 47,  /* PLL loop divider. Valid range for DIV_SELECT divider value: 27~54. */
     .postDivider = 4,   /* Divider after the PLL, should only be 1, 2, 4, 8, 16. */
     .numerator = 1,    /* 30 bit numerator of fractional loop divider. */
     .denominator = 25, /* 30 bit denominator of fractional loop divider */
 };
-#endif
-#if 0	/// @note 48kHz clock
-/*
- *  NXPのサンプルだと、MCLKが12.28875MHzとなってピッタリじゃない値になる
- *  修正版では、12.288MHzとなる
- *
- *  AUDIO PLL setting: Frequency = Fref * (DIV_SELECT + NUM / DENOM)
- *                               = 24 * (38 + 2/5)
- *                               = 921.6 MHz
- */
-const clock_audio_pll_config_t audioPllConfig = {
-    .loopDivider = 38,  /* PLL loop divider. Valid range for DIV_SELECT divider value: 27~54. */
-    .postDivider = 1,   /* Divider after the PLL, should only be 1, 2, 4, 8, 16. */
-    .numerator = 2,    /* 30 bit numerator of fractional loop divider. */
-    .denominator = 5, /* 30 bit denominator of fractional loop divider */
-};
-#endif
-#if 0
-/*
- * AUDIO PLL setting: Frequency = Fref * (DIV_SELECT + NUM / DENOM)
- *                              = 24 * (32 + 77/100)
- *                              = 786.48 MHz
- */
-const clock_audio_pll_config_t audioPllConfig = {
-    .loopDivider = 32,  /* PLL loop divider. Valid range for DIV_SELECT divider value: 27~54. */
-    .postDivider = 1,   /* Divider after the PLL, should only be 1, 2, 4, 8, 16. */
-    .numerator = 77,    /* 30 bit numerator of fractional loop divider. */
-    .denominator = 100, /* 30 bit denominator of fractional loop divider */
-};
-#endif
-
 extern void WM8960_USB_Audio_Init(void *I2CBase, void *i2cHandle);
 extern void WM8960_Config_Audio_Formats(uint32_t samplingRate);
 
@@ -408,20 +357,13 @@ void WM8960_Config_Audio_Formats(uint32_t samplingRate)
 #endif
 }
 
-#if 1	/// @note [SAI] enable RX
+/// @note [SAI] enable RX
 void BOARD_USB_Audio_TxRxInit(uint32_t samplingRate)
 {
     SAI_USB_Audio_TxInit(BOARD_DEMO_SAI);
     SAI_USB_Audio_RxInit(BOARD_DEMO_SAI);
     WM8960_Config_Audio_Formats(samplingRate);
 }
-#else
-void BOARD_USB_Audio_TxInit(uint32_t samplingRate)
-{
-    SAI_USB_Audio_TxInit(BOARD_DEMO_SAI);
-    WM8960_Config_Audio_Formats(samplingRate);
-}
-#endif
 
 /// @note support 44100Hz
 static uint8_t sampleCount_44100Hz;
@@ -437,13 +379,10 @@ static void txCallback(I2S_Type *base, sai_edma_handle_t *handle, status_t statu
     	g_deviceComposite->audioPlayer.speakerDetachOrNoInput = 1;
     }
 
-#if 1	/// @note support 44100Hz
+    /// @note support 44100Hz
     LRClockCount += beforeSendDataSize_44100Hz;
-#else
-    LRClockCount += AUDIO_SAMPLING_RATE_KHZ;
-#endif
 
-#if 1	/// @note support 24bit 44100Hz
+    /// @note support 24bit 44100Hz
     sampleCount_44100Hz++;
     if (g_deviceComposite->audioPlayer.startPlayHalfFull)
     {
@@ -472,47 +411,6 @@ static void txCallback(I2S_Type *base, sai_edma_handle_t *handle, status_t statu
    		sampleCount_44100Hz = (sampleCount_44100Hz % 10);
         xfer.data = audioPlayDMATempBuff;
     }
-#endif
-#if 0	/// @note 24bit 48000Hz (??)
-    if (g_deviceComposite->audioPlayer.startPlayHalfFull)
-    {
-        xfer.dataSize = AUDIO_DATA_BUFF_32BIT_ALIGN_SIZE;
-        xfer.data = audioPlayDataBuff + g_deviceComposite->audioPlayer.tdWriteNumberPlay;
-        g_deviceComposite->audioPlayer.audioSendCount += AUDIO_DATA_BUFF_32BIT_ALIGN_SIZE;
-        g_deviceComposite->audioPlayer.audioSendTimes++;
-        g_deviceComposite->audioPlayer.tdWriteNumberPlay += AUDIO_DATA_BUFF_32BIT_ALIGN_SIZE;
-        if (g_deviceComposite->audioPlayer.tdWriteNumberPlay >=
-            AUDIO_SPEAKER_DATA_WHOLE_BUFFER_LENGTH * AUDIO_DATA_BUFF_32BIT_ALIGN_SIZE)
-        {
-        	g_deviceComposite->audioPlayer.tdWriteNumberPlay = 0;
-        }
-    }
-    else
-    {
-        xfer.dataSize = AUDIO_DATA_BUFF_32BIT_ALIGN_SIZE;
-        xfer.data = audioPlayDMATempBuff;
-    }
-#endif
-#if 0	/// @note 16bit 48000Hz
-    if (g_deviceComposite->audioPlayer.startPlayHalfFull)
-    {
-        xfer.dataSize = FS_ISO_OUT_ENDP_PACKET_SIZE;
-        xfer.data = audioPlayDataBuff + g_deviceComposite->audioPlayer.tdWriteNumberPlay;
-        g_deviceComposite->audioPlayer.audioSendCount += FS_ISO_OUT_ENDP_PACKET_SIZE;
-        g_deviceComposite->audioPlayer.audioSendTimes++;
-        g_deviceComposite->audioPlayer.tdWriteNumberPlay += FS_ISO_OUT_ENDP_PACKET_SIZE;
-        if (g_deviceComposite->audioPlayer.tdWriteNumberPlay >=
-            AUDIO_SPEAKER_DATA_WHOLE_BUFFER_LENGTH * FS_ISO_OUT_ENDP_PACKET_SIZE)
-        {
-        	g_deviceComposite->audioPlayer.tdWriteNumberPlay = 0;
-        }
-    }
-    else
-    {
-        xfer.dataSize = FS_ISO_OUT_ENDP_PACKET_SIZE;
-        xfer.data = audioPlayDMATempBuff;
-    }
-#endif
 
     SAI_TransferSendEDMA(base, handle, &xfer);
 }
@@ -545,97 +443,21 @@ void BOARD_DMA_EDMA_Enable_Audio_Interrupts()
 {
     /* Enable interrupt to handle FIFO error */
     SAI_TxEnableInterrupts(BOARD_DEMO_SAI, kSAI_FIFOErrorInterruptEnable);
+    NVIC_SetPriority(DEMO_SAI_IRQ_TX, SAI_INTERRUPT_PRIORITY);
     EnableIRQ(DEMO_SAI_IRQ_TX);
 }
 
 void BOARD_DMA_EDMA_Start()
 {
     sai_transfer_t xfer = {0};
-#if 1	/// @note support 24bit 44100Hz
+    /// @note support 24bit 44100Hz
     memset(audioPlayDMATempBuff, 0, AUDIO_DATA_BUFF_32BIT_ALIGN_SIZE_45SAMPLES);
     xfer.dataSize = AUDIO_DATA_BUFF_32BIT_ALIGN_SIZE;
     xfer.data = audioPlayDMATempBuff;
-#endif
-#if 0	/// @note support 24bit 48000Hz
-    memset(audioPlayDMATempBuff, 0, AUDIO_DATA_BUFF_32BIT_ALIGN_SIZE);
-    xfer.dataSize = AUDIO_DATA_BUFF_32BIT_ALIGN_SIZE;
-    xfer.data = audioPlayDMATempBuff;
-#endif
-#if 0
-    memset(audioPlayDMATempBuff, 0, FS_ISO_OUT_ENDP_PACKET_SIZE);
-    xfer.dataSize = FS_ISO_OUT_ENDP_PACKET_SIZE;
-    xfer.data = audioPlayDMATempBuff;
-#endif
+
     SAI_TransferSendEDMA(BOARD_DEMO_SAI, &txHandle, &xfer);
 }
 
-#if 0	/// @note [SAI] Cycle Count
-
-volatile uint16_t cycct_min = UINT16_MAX;
-volatile uint16_t cycct_max = 0;
-volatile float cycct_avg = 0;
-
-#define	CycleCountInit() \
-	cycct_min = UINT16_MAX; \
-	cycct_max = 0; \
-	cycct_avg = 0;
-
-#define	CycleCount(exp) \
-	{ \
-		uint16_t ctbuf1, ctbuf2; \
-		HC_CRITICAL_SECTION_ENTER(); \
-		ctbuf1 = DWT->CYCCNT; \
-		exp \
-		ctbuf2 = DWT->CYCCNT; \
-		HC_CRITICAL_SECTION_EXIT(); \
-		if (ctbuf2 > ctbuf1) { \
-			uint16_t cycct; \
-			cycct = ctbuf2 - ctbuf1; \
-			if (cycct < cycct_min) { \
-				cycct_min = cycct; \
-			} \
-			if (cycct > cycct_max) { \
-				cycct_max = cycct; \
-			} \
-			if (cycct_avg == 0) { \
-				cycct_avg = cycct; \
-			} else { \
-				cycct_avg += (cycct - cycct_avg) * 0.01; \
-			} \
-		} \
-	}
-#endif
-
-//----------------------------------
-// Sin
-//----------------------------------
-
-#define	SIN_FREQ	440//125	// 125Hz
-#define	SIN_ADDER	(0x100000000 * SIN_FREQ / kSAI_SampleRate44100Hz)
-
-int16_t osclvl = 0x0800;
-// 疑似サイン波(y = 4 * x * (1.0 - abs(x)))
-//__attribute__ ((section(".ramfunc.$SRAM_ITC")))
-int16_t func_sin(uint32_t adder, uint32_t *sawbuf)
-{
-	int16_t x;
-
-	// saw (-1.0  -0.5  0.0  0.5  1.0)
-	*sawbuf += adder;
-	x = (int16_t)((int32_t)*sawbuf >> 16);
-
-	// sin ( 0.0  -1.0  0.0  1.0  0.0)
-	x = (int16_t)((int32_t)x * (x < 0 ? (uint16_t)0x8000 + x : 0x7FFF - x) >> (15-2));
-
-	return(x);
-}
-
-//__attribute__ ((section(".ramfunc.$SRAM_ITC")))
-int32_t fsfunc_sin(int32_t data)
-{
-	static uint32_t sawbuf;
-	return(((int32_t)func_sin(SIN_ADDER, &sawbuf) * osclvl) << 1);
-}
 
 #if 1	/// @note [SAI] Implement Amp/Effects
 //----------------------------------
@@ -675,18 +497,12 @@ void HC_AudioSetCallback(void (*callback)(int32_t *data_l, int32_t *data_r))
 }
 #endif	// #if 1	/// @note [SAI] Implement Amp/Effects
 
-//int32_t saidata[FSL_FEATURE_SAI_FIFO_COUNT];
 static float saidata[FSL_FEATURE_SAI_FIFO_COUNT];
 static float *pSaidata[2] = {&(saidata[0]),  &(saidata[1])};
 int32_t saiRxdata[FSL_FEATURE_SAI_FIFO_COUNT];
-#if 1	/// @note [SAI] enable RX
-void SAI_UserIRQHandler(void)
-#else
-void SAI_UserTxIRQHandler(void)
-#endif
-{
-#if 1	/// @note [SAI] use SAI interrupt instead of DMA
 
+void SAI_UserIRQHandler(void)
+{
 	int i;
 
     /* Clear the TX FIFO error flag */
@@ -699,29 +515,6 @@ void SAI_UserTxIRQHandler(void)
     {
 		/* Read from USB audio rx buffer and mix to SAI tx buffer */
 	    LRClockCount++;
-	    //if (g_deviceComposite->audioPlayer.startPlayHalfFull)
-	    //{
-        /*
-	        for (i = 0; i < FSL_FEATURE_SAI_FIFO_COUNT; i++) {
-	        	/// @note audioPlayDataBuff 32bit align
-	        	/// @note in case of "+=" -> loopback USB Audio
-//?		        saidata[i] += ((int32_t*)audioPlayDataBuff)[g_deviceComposite->audioPlayer.tdWriteNumberPlay / 4] >> 9;
-		        //saidata[i] = ((int32_t*)audioPlayDataBuff)[g_deviceComposite->audioPlayer.tdWriteNumberPlay / 4] >> 8;	//!
-		        int32_t fsfunc_sin(int32_t data);
-			    saidata[i] = 0x00FFFFFF & (fsfunc_sin(0) >> 8);
-                g_deviceComposite->audioPlayer.tdWriteNumberPlay += 4;
-	            if (g_deviceComposite->audioPlayer.tdWriteNumberPlay >= PLAY_DATA_BUFF_SIZE)
-	            {
-	            	g_deviceComposite->audioPlayer.tdWriteNumberPlay = 0;
-	            }
-	        }*/
-		//}
-        /*
-	    else {
-	        for (i = 0; i < FSL_FEATURE_SAI_FIFO_COUNT; i++) {
-	        	saidata[i] = 0;
-	        }
-	    }*/
 
 	    for (i = 0; i < FSL_FEATURE_SAI_FIFO_COUNT; i++) {
 			saidata[i] = 0;
@@ -734,11 +527,13 @@ void SAI_UserTxIRQHandler(void)
 			SAI_WriteData(BOARD_DEMO_SAI, DEMO_SAI_CHANNEL,(uint32_t)outL);
 			SAI_WriteData(BOARD_DEMO_SAI, DEMO_SAI_CHANNEL,(uint32_t)outR);
 		}else{
+
 			audio_task(pSaidata, 1);
+            
 			for (i = 0; i < FSL_FEATURE_SAI_FIFO_COUNT; i++)
 			{
-					int32_t out = convertOutput(saidata[i]);
-					SAI_WriteData(BOARD_DEMO_SAI, DEMO_SAI_CHANNEL,(uint32_t)out);
+                int32_t out = convertOutput(saidata[i]);
+                SAI_WriteData(BOARD_DEMO_SAI, DEMO_SAI_CHANNEL,(uint32_t)out);
 			}
 		}
 
@@ -763,70 +558,50 @@ void SAI_UserTxIRQHandler(void)
             saiRxdata[i] >>= 8;
         }
 
+        #if 0	/// @note [SAI] Implement Amp/Effects
+            // Callback
+            if (hcAudioCallback != NULL) {
+            #if 1	/// @note [SAI] Cycle Count
+                CycleCount(
+                hcAudioCallback(&saidata[0], &saidata[1]);
+                )
+            #else
+                hcAudioCallback(&saidata[0], &saidata[1]);
+            #endif
+            }
+        #endif
 
+        // @note add AudioRec
 
-	#if 0	/// @note [SAI] Implement Amp/Effects
-		// Callback
-		if (hcAudioCallback != NULL) {
-		#if 1	/// @note [SAI] Cycle Count
-			CycleCount(
-			hcAudioCallback(&saidata[0], &saidata[1]);
-			)
-		#else
-			hcAudioCallback(&saidata[0], &saidata[1]);
-		#endif
-		}
-	#endif
+        if (g_deviceComposite->audioPlayer.startRec) {
+            int i;
 
-		/// @note add AudioRec
-		{
-			if (g_deviceComposite->audioPlayer.startRec) {
-				int i;
+            /* 24bit L/R dataをUSB用バッファに格納  */
+            for (i = 0; i < FSL_FEATURE_SAI_FIFO_COUNT; i++) {
+                audioRecDataBuff[g_deviceComposite->audioPlayer.tdWriteNumberRec+(i*3)+0] = (uint8_t)(saiRxdata[i] & 0x0000FF);
+                audioRecDataBuff[g_deviceComposite->audioPlayer.tdWriteNumberRec+(i*3)+1] = (uint8_t)((saiRxdata[i] & 0x00FF00) >> 8);
+                audioRecDataBuff[g_deviceComposite->audioPlayer.tdWriteNumberRec+(i*3)+2] = (uint8_t)((saiRxdata[i] & 0xFF0000) >> 16);
+            }
+            g_deviceComposite->audioPlayer.tdWriteNumberRec += (FSL_FEATURE_SAI_FIFO_COUNT * AUDIO_FORMAT_SIZE);
+            if (g_deviceComposite->audioPlayer.tdWriteNumberRec >= REC_DATA_BUFF_SIZE)
+            {
+                g_deviceComposite->audioPlayer.tdWriteNumberRec = 0;
+            }
+            /// @note SAI通信でOverflowしてしまったらリセットする
+            
+            if (g_deviceComposite->audioPlayer.tdWriteNumberRec == g_deviceComposite->audioPlayer.tdReadNumberRec) {
+                g_deviceComposite->audioPlayer.startRec = 0;
+                g_deviceComposite->audioPlayer.startRecHalfFull = 0;
+                g_deviceComposite->audioPlayer.tdReadNumberRec= 0;
+                g_deviceComposite->audioPlayer.tdWriteNumberRec = 0;
+            }
+            
+        }
 
-				/* 24bit L/R dataをUSB用バッファに格納  */
-				for (i = 0; i < FSL_FEATURE_SAI_FIFO_COUNT; i++) {
-					audioRecDataBuff[g_deviceComposite->audioPlayer.tdWriteNumberRec+(i*3)+0] = (uint8_t)(saiRxdata[i] & 0x0000FF);
-					audioRecDataBuff[g_deviceComposite->audioPlayer.tdWriteNumberRec+(i*3)+1] = (uint8_t)((saiRxdata[i] & 0x00FF00) >> 8);
-					audioRecDataBuff[g_deviceComposite->audioPlayer.tdWriteNumberRec+(i*3)+2] = (uint8_t)((saiRxdata[i] & 0xFF0000) >> 16);
-				}
-				g_deviceComposite->audioPlayer.tdWriteNumberRec += (FSL_FEATURE_SAI_FIFO_COUNT * AUDIO_FORMAT_SIZE);
-				if (g_deviceComposite->audioPlayer.tdWriteNumberRec >= REC_DATA_BUFF_SIZE)
-				{
-					g_deviceComposite->audioPlayer.tdWriteNumberRec = 0;
-				}
-
-				/// @note SAI通信でOverflowしてしまったらリセットする
-				{
-					if (g_deviceComposite->audioPlayer.tdWriteNumberRec == g_deviceComposite->audioPlayer.tdReadNumberRec) {
-//						usb_echo("USB IN Buffer Overflow\r\n");
-	    				g_deviceComposite->audioPlayer.startRec = 0;
-	    				g_deviceComposite->audioPlayer.startRecHalfFull = 0;
-	            		g_deviceComposite->audioPlayer.tdReadNumberRec= 0;
-	            		g_deviceComposite->audioPlayer.tdWriteNumberRec = 0;
-					}
-				}
-			}
-		}
-
-	#if 0	/// @note [SAI] test tone
-		{
-			int32_t fsfunc_sin(int32_t data);
-			saiRxdata[0] += 0x00FFFFFF & (fsfunc_sin(0) >> 8);
-		}
-	#endif
     }
-
-#else	// #if 1	/// @note [SAI] use SAI interrupt instead of DMA
-
-    /* Clear the FEF flag */
-    SAI_TxClearStatusFlags(BOARD_DEMO_SAI, kSAI_FIFOErrorFlag);
-    SAI_TxSoftwareReset(BOARD_DEMO_SAI, kSAI_ResetTypeFIFO);
-
-#endif	// #if 1	/// @note [SAI] use SAI interrupt instead of DMA
-
     /* Add for ARM errata 838869, affects Cortex-M4, Cortex-M4F Store immediate overlapping
-        exception return operation might vector to incorrect interrupt */
-    __DSB();
+            exception return operation might vector to incorrect interrupt */
+	__DSB();
 }
 
 ////////////////////////////////
@@ -1625,8 +1400,6 @@ usb_status_t USB_DeviceAudioSetInterface(class_handle_t handle, uint8_t interfac
     						for (i = 0; i < (FS_ISO_IN_ENDP_PACKET_SIZE + AUDIO_IN_FORMAT_CHANNELS * AUDIO_FORMAT_SIZE); i++) {
     							audioRecDataBuf1[i] = 0;
     							audioRecDataBuf2[i] = 0;
-    							audioRecDataBuf3[i] = 0;
-    							audioRecDataBuf4[i] = 0;
     						}
     						for (i = 0; i < AUDIO_REC_DATA_BUF_NUM; i++) {
     							audioRecDataBufSize[i] = FS_ISO_IN_ENDP_PACKET_SIZE;

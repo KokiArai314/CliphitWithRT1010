@@ -23,13 +23,14 @@ component/uart \
 device \
 drivers \
 osa \
-source \
 source/audio_task \
+source \
 source/midi \
 source/midi_debug_monitor \
 source/oscillator \
 source/trigger \
 source/trigger/parameter \
+source/usb_device \
 startup \
 usb/device/class/audio \
 usb/device/class/midi \

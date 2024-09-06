@@ -12,9 +12,9 @@
 #include "board.h"
 #include "midi_player.h"
 #include "composite.h"
-#include "usb_device_descriptor.h"
+#include "../usb_device/usb_device_descriptor.h"
 
-#include "midi/midi_hook.h"
+#include "midi_hook.h"
 
 /*******************************************************************************
  * Definitions

@@ -5,14 +5,14 @@
  *      Author: higuchi
  */
 #include "definitions.h"
-#include "usb_device_config.h"
+#include "usb_device/usb_device_config.h"
 #include "usb.h"
 #include "usb_device.h"
 
 #include "usb_device_class.h"
 #include "usb_device_audio.h"
 #include "usb_device_ch9.h"
-#include "usb_device_descriptor.h"
+#include "usb_device/usb_device_descriptor.h"
 
 #include "composite.h"
 #include "pin_mux.h"
@@ -30,13 +30,9 @@
 #include "fsl_clock.h"
 #include "fsl_pit.h"
 
-#if 0	/// @note RT1020-EVK debugPin (board J18:4pin)
-#include "fsl_iomuxc.h"
-#endif
-
 #include "fsl_lpuart.h"
-#include "midi_if.h"
-#include "midi_player.h"
+#include "midi/midi_if.h"
+#include "midi/midi_player.h"
 #include "audio_task/audio_task.h"
 
 #ifdef ADC_ENABLE
@@ -69,14 +65,15 @@ extern void AdcAudioDebugOn();
 extern void BOARD_InitHardware(void);
 extern void USB_DeviceClockInit(void);
 void USB_DeviceIsrEnable(void);
-#if USB_DEVICE_CONFIG_USE_TASK
-void USB_DeviceTaskFn(void *deviceHandle);
-#endif
+void usb_init(void);
+void uart_init(void);
+void pit_init(void);
+static void checkAttachedDevice();
 
-#ifdef ADC_ENABLE
+//#ifdef ADC_ENABLE
 #define NSEC_TO_COUNT(ns, clockFreqInHz) (uint64_t)(((uint64_t)(ns) * (clockFreqInHz)) / 1000000000U)
 #define CYCLE_TIMER_NS_TIME	62500U	// 62.5us
-#endif	//ADC_ENABLE
+//#endif	//ADC_ENABLE
 
 extern usb_status_t USB_DeviceAudioCallback(class_handle_t handle, uint32_t event, void *param);
 extern usb_status_t USB_DeviceMidiCallback(class_handle_t handle, uint32_t event, void *param);
@@ -129,6 +126,230 @@ static usb_device_class_config_list_struct_t g_UsbDeviceCompositeConfigList = {
 /*******************************************************************************
  * Code
  ******************************************************************************/
+
+/*!
+ * @brief Application initialization function.
+ *
+ * This function initializes the application.
+ *
+ * @return None.
+ */
+
+void APPInit(void)
+{
+    
+    usb_init();
+    Init_Board_Sai_Codec();
+    audio_task_init();  //AUDIO INIT
+    trigger_init();     //TRIGGER INIT
+    uart_init();
+#ifdef LOCAL_DEBUG_ENABLE
+        /* Enable RX interrupt. */
+        midi_IF_RxInit();
+        NVIC_SetPriority(BOARD_UART_IRQ, UART_INTERRUPT_PRIORITY);
+        EnableIRQ(BOARD_UART_IRQ);
+        
+#endif
+    pit_init();
+
+#ifdef ADC_ENABLE
+	    adc_init();
+	    /* Set timer period for channel 1 */
+	    PIT_SetTimerPeriod(PIT, kPIT_Chnl_1, NSEC_TO_COUNT(CYCLE_TIMER_NS_TIME, PIT_SOURCE_CLOCK));
+	    /* Set timer chain mode for channel 1 */
+	    PIT_SetTimerChainMode(PIT, kPIT_Chnl_1, false);
+	    /* Enable timer interrupts for channel 1 */
+	    PIT_EnableInterrupts(PIT, kPIT_Chnl_1, kPIT_TimerInterruptEnable);
+	    /* Start channel 1 */
+	    PIT_StartTimer(PIT, kPIT_Chnl_1);
+	    //AdcAudioDebugOn();
+#endif	//ADC_ENABLE
+}
+
+#ifdef LOCAL_DEBUG_ENABLE
+void composite_idle(void);
+extern void midi_hook_exec(void);
+#endif	//LOCAL_DEBUG_ENABLE
+
+#if defined(__CC_ARM) || defined(__GNUC__)
+int main(void)
+#else
+void main(void)
+#endif
+{
+    BOARD_ConfigMPU();
+    BOARD_InitPins();
+    BOARD_BootClockRUN();
+    BOARD_AudioInitPllClock();
+
+    /*Clock setting for LPI2C and SAI1 */
+	BOARD_InitClockPinMux();
+
+    /*Enable MCLK clock*/
+    BOARD_EnableSaiMclkOutput(true);
+
+    APPInit();
+
+	while (1)
+	{
+#ifdef LOCAL_DEBUG_ENABLE
+		composite_idle();
+	}
+}
+void composite_idle(void)
+{
+	{
+#endif	//LOCAL_DEBUG_ENABLE
+    /* USB midi and audio */
+    checkAttachedDevice();
+    if (g_composite.audioPlayer.attach == 1) {
+        USB_AudioCodecTask();
+        USB_AudioSpeakerResetTask();
+    }
+    if (g_composite.midiPlayer.attach == 1) {
+        MIDI_IF_IDLE();
+        USB_MIDI_IDLE();
+    }
+#ifdef LOCAL_DEBUG_ENABLE
+    /* Local debug midi (midi debug monitor)*/
+    else
+    {	// for debug command
+        MIDI_IF_IDLE();
+    }
+    midi_hook_exec();
+#endif	//LOCAL_DEBUG_ENABLE
+#if USB_DEVICE_CONFIG_USE_TASK
+		USB_DeviceTaskFn(g_composite.deviceHandle);
+#endif
+    /*TRIGGGER(ext pad) : Assign new OSC with ADC registry*/
+    trigger_idle();
+	}
+}
+
+/**
+ * Init Functions
+ */
+
+void usb_init(void){
+    USB_DeviceClockInit();
+#if (defined(FSL_FEATURE_SOC_SYSMPU_COUNT) && (FSL_FEATURE_SOC_SYSMPU_COUNT > 0U))
+    SYSMPU_Enable(SYSMPU, 0);
+#endif /* FSL_FEATURE_SOC_SYSMPU_COUNT */
+
+    {
+    	g_composite.speed = USB_SPEED_FULL;
+    	g_composite.attach = 0U;
+    	g_composite.audioPlayer.audioHandle = (class_handle_t)NULL;
+    	g_composite.midiPlayer.midiHandle = (class_handle_t)NULL;
+    	g_composite.deviceHandle = NULL;
+    }
+
+    if (kStatus_USB_Success !=
+        USB_DeviceClassInit(CONTROLLER_ID, &g_UsbDeviceCompositeConfigList, &g_composite.deviceHandle))
+    {
+        usb_echo("USB device composite demo init failed\r\n");
+        return;
+    }
+    else
+    {
+        usb_echo("USB device composite demo\r\n");
+        g_composite.audioPlayer.audioHandle = g_UsbDeviceCompositeConfigList.config[0].classHandle;
+        g_composite.midiPlayer.midiHandle = g_UsbDeviceCompositeConfigList.config[1].classHandle;
+
+        USB_DeviceAudioPlayerInit(&g_composite);
+        USB_DeviceMidiPlayerInit(&g_composite);
+    }
+    return;
+}
+
+void uart_init(void){
+    /* LPUART */
+        lpuart_config_t uartConfig;
+        uint32_t uartClkSrcFreq = BOARD_DebugConsoleSrcFreq();	/// @note OK?
+
+        /*
+         * config.baudRate_Bps = 115200U;
+         * config.parityMode = kLPUART_ParityDisabled;
+         * config.stopBitCount = kLPUART_OneStopBit;
+         * config.txFifoWatermark = 0;
+         * config.rxFifoWatermark = 0;
+         * config.enableTx = false;
+         * config.enableRx = false;
+         */
+        LPUART_GetDefaultConfig(&uartConfig);
+        uartConfig.baudRate_Bps = BOARD_UART_BAUDRATE;
+        uartConfig.enableTx     = true;
+        uartConfig.enableRx     = true;
+
+        LPUART_Init(LPUART1, &uartConfig, uartClkSrcFreq);
+        /**
+         * @note UART Rx側の割込み許可は、USB SetConfigurationが来たら許可する
+         */
+
+    /* Install isr, set priority, and enable IRQ. */
+    USB_DeviceIsrEnable();
+    USB_DeviceRun(g_composite.deviceHandle);
+}
+
+void pit_init(void){
+    
+	/* PIT */
+    /*
+    * @note PITのサンプルプロジェクト参照.
+    * これを入れると, PIT_SetTimerPeriodで
+    * USEC_TO_COUNTをセットしたタイマでカウントしてくれるぽい
+    */
+    /* Set PERCLK_CLK source to OSC_CLK*/
+    CLOCK_SetMux(kCLOCK_PerclkMux, 1U);
+    /* Set PERCLK_CLK divider to 1 */
+    CLOCK_SetDiv(kCLOCK_PerclkDiv, 0U);
+
+	
+    /* Structure of initialize PIT */
+    pit_config_t pitConfig;
+
+    /*
+    * pitConfig.enableRunInDebug = false;
+    */
+    PIT_GetDefaultConfig(&pitConfig);
+
+    /* Init pit module */
+    PIT_Init(PIT, &pitConfig);
+
+    /**
+     * @note おまじない(とりあえずこのプロジェクトにのみ効く対策)
+     * o このプロジェクトは、MCUEpressoのPeripheral設定を介していないUSB_Speakerの
+     * o サンプルプロジェクトを元に作成している. 下記はそこでの弊害が予想される
+     * o おまじない  を入れないと, LTH/LTLの値がTSVの値にリセットされない模様
+     * o => 0xFFFFFFFF / 0xFFFFFFFFからダウンカウンタしていくので
+     * o 初回のPIT割り込みがかかるのが異常に遅くなる
+     * o Channel1がEnableになってしまっているので, Disableにしないと
+     * o LTHのカウンタが-1されていく => Channel1もStopする
+     * o おまじない を入れると, LTH/LTLの値がきちんと設定されるみたい
+     */
+    
+    PIT_StopTimer(PIT, kPIT_Chnl_0);
+    PIT_StopTimer(PIT, kPIT_Chnl_1);
+    
+
+    /* Set timer period for channel 0 */
+    PIT_SetTimerPeriod(PIT, kPIT_Chnl_0, USEC_TO_COUNT(CYCLE_TIMER_US_TIME, PIT_SOURCE_CLOCK));
+
+    /* Enable timer interrupts for channel 0 */
+    PIT_EnableInterrupts(PIT, kPIT_Chnl_0, kPIT_TimerInterruptEnable);
+
+    NVIC_SetPriority(PIT_IRQ_ID, PIT_INTERRUPT_PRIORITY);
+    /* Enable at the NVIC */
+    EnableIRQ(PIT_IRQ_ID);
+
+    /* Start channel 0 */
+    PIT_StartTimer(PIT, kPIT_Chnl_0);
+}
+
+/**
+ * USB device functions
+ */
+
 void USB_OTG1_IRQHandler(void)
 {
 #if (defined(USB_DEVICE_CONFIG_EHCI) && (USB_DEVICE_CONFIG_EHCI > 0U))
@@ -148,22 +369,14 @@ void PIT_CYCLE_TIMER_HANDLER(void)
 	#endif
 		USB_setMidiInTimeoutCount();	/// @note MIDI IN Timeout (100ms)
 	}
+#endif
 	if (PIT_GetStatusFlags(PIT, kPIT_Chnl_1))
 	{
 	    /* Clear interrupt flag.*/
 	    PIT_ClearStatusFlags(PIT, kPIT_Chnl_1, kPIT_TimerFlag);
 	    adc_start(0);
-
-#else	//ADC_ENABLE
-    /* Clear interrupt flag.*/
-    PIT_ClearStatusFlags(PIT, kPIT_Chnl_0, kPIT_TimerFlag);
-#if (defined(USB_DEVICE_CONFIG_EHCI) && (USB_DEVICE_CONFIG_EHCI > 0U))
-    USB_DeviceEhciAttachedDevice(g_composite.deviceHandle);
-#endif
-	USB_setMidiInTimeoutCount();	/// @note MIDI IN Timeout (100ms)
-	__DSB();
-#endif	//ADC_ENABLE
 	}
+
 }
 
 void USB_DeviceIsrEnable(void)
@@ -244,14 +457,8 @@ usb_status_t USB_DeviceCallback(usb_device_handle handle, uint32_t event, void *
 				USB_DeviceMidiSetConfigure(g_composite.midiPlayer.midiHandle, *temp8);
 				error = kStatus_USB_Success;
         	}
-#else
-            if (USB_AUDIO_SPEAKER_CONFIGURE_INDEX == (*temp8))
-            {
-            	g_composite.audioPlayer.attach = 1U;
-            	g_composite.audioPlayer.currentConfiguration = *temp8;
-            }
-#endif
             break;
+#endif
         case kUSB_DeviceEventSetInterface:
             if (g_composite.audioPlayer.attach)
             {
@@ -328,165 +535,6 @@ usb_status_t USB_DeviceCallback(usb_device_handle handle, uint32_t event, void *
     return error;
 }
 
-/*!
- * @brief Application initialization function.
- *
- * This function initializes the application.
- *
- * @return None.
- */
-
-void APPInit(void)
-{
-    USB_DeviceClockInit();
-#if (defined(FSL_FEATURE_SOC_SYSMPU_COUNT) && (FSL_FEATURE_SOC_SYSMPU_COUNT > 0U))
-    SYSMPU_Enable(SYSMPU, 0);
-#endif /* FSL_FEATURE_SOC_SYSMPU_COUNT */
-
-    {
-    	g_composite.speed = USB_SPEED_FULL;
-    	g_composite.attach = 0U;
-    	g_composite.audioPlayer.audioHandle = (class_handle_t)NULL;
-    	g_composite.midiPlayer.midiHandle = (class_handle_t)NULL;
-    	g_composite.deviceHandle = NULL;
-    }
-
-    if (kStatus_USB_Success !=
-        USB_DeviceClassInit(CONTROLLER_ID, &g_UsbDeviceCompositeConfigList, &g_composite.deviceHandle))
-    {
-        usb_echo("USB device composite demo init failed\r\n");
-        return;
-    }
-    else
-    {
-        usb_echo("USB device composite demo\r\n");
-        g_composite.audioPlayer.audioHandle = g_UsbDeviceCompositeConfigList.config[0].classHandle;
-        g_composite.midiPlayer.midiHandle = g_UsbDeviceCompositeConfigList.config[1].classHandle;
-
-        USB_DeviceAudioPlayerInit(&g_composite);
-        USB_DeviceMidiPlayerInit(&g_composite);
-    }
-
-    Init_Board_Sai_Codec();
-    audio_task_init();
-    trigger_init();
-
-    /* LPUART */
-    {
-        lpuart_config_t uartConfig;
-        uint32_t uartClkSrcFreq = BOARD_DebugConsoleSrcFreq();	/// @note OK?
-
-        /*
-         * config.baudRate_Bps = 115200U;
-         * config.parityMode = kLPUART_ParityDisabled;
-         * config.stopBitCount = kLPUART_OneStopBit;
-         * config.txFifoWatermark = 0;
-         * config.rxFifoWatermark = 0;
-         * config.enableTx = false;
-         * config.enableRx = false;
-         */
-        LPUART_GetDefaultConfig(&uartConfig);
-        uartConfig.baudRate_Bps = BOARD_UART_BAUDRATE;
-        uartConfig.enableTx     = true;
-        uartConfig.enableRx     = true;
-
-        LPUART_Init(LPUART1, &uartConfig, uartClkSrcFreq);
-   //     NVIC_SetPriority(((IRQn_Type)LPUART1_IRQn, UART_INTERRUPT_PRIORITY);
-
-        /**
-         * @note UART Rx側の割込み許可は、USB SetConfigurationが来たら許可する
-         */
-    }
-
-    /* Install isr, set priority, and enable IRQ. */
-    USB_DeviceIsrEnable();
-
-    USB_DeviceRun(g_composite.deviceHandle);
-
-
-#ifdef LOCAL_DEBUG_ENABLE
-        /* Enable RX interrupt. */
-        midi_IF_RxInit();
-        EnableIRQ(BOARD_UART_IRQ);
-#endif
-
-	/* PIT */
-    {
-    	/*
-    	 * @note PITのサンプルプロジェクト参照.
-    	 * これを入れると, PIT_SetTimerPeriodで
-    	 * USEC_TO_COUNTをセットしたタイマでカウントしてくれるぽい
-    	 */
-        /* Set PERCLK_CLK source to OSC_CLK*/
-        CLOCK_SetMux(kCLOCK_PerclkMux, 1U);
-        /* Set PERCLK_CLK divider to 1 */
-        CLOCK_SetDiv(kCLOCK_PerclkDiv, 0U);
-    }
-	{
-        /* Structure of initialize PIT */
-        pit_config_t pitConfig;
-
-	    /*
-	     * pitConfig.enableRunInDebug = false;
-	     */
-	    PIT_GetDefaultConfig(&pitConfig);
-
-	    /* Init pit module */
-	    PIT_Init(PIT, &pitConfig);
-
-	    /**
-	     * @note おまじない(とりあえずこのプロジェクトにのみ効く対策)
-	     * o このプロジェクトは、MCUEpressoのPeripheral設定を介していないUSB_Speakerの
-	     * o サンプルプロジェクトを元に作成している. 下記はそこでの弊害が予想される
-	     * o おまじない  を入れないと, LTH/LTLの値がTSVの値にリセットされない模様
-	     * o => 0xFFFFFFFF / 0xFFFFFFFFからダウンカウンタしていくので
-	     * o 初回のPIT割り込みがかかるのが異常に遅くなる
-	     * o Channel1がEnableになってしまっているので, Disableにしないと
-	     * o LTHのカウンタが-1されていく => Channel1もStopする
-	     * o おまじない を入れると, LTH/LTLの値がきちんと設定されるみたい
-	     */
-	    {
-	    	PIT_StopTimer(PIT, kPIT_Chnl_0);
-	    	PIT_StopTimer(PIT, kPIT_Chnl_1);
-	    }
-
-	    /* Set timer period for channel 0 */
-	    PIT_SetTimerPeriod(PIT, kPIT_Chnl_0, USEC_TO_COUNT(CYCLE_TIMER_US_TIME, PIT_SOURCE_CLOCK));
-
-	    /* Enable timer interrupts for channel 0 */
-	    PIT_EnableInterrupts(PIT, kPIT_Chnl_0, kPIT_TimerInterruptEnable);
-
-	    NVIC_SetPriority(PIT_IRQ_ID, PIT_INTERRUPT_PRIORITY);
-	    /* Enable at the NVIC */
-	    EnableIRQ(PIT_IRQ_ID);
-
-	    /* Start channel 0 */
-	    PIT_StartTimer(PIT, kPIT_Chnl_0);
-
-#ifdef ADC_ENABLE
-
-	    adc_init();
-
-	    /* Set timer period for channel 1 */
-	    PIT_SetTimerPeriod(PIT, kPIT_Chnl_1, NSEC_TO_COUNT(CYCLE_TIMER_NS_TIME, PIT_SOURCE_CLOCK));
-
-	    /* Set timer chain mode for channel 1 */
-	    PIT_SetTimerChainMode(PIT, kPIT_Chnl_1, false);
-
-	    /* Enable timer interrupts for channel 1 */
-	    PIT_EnableInterrupts(PIT, kPIT_Chnl_1, kPIT_TimerInterruptEnable);
-
-	    /* Start channel 1 */
-	    PIT_StartTimer(PIT, kPIT_Chnl_1);
-
-	    //AdcAudioDebugOn();
-
-#endif	//ADC_ENABLE
-	}
-
-	trigger_init();
-
-}
 
 static uint8_t keepAttachedDevice;
 static void checkAttachedDevice(void)
@@ -506,99 +554,4 @@ static void checkAttachedDevice(void)
         USB_DeviceMidiPlayerInit(&g_composite);
 	}
 	keepAttachedDevice = attachedDevice;
-}
-
-#ifdef LOCAL_DEBUG_ENABLE
-void composite_idle(void);
-extern void midi_hook_exec(void);
-#endif	//LOCAL_DEBUG_ENABLE
-
-/*!
- * @brief Application task function.
- *
- * This function runs the task for application.
- *
- * @return None.
- */
-#if defined(__CC_ARM) || defined(__GNUC__)
-int main(void)
-#else
-void main(void)
-#endif
-{
-    BOARD_ConfigMPU();
-    BOARD_InitPins();
-    BOARD_BootClockRUN();
-    BOARD_AudioInitPllClock();
-//    BOARD_InitDebugConsole();
-    //systick_init();
-
-#if 0	/// @note RT1020-EVK debugPin (board J18:4pin) => RT1010-EVK???
-    IOMUXC_SetPinMux(
-  	  IOMUXC_GPIO_AD_B1_13_GPIO1_IO29,        /* GPIO_AD_B1_13 is configured as GPIO */
-        0U);                                    /* Software Input On Field: Force input path of pad GPIO_AD_B1_13 */
-    GPIO_PinWrite(GPIO1, 29U, 1);	// GPIO1_IO29 Output:1
-    GPIO1->GDIR |= (1U << 29U); /*!< Enable target USER_LED */
-//	GPIO_PortSet(GPIO1, 1U << 29);
-	GPIO_PortClear(GPIO1, 1U << 29U);
-#endif
-#if 0	/// @note RT1010-EVK USER_LED
-    GPIO_PinWrite(BOARD_USER_LED_GPIO, BOARD_USER_LED_GPIO_PIN, 1);
-    BOARD_USER_LED_GPIO->GDIR |= (1U << BOARD_USER_LED_GPIO_PIN);
-    GPIO_PortClear(BOARD_USER_LED_GPIO, 1U << BOARD_USER_LED_GPIO_PIN);
-#endif
-
-    /*Clock setting for LPI2C and SAI1 */
-	BOARD_InitClockPinMux();
-
-    /*Enable MCLK clock*/
-    BOARD_EnableSaiMclkOutput(true);
-
-    APPInit();
-
-    /// @note [SAI] Implement Amp/Effects
-	{
-		void EditResume1stStatus(void);
-		EditResume1stStatus();
-	}
-
-	while (1)
-	{
-#ifdef LOCAL_DEBUG_ENABLE
-		composite_idle();
-#ifdef ADC_ENABLE
-		trigger_idle();
-#endif	//ADC_ENABLE
-	}
-}
-void composite_idle(void)
-{
-	{
-#endif	//LOCAL_DEBUG_ENABLE
-		/* USBケーブルのconnect/disconnect状態を監視 */
-		checkAttachedDevice();
-
-		if (g_composite.audioPlayer.attach == 1) {
-			USB_AudioCodecTask();
-
-			USB_AudioSpeakerResetTask();
-		}
-		if (g_composite.midiPlayer.attach == 1) {
-			MIDI_IF_IDLE();
-			USB_MIDI_IDLE();
-		}
-
-#ifdef LOCAL_DEBUG_ENABLE
-		else
-		{	// for debug command
-			MIDI_IF_IDLE();
-		}
-		midi_hook_exec();
-#endif	//LOCAL_DEBUG_ENABLE
-#if USB_DEVICE_CONFIG_USE_TASK
-		USB_DeviceTaskFn(g_composite.deviceHandle);
-#endif
-
-		trigger_idle();
-	}
 }

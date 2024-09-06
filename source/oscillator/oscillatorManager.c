@@ -79,13 +79,13 @@ void onmemoryoscillatortest(SampleData_t *psSampleData, int bus)
 		oscSetup.fLevel = 1.0f;
 		oscSetup.fPan = 0.5f;
 		oscSetup.fTempo = 1.0f;
-		oscSetup.length = 0;//psSampleData->LoopOfs ? 0 : psSampleData->EndOfs + 1;
+		oscSetup.length = psSampleData->LoopOfs ? 0 : psSampleData->EndOfs + 1;
 		oscSetup.egAttack = -1;
-		oscSetup.egDecay = 100;
+		oscSetup.egDecay = -1;
 		oscSetup.egDecayCurve = 0;
-		oscSetup.repeat = 1;
+		oscSetup.repeat = 0;
 		oscSetup.outCh = bus;
-		oscSetup.repeatCount = 1000;
+		oscSetup.repeatCount = 3;
 		oscSetup.checkCount = 0;
 
 		onmemoryoscillatorstart(&oscSetup, 0);

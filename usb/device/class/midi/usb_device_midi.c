@@ -5,13 +5,13 @@
  *      Author: higuchi
  */
 
-#include "usb_device_config.h"
+#include "usb_device/usb_device_config.h"
 #include "usb.h"
 #include "usb_device.h"
 
 #include "usb_device_class.h"
 
-#include "usb_device_descriptor.h"
+#include "usb_device/usb_device_descriptor.h"
 
 #if ((defined(USB_DEVICE_CONFIG_MIDI)) && (USB_DEVICE_CONFIG_MIDI > 0U))
 #include "usb_device_midi.h"
@@ -20,7 +20,7 @@
 #if SUPPORT_USB_HIGH_SPEED
 /* Switching of Max Packet Size */
 #include "composite.h"
-#include "usb_device_descriptor.h"
+#include "usb_device/usb_device_descriptor.h"
 extern usb_device_composite_struct_t g_composite;
 
 #endif

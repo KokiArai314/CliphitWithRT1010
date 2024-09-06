@@ -1,5 +1,5 @@
 source/composite.o source/composite.d: ../source/composite.c \
- ../source/definitions.h ../source/usb_device_config.h \
+ ../source/definitions.h ../source/usb_device/usb_device_config.h \
  C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\usb\include/usb.h \
  C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\drivers/fsl_common.h \
  C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\device/fsl_device_registers.h \
@@ -21,8 +21,13 @@ source/composite.o source/composite.d: ../source/composite.c \
  C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\usb\device\class/usb_device_class.h \
  C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\usb\device\class\audio/usb_device_audio.h \
  C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\usb\device\source/usb_device_ch9.h \
- ../source/usb_device_descriptor.h ../source/composite.h \
- ../source/audio_player.h ../source/midi_player.h \
+ ../source/usb_device/usb_device_descriptor.h ../source/composite.h \
+ ../source/audio_task/audio_player.h \
+ ../source/audio_task/../usb_device/usb_device_config.h \
+ ../source/audio_task/../usb_device/usb_device_descriptor.h \
+ ../source/midi/midi_player.h \
+ C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\source/usb_device/usb_device_config.h \
+ C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\source/usb_device/usb_device_descriptor.h \
  ../source/midi_debug_monitor/midi_debug_monitor.h \
  C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\board/pin_mux.h \
  C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\board/clock_config.h \
@@ -35,11 +40,11 @@ source/composite.o source/composite.d: ../source/composite.c \
  C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\drivers/fsl_clock.h \
  C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\drivers/fsl_pit.h \
  C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\drivers/fsl_lpuart.h \
- ../source/midi_if.h ../source/audio_task/audio_task.h \
+ ../source/midi/midi_if.h ../source/audio_task/audio_task.h \
  ../source/trigger/adc.h ../source/trigger/trigger.h \
  ../source/trigger/parameter/STrigger.h
 ../source/definitions.h:
-../source/usb_device_config.h:
+../source/usb_device/usb_device_config.h:
 C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\usb\include/usb.h:
 C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\drivers/fsl_common.h:
 C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\device/fsl_device_registers.h:
@@ -61,10 +66,14 @@ C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_
 C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\usb\device\class/usb_device_class.h:
 C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\usb\device\class\audio/usb_device_audio.h:
 C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\usb\device\source/usb_device_ch9.h:
-../source/usb_device_descriptor.h:
+../source/usb_device/usb_device_descriptor.h:
 ../source/composite.h:
-../source/audio_player.h:
-../source/midi_player.h:
+../source/audio_task/audio_player.h:
+../source/audio_task/../usb_device/usb_device_config.h:
+../source/audio_task/../usb_device/usb_device_descriptor.h:
+../source/midi/midi_player.h:
+C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\source/usb_device/usb_device_config.h:
+C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\source/usb_device/usb_device_descriptor.h:
 ../source/midi_debug_monitor/midi_debug_monitor.h:
 C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\board/pin_mux.h:
 C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\board/clock_config.h:
@@ -77,7 +86,7 @@ C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_
 C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\drivers/fsl_clock.h:
 C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\drivers/fsl_pit.h:
 C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\drivers/fsl_lpuart.h:
-../source/midi_if.h:
+../source/midi/midi_if.h:
 ../source/audio_task/audio_task.h:
 ../source/trigger/adc.h:
 ../source/trigger/trigger.h:

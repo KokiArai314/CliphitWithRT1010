@@ -8,20 +8,20 @@
 #ifndef COMPOSITE_H_
 #define COMPOSITE_H_
 
-#include "audio_player.h"
-#include "midi_player.h"
+#include "audio_task/audio_player.h"
+#include "midi/midi_player.h"
 #include "midi_debug_monitor/midi_debug_monitor.h"
 
-/*******************************************************************************
+/*************************************************************\******************
 * Definitions
 ******************************************************************************/
 #if defined(USB_DEVICE_CONFIG_EHCI) && (USB_DEVICE_CONFIG_EHCI > 0U)
 #define CONTROLLER_ID kUSB_ControllerEhci0
 #endif
 
-#define PIT_INTERRUPT_PRIORITY (6U)
-#define SAI_INTERRUPT_PRIORITY (4U)
-#define USB_DEVICE_INTERRUPT_PRIORITY (5U)
+#define PIT_INTERRUPT_PRIORITY (5U)
+#define SAI_INTERRUPT_PRIORITY (0U)
+#define USB_DEVICE_INTERRUPT_PRIORITY (4U)
 #define UART_INTERRUPT_PRIORITY (3U)
 
 #define USB_DEVICE_INTERFACE_COUNT (2U)	/// @note USB Audio Play/Rec

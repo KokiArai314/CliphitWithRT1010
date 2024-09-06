@@ -17,6 +17,7 @@ RM := rm -rf
 -include usb/device/class/audio/subdir.mk
 -include usb/device/class/subdir.mk
 -include startup/subdir.mk
+-include source/usb_device/subdir.mk
 -include source/trigger/parameter/subdir.mk
 -include source/trigger/subdir.mk
 -include source/oscillator/subdir.mk

@@ -353,7 +353,7 @@ void adc_init(void)
 	}
 #else	//USE_ADC_ETC
 	adc_config_t adcConfigStruct;
-
+	NVIC_SetPriority(ADC_IRQn, 5U);
 	EnableIRQ(ADC_IRQn);
 
     /* Enable ADC_ACLK_EN clock gate. */
@@ -364,6 +364,7 @@ void adc_init(void)
     adcConfigStruct.clockSource = kADC_ClockSourceALT;
 	ADC_Init(ADC_BASE, &adcConfigStruct);
 	ADC_EnableHardwareTrigger(ADC_BASE, false);
+	
 
 	if (kStatus_Success == ADC_DoAutoCalibration(ADC_BASE))
 	{

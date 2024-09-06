@@ -11,10 +11,10 @@
 #include <stdint.h>
 #include "usb.h"
 
-#include "usb_device_config.h"
+#include "usb_device/usb_device_config.h"
 #include "usb_device.h"
 #include "usb_device_class.h"
-#include "usb_device_descriptor.h"
+#include "usb_device/usb_device_descriptor.h"
 
 /*******************************************************************************
 * Definitions
