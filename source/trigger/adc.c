@@ -353,18 +353,18 @@ void adc_init(void)
 	}
 #else	//USE_ADC_ETC
 	adc_config_t adcConfigStruct;
-
+	NVIC_SetPriority(ADC_IRQn, 5U);
 	EnableIRQ(ADC_IRQn);
 
-    /* Enable ADC_ACLK_EN clock gate. */
-    CCM->CSCMR2 |= CCM_CSCMR2_ADC_ACLK_EN_MASK;
+	/* Enable ADC_ACLK_EN clock gate. */
+	CCM->CSCMR2 |= CCM_CSCMR2_ADC_ACLK_EN_MASK;
 
 	ADC_GetDefaultConfig(&adcConfigStruct);
 	adcConfigStruct.enableHighSpeed = true;
     adcConfigStruct.clockSource = kADC_ClockSourceALT;
 	ADC_Init(ADC_BASE, &adcConfigStruct);
 	ADC_EnableHardwareTrigger(ADC_BASE, false);
-
+	
 	if (kStatus_Success == ADC_DoAutoCalibration(ADC_BASE))
 	{
 		//dprintf(SDIR_UARTMIDI, "\nADC_DoAutoCalibration() Done.");
