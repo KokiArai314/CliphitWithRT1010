@@ -1,0 +1,5 @@
+         *(EXCLUDE_FILE(
+         	*oscillator.o
+         	*trigger.o
+	        *extpadrev2.o
+         ) .text*)
