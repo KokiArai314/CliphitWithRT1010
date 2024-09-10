@@ -1,8 +1,5 @@
-../drivers/fsl_cache.h:222:20:L1CACHE_InvalidateDCacheByRange	40	static
-../drivers/fsl_cache.h:240:20:L1CACHE_CleanDCacheByRange	40	static
-../drivers/fsl_cache.h:258:20:L1CACHE_CleanInvalidateDCacheByRange	40	static
-../drivers/fsl_cache.c:497:6:L1CACHE_InvalidateICacheByRange	32	static
-../drivers/fsl_cache.c:528:6:ICACHE_InvalidateByRange	16	static
-../drivers/fsl_cache.c:551:6:DCACHE_InvalidateByRange	16	static
-../drivers/fsl_cache.c:573:6:DCACHE_CleanByRange	16	static
-../drivers/fsl_cache.c:595:6:DCACHE_CleanInvalidateByRange	16	static
+../drivers/fsl_cache.c:497:6:L1CACHE_InvalidateICacheByRange	0	static
+../drivers/fsl_cache.c:528:6:ICACHE_InvalidateByRange	8	static
+../drivers/fsl_cache.c:551:6:DCACHE_InvalidateByRange	0	static
+../drivers/fsl_cache.c:573:6:DCACHE_CleanByRange	0	static
+../drivers/fsl_cache.c:595:6:DCACHE_CleanInvalidateByRange	0	static

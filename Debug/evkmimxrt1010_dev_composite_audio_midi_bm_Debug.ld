@@ -5,7 +5,11 @@
  * Generated linker script file for MIMXRT1011xxxxx
  * Created from linkscript.ldt by FMCreateLinkLibraries
  * Using Freemarker v2.3.30
+<<<<<<< Updated upstream
  * MCUXpresso IDE v11.10.0 [Build 3148] [2024-07-03] on 2024/09/02 14:47:11
+=======
+ * MCUXpresso IDE v11.10.0 [Build 3148] [2024-07-03] on 2024/09/10 11:31:37
+>>>>>>> Stashed changes
  */
 
 INCLUDE "evkmimxrt1010_dev_composite_audio_midi_bm_Debug_library.ld"
@@ -70,7 +74,11 @@ SECTIONS
 
         *(.after_vectors*)
 
-       *(.text*)
+         *(EXCLUDE_FILE(
+         	*oscillator.o
+         	*trigger.o
+	        *extpadrev2.o
+         ) .text*)
        *(.rodata .rodata.* .constdata .constdata.*)
        . = ALIGN(4);
     } > BOARD_FLASH
@@ -101,10 +109,11 @@ SECTIONS
         PROVIDE(__start_data_SRAM_ITC = .) ;
         *(.ramfunc.$RAM2)
         *(.ramfunc.$SRAM_ITC)
-        *(.data.$RAM2)
-        *(.data.$SRAM_ITC)
-        *(.data.$RAM2.*)
-        *(.data.$SRAM_ITC.*)
+        
+        *oscillator.o(.text*)
+        *adc.o(.text*)
+        *trigger.o(.text*)
+        *extpadrev2.o(.text*)
         . = ALIGN(4) ;
         PROVIDE(__end_data_RAM2 = .) ;
         PROVIDE(__end_data_SRAM_ITC = .) ;
@@ -120,11 +129,7 @@ SECTIONS
         *(.ramfunc.$RAM3)
         *(.ramfunc.$SRAM_DTC)
        *(NonCacheable.init)
-        *(.data.$RAM3)
-        *(.data.$SRAM_DTC)
-        *(.data.$RAM3.*)
-        *(.data.$SRAM_DTC.*)
-        . = ALIGN(4) ;
+                . = ALIGN(4) ;
         PROVIDE(__end_data_RAM3 = .) ;
         PROVIDE(__end_data_SRAM_DTC = .) ;
      } > SRAM_DTC AT>BOARD_FLASH
@@ -138,11 +143,7 @@ SECTIONS
         PROVIDE(__start_data_NCACHE_REGION = .) ;
         *(.ramfunc.$RAM4)
         *(.ramfunc.$NCACHE_REGION)
-        *(.data.$RAM4)
-        *(.data.$NCACHE_REGION)
-        *(.data.$RAM4.*)
-        *(.data.$NCACHE_REGION.*)
-        . = ALIGN(4) ;
+                . = ALIGN(4) ;
         PROVIDE(__end_data_RAM4 = .) ;
         PROVIDE(__end_data_NCACHE_REGION = .) ;
      } > NCACHE_REGION AT>BOARD_FLASH

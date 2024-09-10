@@ -1,0 +1,15 @@
+../source/midi/midi_if.c:538:13:setShortMessage	0	static
+../source/midi/midi_if.c:558:13:setSysExMessage	12	static
+../source/midi/midi_if.c:368:13:analyzeSysExMessage	24	static
+../source/midi/midi_if.c:495:13:real_midi_received	16	static
+../source/midi/midi_if.c:197:6:LPUART1_IRQHandler	24	static
+../source/midi/midi_if.c:584:6:midi_IF_TxInit	8	static
+../source/midi/midi_if.c:607:6:midi_IF_TxProc_SysEx	0	static
+../source/midi/midi_if.c:613:6:midi_IF_TxProc_ReceiveByte	0	static
+../source/midi/midi_if.c:618:6:midi_IF_RxInit	8	static
+../source/midi/midi_if.c:627:6:midi_IF_send_usb_blocking	24	static
+../source/midi/midi_if.c:692:6:midi_IF_senc_command_blocking	24	static
+../source/midi/midi_if.c:715:6:midi_IF_senc_command_blocking2	24	static
+../source/midi/midi_if.c:745:6:MIDI_IF_IDLE	32	static
+../source/midi/midi_if.c:900:10:getrxoverrun	0	static
+../source/midi/midi_if.c:904:10:getrxbuffovr	0	static

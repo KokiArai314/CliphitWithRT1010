@@ -1,2 +1,2 @@
-../source/trigger/extpad.c:75:17:getOtherLevel	32	static
-../source/trigger/extpad.c:99:6:extPad	88	static
+../source/trigger/extpad.c:75:17:getOtherLevel	0	static
+../source/trigger/extpad.c:99:6:extPad	48	static

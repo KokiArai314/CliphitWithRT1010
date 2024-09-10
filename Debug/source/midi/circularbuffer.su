@@ -1,4 +1,4 @@
-../source/midi/circularbuffer.c:7:5:putccrbuf	32	static
-../source/midi/circularbuffer.c:28:5:getccrbuf	32	static
-../source/midi/circularbuffer.c:48:5:getccrcnt	24	static
-../source/midi/circularbuffer.c:72:5:getccrspc	24	static
+../source/midi/circularbuffer.c:7:5:putccrbuf	4	static
+../source/midi/circularbuffer.c:28:5:getccrbuf	0	static
+../source/midi/circularbuffer.c:48:5:getccrcnt	0	static
+../source/midi/circularbuffer.c:72:5:getccrspc	0	static

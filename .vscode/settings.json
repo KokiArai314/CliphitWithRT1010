@@ -1,0 +1,12 @@
+{
+  "files.associations": {
+    "edit.h": "c",
+    "usb.h": "c",
+    "usb_device_config.h": "c",
+    "usb_device_descriptor.h": "c",
+    "*.txt": "cpp",
+    "testsample.h": "c",
+    "declare_pcm_buffers.h": "c",
+    "cstdlib": "c"
+  }
+}

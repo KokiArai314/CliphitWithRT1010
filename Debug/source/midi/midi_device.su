@@ -1,0 +1,6 @@
+../source/midi/midi_device.c:63:13:SendExclHeader	16	static
+../source/midi/midi_device.c:80:13:SendExclResult	8	static
+../source/midi/midi_device.c:89:13:MidiRxProc_SysExclError	8	static
+../source/midi/midi_device.c:108:6:midi_AMP_RxInit	0	static
+../source/midi/midi_device.c:475:6:midi_AMP_RxProc_ReceiveByte	48	static
+../source/midi/midi_device.c:114:6:midi_AMP_RxProc_SysEx	16	static

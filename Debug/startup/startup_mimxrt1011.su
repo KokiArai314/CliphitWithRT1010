@@ -1,11 +1,11 @@
-../startup/startup_mimxrt1011.c:380:6:data_init	4	static
-../startup/startup_mimxrt1011.c:389:6:bss_init	0	static
-../startup/startup_mimxrt1011.c:414:6:ResetISR	8	static
 ../startup/startup_mimxrt1011.c:507:14:NMI_Handler	0	static
 ../startup/startup_mimxrt1011.c:511:14:HardFault_Handler	0	static
 ../startup/startup_mimxrt1011.c:515:14:SVC_Handler	0	static
 ../startup/startup_mimxrt1011.c:519:14:PendSV_Handler	0	static
 ../startup/startup_mimxrt1011.c:523:14:SysTick_Handler	0	static
+../startup/startup_mimxrt1011.c:380:6:data_init	4	static
+../startup/startup_mimxrt1011.c:389:6:bss_init	0	static
+../startup/startup_mimxrt1011.c:414:6:ResetISR	8	static
 ../startup/startup_mimxrt1011.c:531:14:IntDefaultHandler	0	static
 ../startup/startup_mimxrt1011.c:541:11:DMA0_IRQHandler	8	static
 ../startup/startup_mimxrt1011.c:545:11:DMA1_IRQHandler	8	static

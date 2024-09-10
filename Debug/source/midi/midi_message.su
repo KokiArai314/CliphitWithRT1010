@@ -1,0 +1,5 @@
+../source/midi/midi_message.c:34:13:SendMidiData	8	static
+../source/midi/midi_message.c:51:6:midi_SendExclData	24	static
+../source/midi/midi_message.c:94:6:midi_Send8BitTo7BitData	32	static
+../source/midi/midi_message.c:137:6:midi_Cnv7BitTo8BitInitialize	0	static
+../source/midi/midi_message.c:144:6:midi_Cnv7BitTo8BitPutData	4	static

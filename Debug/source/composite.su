@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\CMSIS/core_cm7.h:1902:22:__NVIC_EnableIRQ	16	static
 C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\CMSIS/core_cm7.h:1938:22:__NVIC_DisableIRQ	16	static
 C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\CMSIS/core_cm7.h:2030:22:__NVIC_SetPriority	16	static
@@ -21,3 +22,15 @@ C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_
 ../source/composite.c:492:13:checkAttachedDevice	16	static
 ../source/composite.c:524:5:main	8	static
 ../source/composite.c:574:6:composite_idle	8	static
+=======
+../source/composite.c:413:14:USB_DeviceCallback	16	static
+../source/composite.c:199:6:composite_idle	16	static
+../source/composite.c:233:6:usb_init	8	static
+../source/composite.c:294:6:pit_init	16	static
+../source/composite.c:353:6:USB_OTG1_IRQHandler	8	static
+../source/composite.c:360:6:PIT_IRQHandler	8	static
+../source/composite.c:382:6:USB_DeviceIsrEnable	0	static
+../source/composite.c:265:6:uart_init	32	static
+../source/composite.c:138:6:APPInit	8	static
+../source/composite.c:175:5:main	8	static
+>>>>>>> Stashed changes
