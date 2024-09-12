@@ -16,7 +16,7 @@
 #include	<stdint.h>
 
 #include "midi_debug_monitor.h"
-#include "../midi_if.h"
+#include "../midi/midi_if.h"
 
 #if defined(MIDIDEBUGMONITOR)
 

@@ -1,3 +1,0 @@
-../drivers/fsl_common.c:117:7:SDK_Malloc	16	static
-../drivers/fsl_common.c:137:6:SDK_Free	8	static
-../drivers/fsl_common.c:192:6:SDK_DelayAtLeastUs	8	static

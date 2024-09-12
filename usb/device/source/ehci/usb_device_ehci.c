@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-#include "usb_device_config.h"
+#include "usb_device/usb_device_config.h"
 #include "fsl_device_registers.h"
 #include "usb.h"
 #include "usb_device.h"
@@ -1432,8 +1432,8 @@ usb_status_t USB_DeviceEhciCancel(usb_device_controller_handle ehciHandle, uint8
  */
 /// @note add AudioRec
 #include "usb_device_class.h"
-#include "usb_device_descriptor.h"
-#include "audio_player.h"
+#include "usb_device/usb_device_descriptor.h"
+#include "audio_task/audio_player.h"
 
 /// @note support composite MIDI
 #include "composite.h"

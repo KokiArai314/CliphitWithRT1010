@@ -8,8 +8,8 @@
 #ifndef COMPOSITE_H_
 #define COMPOSITE_H_
 
-#include "audio_player.h"
-#include "midi_player.h"
+#include "audio_task/audio_player.h"
+#include "midi/midi_player.h"
 #include "midi_debug_monitor/midi_debug_monitor.h"
 
 /*******************************************************************************

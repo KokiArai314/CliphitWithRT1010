@@ -1,9 +1,0 @@
-../usb/device/class/usb_device_class.c:255:21:USB_DeviceClassGetHandleByDeviceHandle	24	static
-../usb/device/class/usb_device_class.c:187:21:USB_DeviceClassFreeHandle	16	static
-../usb/device/class/usb_device_class.c:222:21:USB_DeviceClassGetHandleByControllerId	24	static
-../usb/device/class/usb_device_class.c:286:14:USB_DeviceClassGetDeviceHandle	24	static
-../usb/device/class/usb_device_class.c:320:14:USB_DeviceClassEvent	40	static
-../usb/device/class/usb_device_class.c:381:14:USB_DeviceClassCallback	32	static
-../usb/device/class/usb_device_class.c:425:14:USB_DeviceClassInit	48	static
-../usb/device/class/usb_device_class.c:489:14:USB_DeviceClassDeinit	40	static
-../usb/device/class/usb_device_class.c:540:14:USB_DeviceClassGetSpeed	16	static

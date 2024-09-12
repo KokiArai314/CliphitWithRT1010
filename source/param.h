@@ -11,7 +11,7 @@
 #include	"base_types.h"
 //#include	"cpufx.h"
 
-#include	"midi_device.h"	// #define TEST_VXII_SYSEX 1
+#include	"midi/midi_device.h"	// #define TEST_VXII_SYSEX 1
 
 //------------------------------------------------------------------------------
 //	Spec

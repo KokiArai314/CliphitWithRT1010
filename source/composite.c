@@ -5,14 +5,14 @@
  *      Author: higuchi
  */
 #include "definitions.h"
-#include "usb_device_config.h"
+#include "usb_device/usb_device_config.h"
 #include "usb.h"
 #include "usb_device.h"
 
 #include "usb_device_class.h"
 #include "usb_device_audio.h"
 #include "usb_device_ch9.h"
-#include "usb_device_descriptor.h"
+#include "usb_device/usb_device_descriptor.h"
 
 #include "composite.h"
 #include "pin_mux.h"
@@ -35,8 +35,8 @@
 #endif
 
 #include "fsl_lpuart.h"
-#include "midi_if.h"
-#include "midi_player.h"
+#include "midi/midi_if.h"
+#include "midi/midi_player.h"
 #include "audio_task/audio_task.h"
 
 #ifdef ADC_ENABLE

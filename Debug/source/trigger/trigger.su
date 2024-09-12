@@ -1,8 +1,0 @@
-../source/trigger/trigger.c:64:6:trigger_init	0	static
-../source/trigger/trigger.c:77:6:trigger_setVelocityCurve	0	static
-../source/trigger/trigger.c:88:9:trigger_getVelocityCurve	0	static
-../source/trigger/trigger.c:101:10:minmaxconvtbl	8	static
-../source/trigger/trigger.c:149:10:minmaxconv	4	static
-../source/trigger/trigger.c:184:6:trigger_idle	8	static
-../source/trigger/trigger.c:203:5:debugSwitch	0	static
-../source/trigger/trigger.c:208:12:triggerGetParamPtr	0	static

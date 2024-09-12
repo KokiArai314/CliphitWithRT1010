@@ -1,3 +1,0 @@
-../source/midi/midi_hook.c:32:6:midi_hook_entry	32	static
-../source/midi/midi_hook.c:135:5:midi_hook_usb_entry	40	static
-../source/midi/midi_hook.c:235:6:midi_hook_exec	16	static

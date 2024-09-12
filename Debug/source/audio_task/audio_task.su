@@ -1,8 +1,0 @@
-<<<<<<< Updated upstream
-../source/audio_task/../utilities/testSample.h:16:22:get_test_sin_tone	16	static
-../source/audio_task/audio_task.c:9:6:audio_task_init	16	static
-../source/audio_task/audio_task.c:16:6:audio_task	40	static
-=======
-../source/audio_task/audio_task.c:9:6:audio_task_init	8	static
-../source/audio_task/audio_task.c:16:6:audio_task	16	static
->>>>>>> Stashed changes
