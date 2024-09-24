@@ -391,7 +391,7 @@ void APPInit(void)
         uartConfig.enableRx     = true;
 
         LPUART_Init(LPUART1, &uartConfig, uartClkSrcFreq);
-   //     NVIC_SetPriority(((IRQn_Type)LPUART1_IRQn, UART_INTERRUPT_PRIORITY);
+        NVIC_SetPriority((IRQn_Type)BOARD_UART_IRQ, UART_INTERRUPT_PRIORITY);
 
         /**
          * @note UART Rx側の割込み許可は、USB SetConfigurationが来たら許可する

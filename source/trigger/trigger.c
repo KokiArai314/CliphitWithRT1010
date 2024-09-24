@@ -15,6 +15,7 @@
 //#include "ccpad.h"
 #include "extpadrev2.h"
 #include "extpad.h"
+#include "../definitions.h"
 //#include "swpedal.h"
 //#include "vrpedal.h"
 
@@ -51,7 +52,11 @@ static TRIGSCN_t trigscn[] = {
 #endif
 };
 
+#ifdef TRIGGER_DEBUG_WITH_MONITOR
+int trigger_debug_flag = 1;
+#else
 int trigger_debug_flag = 0;
+#endif
 
 #define VELOCITYNUMOF (15)
 #define VELOCITYCURVE (128)

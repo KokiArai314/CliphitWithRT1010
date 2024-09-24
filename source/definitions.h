@@ -23,6 +23,7 @@
 #define ADC_ENABLE			// 定義するとADC有効
 //#define UART_LANE_ENABLE_R2	// 定義すると対ULZでLANE release 2 が有効
 //#define TIMING_MEASURRING	// 定義するとtiming logが有効
+#define TRIGGER_DEBUG_WITH_MONITOR //定義するとmidiデバッグモニターを通じてトリガリングをモニター
 
 /*--- 以下は、上記の定義を受けて定義される。 ---*/
 

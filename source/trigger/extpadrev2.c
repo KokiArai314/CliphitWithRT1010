@@ -9,6 +9,7 @@
 #include "adc.h"
 #include "trigger.h"
 #include "extpad.h"
+#include "../assigner/assigner.h"
 
 #include "../midi_debug_monitor/midi_debug_monitor.h"
 
@@ -108,8 +109,8 @@ void extPadRev2(TRIGSCN_t *ptrigscn)
 	EXTPAD_t		*pExtPad = &(ptrigscn->extPad);
 	EXTPADWORK_t	*pExtPadWork = &(extPadWork[pExtPad->id]);
 	uint16_t		trigger = adc_getValue(ptrigscn->adcCh1st);
-	uint16_t		sigmax = pExtPad->vel.smax / 2;
-	MINMAXCONV_t	cnvIn = {2048-sigmax, 2048+sigmax, 0, 4095};
+	uint16_t		sigmax = pExtPad->vel.smax;// / 2;
+	MINMAXCONV_t	cnvIn = {2048-sigmax, 2048+sigmax, 0, 4095};//{2048-sigmax, 2048+sigmax, 0, 4095}; analog入力の正規化
 	MINMAXCONV_t	cnvOut = {0, 4095, pExtPad->vel.tmin, pExtPad->vel.tmax};
 
 	// trigger making part
@@ -139,12 +140,14 @@ void extPadRev2(TRIGSCN_t *ptrigscn)
 		trigger = fil2 < 0 ? 0 : fil2 > 4095 ? 4095 : fil2;
 	}
 #endif	//#if (INPUTFILTER == 2)
+
 	trigger = minmaxconv(trigger, &cnvIn);
 	//AdcAudioSet(trigger, ptrigscn->adcCh1st);
-	uint16_t onLevel = pExtPad->onLvl * EXTPAD_46_VEL_MAX50 / pExtPad->vel.smax;
+	uint16_t onLevel = pExtPad->vel.smin;// pExtPad->onLvl;  * EXTPAD_46_VEL_MAX50 / pExtPad->vel.smax;
+
 	/* trigger refresh */
-	if (pExtPadWork->flag && (pExtPadWork->flag < pExtPad->velWnd))
-	{	// trigger velocity window
+	if (pExtPadWork->flag && (pExtPadWork->flag < pExtPad->velWnd)) //in velWnd (not in release)
+	{	// in trigger velocity window
 		for (int i = 0; i < pExtPad->onCnt-1; i++)
 		{
 			pExtPadWork->triggervalue[i] = pExtPadWork->triggervalue[i+1];
@@ -159,7 +162,7 @@ void extPadRev2(TRIGSCN_t *ptrigscn)
 			pExtPadWork->triggermax = trigger;
 		}
 #if 1
-		if (pExtPad->crsCan)
+		if (pExtPad->crsCan) //クロストーク処理
 		{
 			if (pExtPadWork->flag == (pExtPad->velWnd / 2))
 			{
@@ -190,8 +193,8 @@ void extPadRev2(TRIGSCN_t *ptrigscn)
 		}
 #endif
 	}
-	else
-	{	// off or on release
+	else // not in trigger velocity window
+	{	// off or release, trigger min max reset
 		pExtPadWork->triggermin = trigger;
 		pExtPadWork->triggermax = trigger;
 		for (int i = 0; i < pExtPad->onCnt-1; i++)
@@ -214,14 +217,15 @@ void extPadRev2(TRIGSCN_t *ptrigscn)
 #if defined(ENVMASK)
 	// envelope mask
 	if (!pExtPadWork->envMaskCount)
-	{	// next
-		pExtPadWork->envPreviousLevel = pExtPadWork->envTriggerMax - pExtPadWork->envTriggerMin + onLevel;
+	{	// envelope masking開始
+		pExtPadWork->envPreviousLevel = pExtPadWork->envTriggerMax - pExtPadWork->envTriggerMin + onLevel; //次のonになる閾値 前のmaskのトリガー値を保存しとく
 		pExtPadWork->envTriggerMax = pExtPadWork->envTriggerMin = trigger;
-		pExtPadWork->envMaskCount = pExtPad->velWnd + pExtPad->mskTim * 3 -1;	// x3 scan cycle
+		pExtPadWork->envMaskCount = pExtPad->velWnd + pExtPad->mskTim * 3 -1;	// x3 scan cycle (=env mask window size)
 //		dprintf(SDIR_USBMIDI,"\n%d", pExtPadWork->envPreviousLevel);
 	}
 	else
-	{	// now mask
+	{	// envelope masking動作
+		//env maskごとに最大値と最低値を保存しておく
 		if (pExtPadWork->envTriggerMax < trigger)
 		{
 			pExtPadWork->envTriggerMax = trigger;
@@ -262,31 +266,32 @@ void extPadRev2(TRIGSCN_t *ptrigscn)
 			}
 		}
 #if defined(ENVMASK)
-		if (triggerLevel > pExtPadWork->envPreviousLevel)
+		if (triggerLevel > pExtPadWork->envPreviousLevel)	
 #else	//#if defined(ENVMASK)
 		if (triggerLevel > onLevel)
 #endif	//#if defined(ENVMASK)
 		{
 			if (pExtPadWork->maskCount == 0)
 			{
-				pExtPadWork->flag++;
+				//velWndへ入る(pExtPadWork->flag > 0)
+				pExtPadWork->flag++;	//pExtPadWork->flagはここで初めて1にインクリ 以降は↓のvelWndの中で増えていく
 #if defined(ENVMASK)
 				pExtPadWork->envMaskCount = pExtPad->mskTim * 3 - 1;	// x3 scan cycle;
-				pExtPadWork->envTriggerMax = pExtPadWork->triggermax;
+				pExtPadWork->envTriggerMax = pExtPadWork->triggermax;	//velWndに入った際、envTriggerを上書き
 				pExtPadWork->envTriggerMin = pExtPadWork->triggermin;
 #endif	//#if defined(ENVMASK)
 			}
 		}
 	}
-	else if (pExtPadWork->flag < pExtPad->velWnd)
-	{	// now velocity window
+	else if (pExtPadWork->flag < pExtPad->velWnd) //pExtPadWork->flag != 0...かつ velWndに到達していない
+	{	// now in velocity window 
 
 		/* on check */
-		if (++pExtPadWork->flag == pExtPad->velWnd)
-		{	// on !
-
+		if (++pExtPadWork->flag == pExtPad->velWnd)	//pExtPadWork->flagがvelWndに到達するまでインクリ
+		{	
+			// trigger on ! ==========================================================================================
 			uint16_t velocity = trigger;
-			uint16_t sigmin = pExtPad->vel.smin * 4095 / pExtPad->vel.smax;
+			uint16_t sigmin = pExtPad->vel.smin;// * 4095 / pExtPad->vel.smax;
 
 			velocity = velocity < sigmin ? 0 : minmaxconvtbl(velocity, &cnvOut, pExtPad->id + 10);
 			if (ptrigscn->enable)
@@ -304,21 +309,24 @@ void extPadRev2(TRIGSCN_t *ptrigscn)
 			}
 			if (trigger_debug_flag)
 			{
+
 				dprintf(SDIR_USBMIDI, "\n %c ext pad on %1d, %3d(%4d)", ptrigscn->enable ? 'S' : '-', pExtPad->id,
 						velocity, trigger);
 			}
+			entryVcb(0, ((float)velocity / 127.0f ));
 			pExtPadWork->maskCount = pExtPad->mskTim * 3;	// scan cycle
 		}
 	}
-	else
+	else//pExtPadWork->flag == 0 もしくは velWnd以上 
+	//pExtPadWork->flag がvelWndに到達(発音完了)後の処理
 	{	// now on release
-		if (pExtPadWork->maskCount == 0)
+		if (pExtPadWork->maskCount == 0) //発音後、一定期間はmaskによって再発音しない
 		{
 			if (trigger_debug_flag)
 			{
 				dprintf(SDIR_USBMIDI, "\n %c ext pad off %d", ptrigscn->enable ? 'S' : '-', pExtPad->id);
 			}
-			pExtPadWork->flag = 0;
+			pExtPadWork->flag = 0; //mask期間終了 再発音
 		}
 	}
 

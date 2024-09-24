@@ -32,7 +32,7 @@
 	1		x		1		x		x			->		0		x		0		x		x
 */
 
-static Vcb_t vcb[VOICEMAX] = {0};	// 前半が memory voice, 後半が drive voice
+Vcb_t vcb[VOICEMAX] = {0};	// 前半が memory voice, 後半が drive voice
 
 static const float decaytbl[] ={
         2,      2,      2,      3,      4,

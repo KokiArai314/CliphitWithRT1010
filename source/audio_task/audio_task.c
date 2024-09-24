@@ -2,14 +2,14 @@
 #include "audio_task.h"
 #include "../utilities/testSample.h"
 #include "../Oscillator/oscillatorManager.h"
+#include "../assigner/assigner.h"
 
 static float pfWork[2][NumOfSlot];
 static float *ppfWork[2] = {&(pfWork[0][0]),  &(pfWork[1][0])};	// to main
 
 void audio_task_init(void)
 {
-	SampleData_t *sampleData = get_test_sample();
-	onmemoryoscillatortest(sampleData, 0);
+	entryVcb(0, 1.0f);
 	return;
 }
 

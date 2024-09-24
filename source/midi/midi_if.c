@@ -163,6 +163,7 @@ static uint32_t	 rxbuffovr2 = 0;
  ******************************************************************************/
 static void clearMidiRxEventParameter(void);
 static void real_midi_received(uint8_t data);
+static void received_midi_to_buf(uint8_t data);
 
 /**
  * @note startから1byteしかないデータなら割り込み許可せず終了. それ以外は割り込み内で送信を続ける
@@ -194,7 +195,7 @@ static void sendtoUartTx(void)
 /*******************************************************************************
  * LPUART1 Interrupt Handler
  ******************************************************************************/
-void LPUART1_IRQHandler() {
+void BOARD_UART_IRQ_HANDLER() {
 	volatile uint32_t uart_stat;
 	volatile uint32_t uart_ctrl;
 
@@ -223,7 +224,7 @@ void LPUART1_IRQHandler() {
 	    {	/* If new data arrived. */
 			uint8_t data = (uint8_t)LPUART1->DATA;
 
-			real_midi_received(data);
+			received_midi_to_buf(data);
 	    	count--;
 	    }
 #else	// ..FIFO消化
@@ -492,6 +493,15 @@ static void analyzeSysExMessage(uint8_t data) {
 	}
 }
 
+static void received_midi_to_buf(uint8_t data){
+	if (putccrbuf(&rxccrbuf, data) < 0)
+	{
+		rxbuffovr++;
+	}
+
+	return;
+}
+
 static void real_midi_received(uint8_t data)
 {
 	if (data == 0xFE) {
@@ -582,6 +592,30 @@ static void setSysExMessage(uint16_t setNextBufWtPtr)
  * LPUART1 Txへデータを一つ送る & LPUART1 Tx割込み許可
  */
 void midi_IF_TxInit()
+	#ifdef LOCAL_DEBUG_ENABLE
+{
+	void midi_IF_TxInit_sub(void);
+	int midi_hook_usb_entry(uint8_t *bp, uint16_t size);
+	static volatile int flag = 0;
+
+	if (!flag)
+	{
+		flag = 1;	// 再入抑止
+		if (s_MidiIfTxNumOfData)
+		{
+			uint16_t count = s_MidiIfTxNumOfData;
+
+			s_MidiIfTxNumOfData = 0;
+			s_MidiIfTxNumOfData = midi_hook_usb_entry(s_MidiIfTxBuff, count);
+		}
+		flag = 0;	// 再入許可
+	}
+	midi_IF_TxInit_sub();
+
+	return;
+}
+void midi_IF_TxInit_sub()
+#endif	//LOCAL_DEBUG_ENABLE
 {
 	bool thruMidi;
 
@@ -634,7 +668,6 @@ void midi_IF_send_usb_blocking(uint8_t *str, uint16_t cnt)
 		{
 			send = cnt;
 		}
-		while (getccrcnt(&usbtxccrbuf))
 		{
 			composite_idle();
 		}
@@ -768,7 +801,7 @@ void MIDI_IF_IDLE()
 		{
 			int send = (g_deviceComposite->midiPlayer.speed == USB_SPEED_HIGH) ? HS_TXBUFSIZ : FS_TXBUFSIZ;
 
-			if (getccrcnt(&usbtxccrbuf))
+			if (getccrcnt(&usbtxccrbuf)) //txバッファに残っていれば
 			{
 				int count = getccrcnt(&usbtxccrbuf);
 
@@ -790,7 +823,7 @@ void MIDI_IF_IDLE()
 					}
 				}
 			}
-			else
+			else //txバッファに何もなければrxバッファを見に行く
 			{
 				int count = getccrcnt(&rxccrbuf);
 
