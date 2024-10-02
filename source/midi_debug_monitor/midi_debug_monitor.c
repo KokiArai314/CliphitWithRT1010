@@ -17,6 +17,7 @@
 
 #include "midi_debug_monitor.h"
 #include "../midi/midi_if.h"
+#include "../utilities/systick.h"
 
 #if defined(MIDIDEBUGMONITOR)
 
@@ -575,7 +576,8 @@ static uint32_t calcJobTime(uint32_t sta, uint32_t stp)
 	}
 	else if (sta > stp)
 	{
-		ret = 0xfffffffful - sta + 1 + stp;
+		ret = 0;
+		//ret = 0xfffffffful - sta + 1 + stp;
 	}
 
 	return ret;
@@ -601,7 +603,12 @@ void jobTimeStop(int index)
 		uint32_t now = systick_getCount();
 
 		jobTime[index].stp = now;
-		jobTime[index].tim = calcJobTime(jobTime[index].sta, now);
+		uint32_t jt = calcJobTime(jobTime[index].sta, now);
+		/*if(jt > jobTime[index].tim){	//最も長いJobTimeを保存
+			jobTime[index].tim=jt;
+		}*/
+		jobTime[index].tim = jt; //直近のJobTimeを保存
+
 	}
 
 	return;
@@ -654,7 +661,7 @@ static int JobTime(ESendDir eDir, char *cmdstr, char ofs)
 
 			if (tim)
 			{
-				dprintf(eDir, "\n %1d:%10d(%dnsec)", i, tim, tim*2);
+				dprintf(eDir, "\n %1d:%10u(%unsec)", i, tim, tim*2);
 			}
 		}
 	}

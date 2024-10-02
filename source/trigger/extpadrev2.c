@@ -49,6 +49,10 @@ typedef struct {
  ******************************************************************************/
 //extern void midi_IF_send_usb_blocking(uint8_t *str, uint16_t cnt);
 //extern void midi_IF_send_uart_blocking(uint8_t *str, uint16_t cnt);
+void jobTimeStart(int index);
+void jobTimeStop(int index);
+void jobTimeInterval(int index);
+
 
 extern void AdcAudioSet(uint16_t value, uint8_t ch);	// for debug
 
@@ -106,10 +110,14 @@ static uint16_t getOtherLevel(int id)
 /* --- extPad --- */
 void extPadRev2(TRIGSCN_t *ptrigscn)
 {
+	//jobTimeStart(3);
+
+
 	EXTPAD_t		*pExtPad = &(ptrigscn->extPad);
 	EXTPADWORK_t	*pExtPadWork = &(extPadWork[pExtPad->id]);
 	uint16_t		trigger = adc_getValue(ptrigscn->adcCh1st);
 	uint16_t		sigmax = pExtPad->vel.smax;// / 2;
+	uint16_t adcValue = trigger; //for debug
 	MINMAXCONV_t	cnvIn = {2048-sigmax, 2048+sigmax, 0, 4095};//{2048-sigmax, 2048+sigmax, 0, 4095}; analog入力の正規化
 	MINMAXCONV_t	cnvOut = {0, 4095, pExtPad->vel.tmin, pExtPad->vel.tmax};
 
@@ -143,7 +151,7 @@ void extPadRev2(TRIGSCN_t *ptrigscn)
 
 	trigger = minmaxconv(trigger, &cnvIn);
 	//AdcAudioSet(trigger, ptrigscn->adcCh1st);
-	uint16_t onLevel = pExtPad->vel.smin;// pExtPad->onLvl;  * EXTPAD_46_VEL_MAX50 / pExtPad->vel.smax;
+	uint16_t onLevel = pExtPad->vel.smin;// pExtPad->onLvl;  * EXTPAD_46_VEL_MAX50 / pExtPad->vel.smax; 
 
 	/* trigger refresh */
 	if (pExtPadWork->flag && (pExtPadWork->flag < pExtPad->velWnd)) //in velWnd (not in release)
@@ -310,8 +318,9 @@ void extPadRev2(TRIGSCN_t *ptrigscn)
 			if (trigger_debug_flag)
 			{
 
-				dprintf(SDIR_USBMIDI, "\n %c ext pad on %1d, %3d(%4d)", ptrigscn->enable ? 'S' : '-', pExtPad->id,
-						velocity, trigger);
+				//jobTimeStop(3);
+				dprintf(SDIR_USBMIDI, "\n %c ext pad on %1d, %3d(%4d)(%4d)", ptrigscn->enable ? 'S' : '-', pExtPad->id,
+						velocity, trigger, adcValue);
 			}
 			entryVcb(0, ((float)velocity / 127.0f ));
 			pExtPadWork->maskCount = pExtPad->mskTim * 3;	// scan cycle

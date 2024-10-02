@@ -1,5 +1,7 @@
         <#if memory.name=="SRAM_ITC">
         *oscillator.o(.text*)
+        *oscillatorProcess.o(.text*)
+        *oscillatorManager.o(.text*)
         *adc.o(.text*)
         *trigger.o(.text*)
         *extpadrev2.o(.text*)

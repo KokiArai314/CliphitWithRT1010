@@ -148,7 +148,7 @@ typedef struct {
 #define EXTPAD_CLS_CAN		(0)		// 0:off
 
 #define EXTPAD_46_VEL_MIN	 (80) //MPS-10 : 400
-#define EXTPAD_46_VEL_MAX	(1000) //MPS-10 : 4095
+#define EXTPAD_46_VEL_MAX	(500) //MPS-10 : 4095
 #define EXTPAD_47_VEL_MIN	 (50)
 #define EXTPAD_47_VEL_MAX	(4095)
 #define EXTPAD_48_VEL_MIN	 (50)

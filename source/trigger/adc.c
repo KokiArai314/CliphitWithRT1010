@@ -55,9 +55,9 @@ typedef struct {
 /*******************************************************************************
  * Prototypes
  ******************************************************************************/
-//void jobTimeStart(int index);
-//void jobTimeStop(int index);
-//void jobTimeInterval(int index);
+void jobTimeStart(int index);
+void jobTimeStop(int index);
+void jobTimeInterval(int index);
 
 
 /*******************************************************************************
@@ -386,7 +386,7 @@ void adc_start(int select)
 	{	// from timer
 		//jobTimeInterval(0);
 
-		//jobTimeStart(1);
+		
 #ifdef BOARD_PROTO1
 		for (int i = 0; i < GPIO_CNT; i++)
 		{
@@ -457,12 +457,14 @@ void adc_start(int select)
 
 int16_t adc_getValue(int index)
 {
+	//jobTimeStart(1);
 	int16_t ret = -1;
 
 	if (index < ARRAYSIZE(g_AdcConversionValue))
 	{
 		ret = g_AdcConversionValue[index];
 	}
+	//jobTimeStop(1);
 
 	return ret;
 }

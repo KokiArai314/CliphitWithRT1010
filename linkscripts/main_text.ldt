@@ -1,5 +1,7 @@
          *(EXCLUDE_FILE(
          	*oscillator.o
-         	*trigger.o
+					*oscillatorProcess.o
+         	*oscillatorManager.o
+					*trigger.o
 	        *extpadrev2.o
          ) .text*)

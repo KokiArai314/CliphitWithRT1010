@@ -234,7 +234,7 @@ int midi_hook_usb_entry(uint8_t *bp, uint16_t size)
 
 void midi_hook_exec(void)
 {
-	static volatile int uart_exec = 0;
+	//static volatile int uart_exec = 0;
 	static volatile int usb_exec = 0;
 /*
 	if (!uart_exec)

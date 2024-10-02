@@ -19,7 +19,7 @@
 //#include "swpedal.h"
 //#include "vrpedal.h"
 
-//#include "../MidiDebugMonitor/MidiDebugMonitor.h"
+#include "../midi_debug_monitor/midi_debug_monitor.h"
 
 /*******************************************************************************
  * Definitions
@@ -30,9 +30,9 @@
 /*******************************************************************************
  * Prototypes
  ******************************************************************************/
-//void jobTimeStart(int index);
-//void jobTimeStop(int index);
-//void jobTimeInterval(int index);
+void jobTimeStart(int index);
+void jobTimeStop(int index);
+void jobTimeInterval(int index);
 
 #define BOARD_RT1010TESTFORCLIPHIT
 

@@ -13,8 +13,13 @@
 //#include "assigner/assignerOsc.h"
 #include "egCurve.h"
 #include "oscillatorProcess.h"
+#include "../midi_debug_monitor/midi_debug_monitor.h"
 
 #define VOICEMAX	(MEMVOICEMAX+DRVVOICEMAX)
+
+void jobTimeStart(int index);
+void jobTimeStop(int index);
+void jobTimeInterval(int index);
 
 /*
 	pre
@@ -462,7 +467,9 @@ static void egProcess(void)
 		{	// valid
 			if ((vcb[i].flag.active) && (!vcb[i].flag.egMute) && (!vcb[i].flag.pause))
 			{	// active && not mute && not pause
+				jobTimeStart(4);
 				egProcessSub(&vcb[i]);
+				jobTimeStop(4);
 			}
 		}
 	}
@@ -479,6 +486,7 @@ void oscillatorProcess(float **ppfOut, int fs)
 	{
 		if ((vcb[i].flag.active || vcb[i].flag.onReq) && (!vcb[i].flag.pause))
 		{
+			jobTimeStart(3);
 			const int workSamples = 1;
 			volatile Vcb_t *pVcb = &vcb[i];
 
@@ -493,6 +501,7 @@ void oscillatorProcess(float **ppfOut, int fs)
 					break;
 				}
 			}
+			jobTimeStop(3);
 		}
 	}
 	while (fs >= 1)

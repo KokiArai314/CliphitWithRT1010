@@ -163,7 +163,7 @@ static uint32_t	 rxbuffovr2 = 0;
  ******************************************************************************/
 static void clearMidiRxEventParameter(void);
 static void real_midi_received(uint8_t data);
-static void received_midi_to_buf(uint8_t data);
+//static void received_midi_to_buf(uint8_t data);
 
 /**
  * @note startから1byteしかないデータなら割り込み許可せず終了. それ以外は割り込み内で送信を続ける
@@ -224,7 +224,7 @@ void BOARD_UART_IRQ_HANDLER() {
 	    {	/* If new data arrived. */
 			uint8_t data = (uint8_t)LPUART1->DATA;
 
-			received_midi_to_buf(data);
+			real_midi_received(data);
 	    	count--;
 	    }
 #else	// ..FIFO消化
@@ -493,6 +493,7 @@ static void analyzeSysExMessage(uint8_t data) {
 	}
 }
 
+/*
 static void received_midi_to_buf(uint8_t data){
 	if (putccrbuf(&rxccrbuf, data) < 0)
 	{
@@ -500,7 +501,7 @@ static void received_midi_to_buf(uint8_t data){
 	}
 
 	return;
-}
+}*/
 
 static void real_midi_received(uint8_t data)
 {
@@ -668,6 +669,7 @@ void midi_IF_send_usb_blocking(uint8_t *str, uint16_t cnt)
 		{
 			send = cnt;
 		}
+		while (getccrcnt(&usbtxccrbuf))
 		{
 			composite_idle();
 		}

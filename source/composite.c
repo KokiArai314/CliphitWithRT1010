@@ -8,6 +8,7 @@
 #include "usb_device/usb_device_config.h"
 #include "usb.h"
 #include "usb_device.h"
+#include "../utilities/RTT/SEGGER_RTT.h"
 
 #include "usb_device_class.h"
 #include "usb_device_audio.h"
@@ -391,11 +392,9 @@ void APPInit(void)
         uartConfig.enableRx     = true;
 
         LPUART_Init(LPUART1, &uartConfig, uartClkSrcFreq);
-        NVIC_SetPriority((IRQn_Type)BOARD_UART_IRQ, UART_INTERRUPT_PRIORITY);
-
-        /**
-         * @note UART Rx側の割込み許可は、USB SetConfigurationが来たら許可する
-         */
+        
+        //@note UART Rx側の割込み許可は、USB SetConfigurationが来たら許可する
+        //NVIC_SetPriority((IRQn_Type)BOARD_UART_IRQ, UART_INTERRUPT_PRIORITY);
     }
 
     /* Install isr, set priority, and enable IRQ. */
@@ -526,12 +525,14 @@ int main(void)
 void main(void)
 #endif
 {
+    
     BOARD_ConfigMPU();
     BOARD_InitPins();
     BOARD_BootClockRUN();
     BOARD_AudioInitPllClock();
-//    BOARD_InitDebugConsole();
-    //systick_init();
+    //BOARD_InitDebugConsole();
+    systick_init();	//systick on for JobTime
+	SEGGER_RTT_Init();
 
 #if 0	/// @note RT1020-EVK debugPin (board J18:4pin) => RT1010-EVK???
     IOMUXC_SetPinMux(
