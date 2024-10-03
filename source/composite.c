@@ -5,15 +5,14 @@
  *      Author: higuchi
  */
 #include "definitions.h"
-#include "usb_device/usb_device_config.h"
-#include "usb.h"
+#include "usb_device_config.h"
 #include "usb_device.h"
 #include "../utilities/RTT/SEGGER_RTT.h"
 
 #include "usb_device_class.h"
 #include "usb_device_audio.h"
 #include "usb_device_ch9.h"
-#include "usb_device/usb_device_descriptor.h"
+#include "usb_device_descriptor.h"
 
 #include "composite.h"
 #include "pin_mux.h"
@@ -24,6 +23,7 @@
 #include "fsl_debug_console.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <usb/CLIPHIT2_usb.h>
 #if (defined(FSL_FEATURE_SOC_SYSMPU_COUNT) && (FSL_FEATURE_SOC_SYSMPU_COUNT > 0U))
 #include "fsl_sysmpu.h"
 #endif /* FSL_FEATURE_SOC_SYSMPU_COUNT */
@@ -512,66 +512,6 @@ void composite_idle(void);
 extern void midi_hook_exec(void);
 #endif	//LOCAL_DEBUG_ENABLE
 
-/*!
- * @brief Application task function.
- *
- * This function runs the task for application.
- *
- * @return None.
- */
-#if defined(__CC_ARM) || defined(__GNUC__)
-int main(void)
-#else
-void main(void)
-#endif
-{
-    
-    BOARD_ConfigMPU();
-    BOARD_InitPins();
-    BOARD_BootClockRUN();
-    BOARD_AudioInitPllClock();
-    //BOARD_InitDebugConsole();
-    systick_init();	//systick on for JobTime
-	SEGGER_RTT_Init();
-
-#if 0	/// @note RT1020-EVK debugPin (board J18:4pin) => RT1010-EVK???
-    IOMUXC_SetPinMux(
-  	  IOMUXC_GPIO_AD_B1_13_GPIO1_IO29,        /* GPIO_AD_B1_13 is configured as GPIO */
-        0U);                                    /* Software Input On Field: Force input path of pad GPIO_AD_B1_13 */
-    GPIO_PinWrite(GPIO1, 29U, 1);	// GPIO1_IO29 Output:1
-    GPIO1->GDIR |= (1U << 29U); /*!< Enable target USER_LED */
-//	GPIO_PortSet(GPIO1, 1U << 29);
-	GPIO_PortClear(GPIO1, 1U << 29U);
-#endif
-#if 0	/// @note RT1010-EVK USER_LED
-    GPIO_PinWrite(BOARD_USER_LED_GPIO, BOARD_USER_LED_GPIO_PIN, 1);
-    BOARD_USER_LED_GPIO->GDIR |= (1U << BOARD_USER_LED_GPIO_PIN);
-    GPIO_PortClear(BOARD_USER_LED_GPIO, 1U << BOARD_USER_LED_GPIO_PIN);
-#endif
-
-    /*Clock setting for LPI2C and SAI1 */
-	BOARD_InitClockPinMux();
-
-    /*Enable MCLK clock*/
-    BOARD_EnableSaiMclkOutput(true);
-
-    APPInit();
-
-    /// @note [SAI] Implement Amp/Effects
-	{
-		void EditResume1stStatus(void);
-		EditResume1stStatus();
-	}
-
-	while (1)
-	{
-#ifdef LOCAL_DEBUG_ENABLE
-		composite_idle();
-#ifdef ADC_ENABLE
-		trigger_idle();
-#endif	//ADC_ENABLE
-	}
-}
 void composite_idle(void)
 {
 	{

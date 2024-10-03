@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<JScopeProject>
+    <FileVersion major="1" minor="1" />
+    <Project>
+        <Configuration>
+            <JLink>
+                <Options Connection="1" IsRTTSession="0" IsRTTWithTimeStamp="0" SamplingPeriod="100" SerialNo="0" JTAG_IRPre="0" JTAG_DRPre="0" IP="" TargetDevice="MIMXRT1011xxx5A" TargetInterface="SWD" InterfaceSpeed="4000" />
+            </JLink>
+            <ElfFile Name="C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\Debug\evkmimxrt1010_dev_composite_audio_midi_bm.axf" />
+            <Scope>
+                <Options TimeResolutionUs="1000000" />
+            </Scope>
+        </Configuration>
+        <Windows>
+            <Graph Show="1" />
+            <Watch Show="1" />
+        </Windows>
+        <SelectedSymbols>
+            <Symbol>
+                <Options Name="g_systickCounter" Address="0x202003B0" Type="volatile unsigned int" TypeID="8" Size="4" GraphColorRed="255" GraphColorGreen="0" GraphColorBlue="0" YMinSampled="10773" YMaxSampled="11932" YAvgSampled="11352.3" Offset="4" ShowInGraph="1" YOffset="0" IsAutoConfig="0" YResolution="5000" MaxValue="-2147483648" File="C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\Debug/../source/utilities/systick.c" DrawStyle="0" NameWithParents="g_systickCounter" />
+            </Symbol>
+            <Symbol>
+                <Options Name="tim" Address="0x202012AC" Type="unsigned int" TypeID="8" Size="4" GraphColorRed="0" GraphColorGreen="0" GraphColorBlue="255" YMinSampled="0" YMaxSampled="0" YAvgSampled="0" Offset="8" ShowInGraph="0" YOffset="0" IsAutoConfig="0" YResolution="1" MaxValue="-2147483648" File="C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\Debug/../source/midi_debug_monitor/midi_debug_monitor.c" DrawStyle="0" NameWithParents="jobTime[2].tim" />
+            </Symbol>
+            <Symbol>
+                <Options Name="tim" Address="0x202012C4" Type="unsigned int" TypeID="8" Size="4" GraphColorRed="0" GraphColorGreen="255" GraphColorBlue="0" YMinSampled="629" YMaxSampled="629" YAvgSampled="629" Offset="12" ShowInGraph="1" YOffset="0" IsAutoConfig="0" YResolution="500" MaxValue="-2147483648" File="C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\Debug/../source/midi_debug_monitor/midi_debug_monitor.c" DrawStyle="0" NameWithParents="jobTime[4].tim" />
+            </Symbol>
+        </SelectedSymbols>
+    </Project>
+</JScopeProject>

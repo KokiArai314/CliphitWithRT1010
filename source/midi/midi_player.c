@@ -5,7 +5,7 @@
  *      Author: higuchi
  */
 
-#include "../usb_device/usb_device_config.h"
+#include "usb_device_config.h"
 #include "usb.h"
 #include "usb_device.h"
 
@@ -13,7 +13,7 @@
 #include "usb_device_midi.h"
 
 #include "usb_device_ch9.h"
-#include "usb_device/usb_device_descriptor.h"
+#include "usb_device_descriptor.h"
 
 #include "../composite.h"
 #include "midi_player.h"

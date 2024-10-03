@@ -8,6 +8,9 @@
     "testsample.h": "c",
     "declare_pcm_buffers.h": "c",
     "cstdlib": "c",
-    "segger_rtt.h": "c"
+    "segger_rtt.h": "c",
+    "audio_player.h": "c",
+    "definitions.h": "c",
+    "cliphit2_usb.h": "c"
   }
 }

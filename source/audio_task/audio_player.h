@@ -11,10 +11,10 @@
 #include <stdint.h>
 #include "usb.h"
 
-#include "../usb_device/usb_device_config.h"
+#include "usb_device_config.h"
 #include "usb_device.h"
 #include "usb_device_class.h"
-#include "../usb_device/usb_device_descriptor.h"
+#include "usb_device_descriptor.h"
 
 
 /*******************************************************************************
@@ -125,5 +125,12 @@ typedef struct _usb_audio_player_struct
     volatile uint32_t tdReadNumberRec;
     volatile uint32_t tdWriteNumberRec;
 } usb_audio_player_struct_t;
+
+void BOARD_AudioInitPllClock(void);
+void BOARD_EnableSaiMclkOutput(bool enable);
+void BOARD_InitClockPinMux(void);
+void USB_AudioCodecTask(void);
+void USB_AudioSpeakerResetTask(void);
+void Init_Board_Sai_Codec(void);
 
 #endif /* AUDIO_PLAYER_H_ */

@@ -18,6 +18,7 @@
 #include "midi_debug_monitor.h"
 #include "../midi/midi_if.h"
 #include "../utilities/systick.h"
+#include "../trigger/trigger.h"
 
 #if defined(MIDIDEBUGMONITOR)
 

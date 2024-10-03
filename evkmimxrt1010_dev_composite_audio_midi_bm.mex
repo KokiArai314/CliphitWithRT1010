@@ -14,6 +14,10 @@
       <validate_boot_init_only>true</validate_boot_init_only>
       <generate_extended_information>false</generate_extended_information>
       <generate_code_modified_registers_only>false</generate_code_modified_registers_only>
+      <custom_copyright>
+         <text></text>
+         <enabled>true</enabled>
+      </custom_copyright>
       <update_include_paths>true</update_include_paths>
       <generate_registers_defines>false</generate_registers_defines>
    </preferences>
@@ -26,7 +30,7 @@
       </pins>
       <clocks name="Clocks" version="14.0" enabled="true" update_project_code="true">
          <clocks_profile>
-            <processor_version>16.1.0</processor_version>
+            <processor_version>16.3.0</processor_version>
          </clocks_profile>
          <clock_configurations>
             <clock_configuration name="BOARD_BootClockRUN" id_prefix="" prefix_user_defined="false">

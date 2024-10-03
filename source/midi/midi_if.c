@@ -12,7 +12,7 @@
 #include "board.h"
 #include "midi_player.h"
 #include "composite.h"
-#include "../usb_device/usb_device_descriptor.h"
+#include "usb_device_descriptor.h"
 
 #include "midi_hook.h"
 
@@ -741,7 +741,7 @@ void midi_IF_senc_command_blocking(uint8_t *str, uint16_t cnt)
 			s_ControlIfTxBuffEx[s_ControlIfTxNumOfDataEx++] = *str++;
 		}
 		s_ControlIfTxBuffPosEx = 0;		// enable
-		uartexif_enablecontrol(1);
+		//uartexif_enablecontrol(1);
 	}
 
 	return;
@@ -764,7 +764,7 @@ void midi_IF_senc_command_blocking2(uint8_t *str, uint16_t cnt)
 			s_ControlIfTxBuffEx2[s_ControlIfTxNumOfDataEx2++] = *str++;
 		}
 		s_ControlIfTxBuffPosEx2 = 0;	// enable
-		uartexif_enablecontrol2(1);
+		//uartexif_enablecontrol2(1);
 	}
 
 	return;
