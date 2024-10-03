@@ -495,7 +495,7 @@ static int MemoryDump(ESendDir eDir, char *cmdstr, char ofs)
 #include "fsl_device_registers.h"
 #include "../../hardware/systick.h"
 #include "board/board.h"
-#include "composite.h"
+#include "usb/CLIPHIT2_usb.h"
 
 extern uint32_t getrxoverrun(void);
 extern uint32_t getrxbuffovr(void);

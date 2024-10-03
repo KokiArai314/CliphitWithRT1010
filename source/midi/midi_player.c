@@ -15,7 +15,7 @@
 #include "usb_device_ch9.h"
 #include "usb_device_descriptor.h"
 
-#include "../composite.h"
+#include "usb/CLIPHIT2_usb.h"
 #include "midi_player.h"
 
 #include "board.h"

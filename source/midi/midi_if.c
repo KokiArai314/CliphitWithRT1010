@@ -11,7 +11,7 @@
 
 #include "board.h"
 #include "midi_player.h"
-#include "composite.h"
+#include "usb/CLIPHIT2_usb.h"
 #include "usb_device_descriptor.h"
 
 #include "midi_hook.h"

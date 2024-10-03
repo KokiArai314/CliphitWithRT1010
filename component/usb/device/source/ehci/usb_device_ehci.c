@@ -1436,7 +1436,7 @@ usb_status_t USB_DeviceEhciCancel(usb_device_controller_handle ehciHandle, uint8
 #include "audio_task/audio_player.h"
 
 /// @note support composite MIDI
-#include "composite.h"
+#include "usb/CLIPHIT2_usb.h"
 extern usb_device_composite_struct_t g_composite;
 
 usb_status_t USB_DeviceEhciControl(usb_device_controller_handle ehciHandle, usb_device_control_type_t type, void *param)

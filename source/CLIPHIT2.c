@@ -40,7 +40,7 @@
 #ifdef ADC_ENABLE
 #define NSEC_TO_COUNT(ns, clockFreqInHz) (uint64_t)(((uint64_t)(ns) * (clockFreqInHz)) / 1000000000U)
 #define CYCLE_TIMER_NS_TIME	62500U	// 62.5us
-extern void AdcAudioDebugOn();
+//extern void AdcAudioDebugOn();
 #endif	//ADC_ENABLE
 
 void APPInit(void);
