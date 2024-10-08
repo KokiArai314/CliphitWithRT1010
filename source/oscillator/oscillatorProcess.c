@@ -14,6 +14,7 @@
 #include "egCurve.h"
 #include "oscillatorProcess.h"
 #include "../midi_debug_monitor/midi_debug_monitor.h"
+#include "../utilities/RTT/rtt_debugger.h"
 
 #define VOICEMAX	(MEMVOICEMAX+DRVVOICEMAX)
 
@@ -244,7 +245,7 @@ static int oscEnd(Vcb_t *pVcb)
 }
 
 /*
-	worker @ 4fs
+	worker @ 1fs
 */
 static int oscillatorProcessSub(Vcb_t *pVcb, float **ppfDst)
 {
@@ -467,9 +468,9 @@ static void egProcess(void)
 		{	// valid
 			if ((vcb[i].flag.active) && (!vcb[i].flag.egMute) && (!vcb[i].flag.pause))
 			{	// active && not mute && not pause
-				jobTimeStart(4);
+				//jobTimeStart(4);
 				egProcessSub(&vcb[i]);
-				jobTimeStop(4);
+				//jobTimeStop(4);
 			}
 		}
 	}
@@ -521,6 +522,7 @@ void oscillatorStart(uint8_t oscNum, OscSetup_t *psOscSetup)
 	if (oscNum < VOICEMAX)
 	{
 		Vcb_t *pVcb = &vcb[oscNum];
+		//rtt_debug_with_jscope(2,1);
 
 		pVcb->vcbNum = oscNum;	// 自身の番号
 

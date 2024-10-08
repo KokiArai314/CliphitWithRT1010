@@ -9,7 +9,6 @@
 
 #include "midi_message.h"
 
-#include "../param.h"
 
 /*******************************************************************************
  * Definitions
@@ -210,13 +209,15 @@ static void SendDeviceInquiryReply(void)
 	midi_SendExclData((unsigned char*)&DevInqRepData, sizeof(MIDI_DevInquiryReply));
 }
 
+/*
 static void SendCurrentProgramDataDump(void)
 {
 	SendExclHeader(SFC_CDUMP);
 
 	midi_Send8BitTo7BitData(&editbuf.amptype, EDITBUF_SIZE);
-}
+}*/
 
+/*
 static void SendProgramDataDump(void)
 {
 	SendExclHeader(SFC_PDUMP);
@@ -231,7 +232,7 @@ static void SendProgramDataDump(void)
 	midi_SendExclData(TmpData, 2);
 
 	midi_Send8BitTo7BitData(&editbuf.amptype, EDITBUF_SIZE);
-}
+}*/
 
 static void SendWriteResult(uint8_t result, uint8_t userProgramNo)
 {

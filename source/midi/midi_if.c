@@ -799,7 +799,7 @@ void MIDI_IF_IDLE()
 		 * 0							*		*			execute	: other
 		 */
 		int attachOpen = g_deviceComposite->midiPlayer.attach && isMidiInOpen();
-		if ((g_deviceComposite->midiPlayer.txDataTransmissionCompleted == 1) || !attachOpen)
+		if ((g_deviceComposite->midiPlayer.txDataTransmissionCompleted == 1) || !attachOpen)	//execute
 		{
 			int send = (g_deviceComposite->midiPlayer.speed == USB_SPEED_HIGH) ? HS_TXBUFSIZ : FS_TXBUFSIZ;
 
@@ -814,14 +814,11 @@ void MIDI_IF_IDLE()
 				while (count--)
 				{
 					int data = getccrbuf(&usbtxccrbuf);
-
-					if (data < 0)
-					{
+					if (data < 0){
 						break;
 					}
-					if (attachOpen)
-					{
-						real_midi_received(data);
+					if (attachOpen){
+						real_midi_received(data);	//execute	: open ready
 					}
 				}
 			}
@@ -829,48 +826,16 @@ void MIDI_IF_IDLE()
 			{
 				int count = getccrcnt(&rxccrbuf);
 
-				if (count > send)
-				{
+				if (count > send){
 					count = send;
 				}
-				while (count--)
-				{
+				while (count--){
 					int data = getccrbuf(&rxccrbuf);
-
-					if (data < 0)
-					{
+					if (data < 0){
 						break;
 					}
-#ifdef BOARD_PROTO1
-					if (txchange && attachOpen)
-					{
-						real_midi_received(data);
-					}
-#else	//BOARD_PROTO1
-//*					real_midi_received_sub(data);
 					midi_hook_entry(data, real_midi_received, g_deviceComposite->midiPlayer.attach);
-#endif	//BOARD_PROTO1
 				}
-#ifdef BOARD_PROTO1
-				count = getccrcnt(&rxccrbuf2);
-				if (count > send)
-				{
-					count = send;
-				}
-				while (count--)
-				{
-					int data = getccrbuf(&rxccrbuf2);
-
-					if (data < 0)
-					{
-						break;
-					}
-					if (!txchange && attachOpen)
-					{
-						real_midi_received(data);
-					}
-				}
-#endif	//BOARD_PROTO1
 			}
 		}
 #endif	//LOCAL_DEBUG_ENABLE

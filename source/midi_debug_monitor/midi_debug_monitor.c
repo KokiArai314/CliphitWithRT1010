@@ -19,6 +19,7 @@
 #include "../midi/midi_if.h"
 #include "../utilities/systick.h"
 #include "../trigger/trigger.h"
+#include "../utilities/RTT/rtt_debugger.h"	//for segger j-scope
 
 #if defined(MIDIDEBUGMONITOR)
 
@@ -53,6 +54,11 @@
 /*	MIDIデバッグモニタ	*/
 #define OUTBUFSIZ (80)	//(80*25)
 
+/*for segger j-scope w/RTT */
+char JS_RTT_UpBuffer[4096];    // J-Scope RTT Buffer
+int  JS_RTT_Channel = 1;       // J-Scope RTT Channel
+
+
 struct OutBuf {
 	unsigned char wcnt;
 	unsigned char channel;
@@ -61,6 +67,8 @@ struct OutBuf {
 
 static struct OutBuf uartOutBuf = {0,0,{0}};
 static struct OutBuf usbOutBuf = {0,0,{0}};
+
+
 
 #define channel(aaa) ((aaa) == SDIR_UARTMIDI ? uartOutBuf.channel : usbOutBuf.channel)
 #define SetChannel(aaa,bbb) ((aaa) == SDIR_UARTMIDI ? (uartOutBuf.channel = (bbb)) : (usbOutBuf.channel = (bbb)))
@@ -246,6 +254,40 @@ void dputhexl(ESendDir eDir, long d)
 	return;
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*	コマンド戻り値定義	*/
 #ifndef DEBUG_Result
 #define	DEBUG_Result
@@ -260,6 +302,14 @@ typedef struct{
 	char *cmd_str;										/*	コマンド(スペース)ヘルプ表示	*/
 	int (*cmd_fnc)(ESendDir eDir, char *str, char ofs);	/*	str=command, ofs=space offset	*/
 }Cmd;
+
+
+
+
+
+
+
+
 
 /****************/
 /*	各種処理	*/
@@ -609,7 +659,7 @@ void jobTimeStop(int index)
 			jobTime[index].tim=jt;
 		}*/
 		jobTime[index].tim = jt; //直近のJobTimeを保存
-
+		rtt_debug_with_jscope(1,jt);
 	}
 
 	return;

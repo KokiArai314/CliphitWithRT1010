@@ -34,7 +34,9 @@ static SampleData_t* get_test_sin_tone(){
 
 static SampleData_t* get_test_sample(){
 
-  int samples = sizeof(pcm_buff_00)/sizeof(pcm_buff_00[0]);
+  extern int16_t pcm_buff_00[];
+
+  int samples = 0;//sizeof(pcm_buff_00)/sizeof(pcm_buff_00[0]);
 
   SampleData_t *pSampleData = &sampleData;
   pSampleData->DataPtr = &pcm_buff_00;

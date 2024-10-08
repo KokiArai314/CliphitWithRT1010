@@ -13,6 +13,8 @@
     "definitions.h": "c",
     "cliphit2_usb.h": "c",
     "usb_device_midi.h": "c",
-    "midi_player.h": "c"
+    "midi_player.h": "c",
+    "midi_device.h": "c",
+    "board.h": "c"
   }
 }

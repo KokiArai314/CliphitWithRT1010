@@ -20,6 +20,8 @@
 
 #include "board.h"
 
+#include "../../board/board.h"
+
 #if SUPPORT_MIDI_IF
 #include "midi_if.h"
 #else
@@ -667,7 +669,7 @@ uint8_t Send2USB(void)
 				while (g_deviceComposite->midiPlayer.fifoTxBuffer->Cnt > 0) {
 					if (g_deviceComposite->midiPlayer.txBuffer->Cnt > 0) {
 						g_deviceComposite->midiPlayer.fifoTxBuffer->Buffer[i++] =
-								*(g_deviceComposite->midiPlayer.txBuffer->Buffer + g_deviceComposite->midiPlayer.txBuffer->Rd);
+								*(g_deviceComposite->midiPlayer.txBuffer->Buffer + g_deviceComposite->midiPlayer.txBuffer->Rd);	//usbの出力バッファにMidiを投げ込む
 						g_deviceComposite->midiPlayer.txBuffer->Rd = INC_IN_BUF_POS(g_deviceComposite->midiPlayer.txBuffer->Rd);
 
 						g_deviceComposite->midiPlayer.txBuffer->Cnt--;

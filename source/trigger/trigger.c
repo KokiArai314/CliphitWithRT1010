@@ -188,15 +188,15 @@ uint16_t minmaxconv(uint16_t value, MINMAXCONV_t *cnv)
 
 void trigger_idle(void)
 {
-	//jobTimeStart(2);
 	for (int i = 0; i < ARRAYSIZE(trigscn); i++)
 	{
 		if (adc_getFlag(trigscn[i].adcCh1st, trigscn[i].adcCh2nd))
 		{
+			//jobTimeStart(1);
 			(trigscn[i].func)(&trigscn[i]);
+			//jobTimeStop(1);
 		}
 	}
-	//jobTimeStop(2);
 
 	return;
 }

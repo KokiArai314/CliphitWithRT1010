@@ -15,6 +15,7 @@
 #include "usb/CLIPHIT2_usb.h"
 #include "pin_mux.h"
 #include "systick.h"
+#include "utilities/RTT/rtt_debugger.h"
 
 #include "fsl_lpuart.h"
 
@@ -28,6 +29,9 @@
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
+
+
+
 /**
  * PIT : CYCLE Timer 100ms
  */
@@ -96,6 +100,7 @@ void main(void)
     BOARD_AudioInitPllClock();
     //BOARD_InitDebugConsole();
     systick_init();	//systick on for JobTime
+	rtt_debugger_init();
 
     /*Clock setting for LPI2C and SAI1 */
 	BOARD_InitClockPinMux();
@@ -107,8 +112,8 @@ void main(void)
 
     /// @note [SAI] Implement Amp/Effects
 	{
-		void EditResume1stStatus(void);
-		EditResume1stStatus();
+		//void EditResume1stStatus(void);
+		//EditResume1stStatus();
 	}
 
 	while (1)

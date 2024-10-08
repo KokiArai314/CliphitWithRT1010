@@ -81,10 +81,10 @@ void usb_init(void){
   g_composite.deviceHandle = NULL;
   
   if (kStatus_USB_Success != USB_DeviceClassInit(CONTROLLER_ID, &g_UsbDeviceCompositeConfigList, &g_composite.deviceHandle)){
-    usb_echo("USB device composite demo init failed\r\n");
+    //usb_echo("USB device composite demo init failed\r\n");
     return;
   }else{
-    usb_echo("USB device composite demo\r\n");
+    //usb_echo("USB device composite demo\r\n");
     g_composite.audioPlayer.audioHandle = g_UsbDeviceCompositeConfigList.config[0].classHandle;
     g_composite.midiPlayer.midiHandle = g_UsbDeviceCompositeConfigList.config[1].classHandle;
     USB_DeviceAudioPlayerInit(&g_composite);
