@@ -6,7 +6,6 @@
  */
 
 #include "fsl_flexspi_nor_boot.h"
-extern void ResetISR(void);
 
 /* Component ID definition, used by tools. */
 #ifndef FSL_COMPONENT_ID
@@ -24,7 +23,7 @@ __attribute__((section(".boot_hdr.ivt")))
  *************************************/
 const ivt image_vector_table = {
     IVT_HEADER,                    /* IVT Header */
-    (uint32_t)ResetISR,           /* Image Entry Function */
+    IMAGE_ENTRY_ADDRESS,           /* Image Entry Function */
     IVT_RSVD,                      /* Reserved = 0 */
     (uint32_t)DCD_ADDRESS,         /* Address where DCD information is stored */
     (uint32_t)BOOT_DATA_ADDRESS,   /* Address where BOOT Data Structure is stored */

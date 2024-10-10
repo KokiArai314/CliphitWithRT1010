@@ -416,26 +416,6 @@ void ResetISR(void) {
     // Disable interrupts
     __asm volatile ("cpsid i");
 
-    /**
-     * Reallocationg FlexRAM
-     * C.F. https://community.nxp.com/t5/i-MX-RT-Crossover-MCUs-Knowledge/Reallocating-the-FlexRAM/ta-p/1117649
-     * @author arai 
-    */
-
-    __asm (".syntax unified\n"
-
-    "LDR R0,=0x20001fff\n"
-    "MSR MSP,R0\n"
-
-    "LDR R0, =0x400ac044\n"//Address of register IOMUXC_GPR_GPR17 (same as C.F.)
-    "LDR R1, =0x000000ad\n"//FlexRAM configuration DTC = 64KB, ITC = 24KB, OC = 24KB (10 10 | 11 01)
-    "STR R1,[R0]\n"
-
-    "LDR R0,=0x400ac040\n"//Address of register IOMUXC_GPR_GPR16
-    "LDR R1,[R0]\n"
-    "ORR R1,R1,#4\n"//The 4 corresponds to setting the FLEXRAM_BANK_CFG_SEL bit in register IOMUXC_GPR_GPR16
-    "STR R1,[R0]\n"
-    ".syntax divided\n");
 
 #if defined (__USE_CMSIS)
 // If __USE_CMSIS defined, then call CMSIS SystemInit code
