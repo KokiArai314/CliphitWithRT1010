@@ -40,7 +40,7 @@ int16_t entryVcb(uint16_t sampleNo, float fVelocity){
 	/*sample情報取得 for test*/
 	int16_t* pcm_buff = &pcm_buff_02;
 	SampleData_t sampleData;
-	int samples = 1000;//sizeof(pcm_buff)/sizeof(pcm_buff[0]);
+	int samples = 9000;//sizeof(pcm_buff)/sizeof(pcm_buff[0]);
 
 	SampleData_t *pSampleData = &sampleData;
 	pSampleData->DataPtr = pcm_buff;

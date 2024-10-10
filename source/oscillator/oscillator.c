@@ -24,7 +24,7 @@ static int OscStereo(Oscillator_t *ps, float **ppfDst, int samples)
 	if (pitch)
 	{	// 有効
 		int16_t		*baseAdr = (int16_t *)ps->DataPtr;
-
+		
 		if (baseAdr)
 		{	// 有効
 			uint32_t	curOfs = ps->CurOfs * 2;				// *2 for stereo
