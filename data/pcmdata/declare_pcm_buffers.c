@@ -10,21 +10,16 @@
 
 //__DATA(RAM3)
 
-__DATA(RAM3) int16_t pcm_buff_00[]={
-  #include "pcm_00.txt"
-};
+//__DATA(RAM3) int16_t pcm_buff_00[]={10};
+//#include "pcm_00.txt"
 
-__DATA(RAM3) int16_t pcm_buff_01[]={
-  #include "pcm_01.txt"
-};
+//__DATA(RAM3) int16_t pcm_buff_01[]={10};//#include "pcm_01.txt"
 
-__DATA(RAM3) int16_t pcm_buff_02[]={
+int16_t pcm_buff_02[]={
   #include "pcm_02.txt"
 };
 
-__DATA(RAM3) int16_t pcm_buff_03[]={
-  #include "pcm_03.txt"
-};
+//__DATA(RAM3) int16_t pcm_buff_03[]={10};//#include "pcm_03.txt"
 
 /*
 int16_t* getTestPcm(){

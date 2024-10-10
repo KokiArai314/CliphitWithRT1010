@@ -6,6 +6,7 @@
  */
 
 #include "fsl_flexspi_nor_boot.h"
+
 extern void ResetISR(void);
 
 /* Component ID definition, used by tools. */

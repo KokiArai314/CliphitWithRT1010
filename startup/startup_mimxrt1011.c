@@ -419,22 +419,37 @@ void ResetISR(void) {
     /**
      * Reallocationg FlexRAM
      * C.F. https://community.nxp.com/t5/i-MX-RT-Crossover-MCUs-Knowledge/Reallocating-the-FlexRAM/ta-p/1117649
-     * @author arai 
+     * @author arai
     */
 
     __asm (".syntax unified\n"
 
-    "LDR R0,=0x20001fff\n"
+    "LDR R0,=0x20002fff\n"
     "MSR MSP,R0\n"
 
     "LDR R0, =0x400ac044\n"//Address of register IOMUXC_GPR_GPR17 (same as C.F.)
-    "LDR R1, =0x000000ad\n"//FlexRAM configuration DTC = 64KB, ITC = 24KB, OC = 24KB (10 10 | 11 01)
+    "LDR R1, =0xe9\n"//FlexRAM configuration DTC = 64KB, ITC = 24KB, OC = 24KB
     "STR R1,[R0]\n"
 
     "LDR R0,=0x400ac040\n"//Address of register IOMUXC_GPR_GPR16
     "LDR R1,[R0]\n"
     "ORR R1,R1,#4\n"//The 4 corresponds to setting the FLEXRAM_BANK_CFG_SEL bit in register IOMUXC_GPR_GPR16
     "STR R1,[R0]\n"
+
+	#ifdef FLEXRAM_ITCM_ZERO_SIZE
+	 "LDR R0,=0x400ac040\n"//Address of register IOMUXC_GPR_GPR16
+	 "LDR R1,[R0]\n"
+	 "AND R1,R1,#0xfffffffe\n"//Disabling SRAM_ITC in register IOMUXC_GPR_GPR16
+	 "STR R1,[R0]\n"
+	#endif
+
+	#ifdef FLEXRAM_DTCM_ZERO_SIZE
+	 "LDR R0,=0x400ac040\n"//Address of register IOMUXC_GPR_GPR16
+	 "LDR R1,[R0]\n"
+	 "AND R1,R1,#0xfffffffd\n"//Disabling SRAM_DTC in register IOMUXC_GPR_GPR16
+	 "STR R1,[R0]\n"
+	#endif
+
     ".syntax divided\n");
 
 #if defined (__USE_CMSIS)

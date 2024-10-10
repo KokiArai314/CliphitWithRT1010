@@ -6,3 +6,20 @@
         *trigger.o(.text*)
         *extpadrev2.o(.text*)
         </#if>
+        <#if memory.name=="SRAM_DTC">
+        *oscillator.o(.bss*)
+        *oscillatorProcess.o(.bss*)
+        *oscillatorManager.o(.bss*)
+        *adc.o(.bss*)
+        *trigger.o(.bss*)
+        *extpadrev2.o(.bss*)
+        </#if>
+        <#if memory.name=="SRAM_DTC">
+        *oscillator.o(.data*)
+        *oscillatorProcess.o(.data*)
+        *oscillatorManager.o(.data*)
+        *adc.o(.data*)
+        *trigger.o(.data*)
+        *extpadrev2.o(.data*)
+        *declare_pcm_buffers.o(.data*)
+        </#if>

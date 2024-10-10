@@ -15,6 +15,7 @@
 #include "oscillatorProcess.h"
 #include "../midi_debug_monitor/midi_debug_monitor.h"
 #include "../utilities/RTT/rtt_debugger.h"
+#include "cr_section_macros.h"
 
 #define VOICEMAX	(MEMVOICEMAX+DRVVOICEMAX)
 

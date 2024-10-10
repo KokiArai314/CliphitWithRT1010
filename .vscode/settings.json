@@ -15,6 +15,10 @@
     "usb_device_midi.h": "c",
     "midi_player.h": "c",
     "midi_device.h": "c",
-    "board.h": "c"
-  }
+    "board.h": "c",
+    "fsl_device_registers.h": "c",
+    "rtt_debugger.h": "c",
+    "midi_debug_monitor.h": "c"
+  },
+  "search.useIgnoreFiles": false
 }

@@ -751,7 +751,7 @@ static int AdcView(ESendDir eDir, char *cmdstr, char ofs)
 
 #ifdef ADCAUDIO
 
-void HC_AudioSetCallback(void (*callback)(int32_t *data_l, int32_t *data_r));
+extern void HC_AudioSetCallback(void (*callback)(int32_t *data_l, int32_t *data_r));
 
 #define CCRBUFSIZ (4)
 

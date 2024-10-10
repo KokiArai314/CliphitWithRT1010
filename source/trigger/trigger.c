@@ -20,6 +20,7 @@
 //#include "vrpedal.h"
 
 #include "../midi_debug_monitor/midi_debug_monitor.h"
+#include "cr_section_macros.h"
 
 /*******************************************************************************
  * Definitions
@@ -60,7 +61,7 @@ int trigger_debug_flag = 0;
 
 #define VELOCITYNUMOF (15)
 #define VELOCITYCURVE (128)
-static uint8_t velocityCurve[VELOCITYNUMOF][VELOCITYCURVE];
+__DATA(RAM3) static uint8_t velocityCurve[VELOCITYNUMOF][VELOCITYCURVE];
 
 /*******************************************************************************
  * Code

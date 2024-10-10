@@ -24,9 +24,21 @@
    <tools>
       <pins name="Pins" version="16.0" enabled="false" update_project_code="true">
          <pins_profile>
-            <processor_version>N/A</processor_version>
+            <processor_version>16.3.0</processor_version>
+            <power_domains/>
          </pins_profile>
-         <functions_list/>
+         <functions_list>
+            <function name="BOARD_InitPins">
+               <description></description>
+               <options>
+                  <callFromInitBoot>true</callFromInitBoot>
+                  <coreID>core0</coreID>
+                  <enableClock>true</enableClock>
+               </options>
+               <dependencies/>
+               <pins/>
+            </function>
+         </functions_list>
       </pins>
       <clocks name="Clocks" version="14.0" enabled="true" update_project_code="true">
          <clocks_profile>

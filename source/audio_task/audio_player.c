@@ -36,6 +36,8 @@
 #include "fsl_dmamux.h"
 #include "fsl_sai_edma.h"
 
+#include "cr_section_macros.h"
+
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
@@ -474,6 +476,7 @@ void HC_CRITICAL_SECTION_ENTER(void)
 	++hcCritSectCount;
 }
 
+
 void HC_CRITICAL_SECTION_EXIT(void)
 {
 	if (hcCritSectCount != 0) {
@@ -483,6 +486,7 @@ void HC_CRITICAL_SECTION_EXIT(void)
 	}
 }
 
+
 //----------------------------------
 // Audio
 //----------------------------------
@@ -491,9 +495,9 @@ static void (*hcAudioCallback)(int32_t *data_l, int32_t *data_r) = NULL;
 
 void HC_AudioSetCallback(void (*callback)(int32_t *data_l, int32_t *data_r))
 {
-	HC_CRITICAL_SECTION_ENTER();
-	hcAudioCallback = callback;
-	HC_CRITICAL_SECTION_EXIT();
+	//HC_CRITICAL_SECTION_ENTER();
+	//hcAudioCallback = callback;
+	//HC_CRITICAL_SECTION_EXIT();
 }
 #endif	// #if 1	/// @note [SAI] Implement Amp/Effects
 
