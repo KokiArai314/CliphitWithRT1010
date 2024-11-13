@@ -727,7 +727,7 @@ static int JobTime(ESendDir eDir, char *cmdstr, char ofs)
 
 #ifdef ADCVIEW
 
-#include "../trigger/adc.h"
+#include "../peripheral/p_adc.h"
 
 static int AdcView(ESendDir eDir, char *cmdstr, char ofs)
 {
@@ -736,7 +736,7 @@ static int AdcView(ESendDir eDir, char *cmdstr, char ofs)
 	int32_t val;
 
 	dprintf(eDir, "\n===Adc===");
-	while ((val = adc_getValue(index++)) >= 0)
+	while ((val = adcGetValue(index++)) >= 0)
 	{
 		dprintf(eDir, "\n %2d:%4d", index-1, val);
 	}

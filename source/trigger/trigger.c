@@ -8,11 +8,8 @@
  */
 
 #include <stdint.h>
-//#include <extpadrev2.h>
-#include "adc.h"
+#include "../peripheral/p_adc.h"
 #include "trigger.h"
-//#include "pad.h"
-//#include "ccpad.h"
 #include "extpadrev2.h"
 #include "extpad.h"
 #include "../definitions.h"
@@ -41,7 +38,7 @@ void jobTimeInterval(int index);
  ******************************************************************************/
 static TRIGSCN_t trigscn[] = {
 #ifdef BOARD_RT1010TESTFORCLIPHIT
-	{EXTPAD_46_AD_CH,	-1,		1,	-1,	extPadRev2,
+	{0,	-1,		1,	-1,	extPadRev2,
 			{.extPad.id			= EXTPAD_46_ID,
 			 .extPad.onCnt		= EXTPAD_ON_COUNT,
 			 .extPad.velWnd		= EXTPAD_VEL_WINDOW,
@@ -49,6 +46,14 @@ static TRIGSCN_t trigscn[] = {
 			 .extPad.crsCan		= EXTPAD_CLS_CAN,
 			 .extPad.onLvl		= EXTPAD_ON_LEVEL,
 			 .extPad.vel		= {EXTPAD_46_VEL_MIN, EXTPAD_46_VEL_MAX, 1,127}}},
+	{1,	-1,		1,	-1,	extPadRev2,
+			{.extPad.id			= EXTPAD_47_ID,
+			 .extPad.onCnt		= EXTPAD_ON_COUNT,
+			 .extPad.velWnd		= EXTPAD_VEL_WINDOW,
+			 .extPad.mskTim		= EXTPAD_MSK_TIME,
+			 .extPad.crsCan		= EXTPAD_CLS_CAN,
+			 .extPad.onLvl		= EXTPAD_ON_LEVEL,
+			 .extPad.vel		= {EXTPAD_46_VEL_MIN, EXTPAD_46_VEL_MAX, 1,127}}}
 #endif
 };
 
@@ -190,11 +195,9 @@ void trigger_idle(void)
 {
 	for (int i = 0; i < ARRAYSIZE(trigscn); i++)
 	{
-		if (adc_getFlag(trigscn[i].adcCh1st, trigscn[i].adcCh2nd))
+		if (adcGetFlag(trigscn[i].adcCh1st, trigscn[i].adcCh2nd))
 		{
-			//jobTimeStart(1);
 			(trigscn[i].func)(&trigscn[i]);
-			//jobTimeStop(1);
 		}
 	}
 

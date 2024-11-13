@@ -15,6 +15,25 @@
     "usb_device_midi.h": "c",
     "midi_player.h": "c",
     "midi_device.h": "c",
-    "board.h": "c"
+    "board.h": "c",
+    "cliphit2_voice.h": "c",
+    "format": "c",
+    "stdint.h": "c",
+    "compare": "c",
+    "cstdint": "c",
+    "midi_debug_monitor.h": "c",
+    "audio_task.h": "c",
+    "fsl_adc.h": "c",
+    "charconv": "c",
+    "chrono": "c",
+    "optional": "c",
+    "ratio": "c",
+    "system_error": "c",
+    "array": "c",
+    "functional": "c",
+    "tuple": "c",
+    "type_traits": "c",
+    "utility": "c",
+    "string_view": "c"
   }
 }

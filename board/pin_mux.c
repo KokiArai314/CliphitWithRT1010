@@ -66,7 +66,9 @@ BOARD_InitPins:
 void BOARD_InitPins(void) {
 	CLOCK_EnableClock(kCLOCK_Iomuxc);           /* iomuxc clock (iomuxc_clk_enable): 0x03U */
 
+  /*GPIO 15, 16 to ADC, for pad trigger */
 	IOMUXC_SetPinMux(IOMUXC_GPIO_AD_01_GPIOMUX_IO15, 0U);
+  IOMUXC_SetPinMux(IOMUXC_GPIO_AD_02_GPIOMUX_IO16, 0U);
 
 	IOMUXC_SetPinMux(
 		IOMUXC_GPIO_01_LPI2C1_SDA,              /* GPIO_01 is configured as LPI2C1_SDA */
@@ -101,9 +103,7 @@ void BOARD_InitPins(void) {
 #endif	// LPUART TX/RX
 
 
-	IOMUXC_SetPinConfig(
-			IOMUXC_GPIO_AD_01_GPIOMUX_IO15,         /* GPIO_AD_01 PAD functional properties : */
-			0x0U);
+	
 
 	IOMUXC_SetPinConfig(
 		IOMUXC_GPIO_01_LPI2C1_SDA,              /* GPIO_01 PAD functional properties : */
@@ -189,6 +189,9 @@ void BOARD_InitPins(void) {
                                                  Pull Up / Down Config. Field: 100K Ohm Pull Down
                                                  Hyst. Enable Field: Hysteresis Disabled */
 #endif	// LPUART TX/RX
+
+  IOMUXC_SetPinConfig(IOMUXC_GPIO_AD_01_GPIOMUX_IO15,0x0U);
+  IOMUXC_SetPinConfig(IOMUXC_GPIO_AD_02_GPIOMUX_IO16,0x0U);
 }
 
 /***********************************************************************************************************************

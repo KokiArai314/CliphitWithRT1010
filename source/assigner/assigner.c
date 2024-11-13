@@ -13,7 +13,7 @@
 
 //extern int16_t* getTestPcm();
 extern Vcb_t vcb[];
-extern int16_t pcm_buff_02[];
+extern const int16_t pcm_buff_02[];
 
 /**
  * フリーなvcbを探し番号を返す
@@ -38,7 +38,7 @@ int16_t findFreeVcb(void){
 int16_t entryVcb(uint16_t sampleNo, float fVelocity){
 
 	/*sample情報取得 for test*/
-	extern int16_t pcm_buff_02[];
+	extern const  int16_t pcm_buff_02[];
 	int16_t* pcm_buff = &pcm_buff_02;
 	SampleData_t sampleData;
 	int samples = 9000;//sizeof(pcm_buff)/sizeof(pcm_buff[0]);

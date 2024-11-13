@@ -22,7 +22,7 @@
 #include "fsl_pit.h"
 
 #ifdef ADC_ENABLE
-#include "trigger/adc.h"
+#include "peripheral/p_adc.h"
 #include "trigger/trigger.h"
 #endif	//ADC_ENABLE
 
@@ -58,18 +58,18 @@ void PIT_CYCLE_TIMER_HANDLER(void)
 #ifdef ADC_ENABLE
 	if (PIT_GetStatusFlags(PIT, kPIT_Chnl_0))
 	{
-	    /* Clear interrupt flag.*/
-	    PIT_ClearStatusFlags(PIT, kPIT_Chnl_0, kPIT_TimerFlag);
-	#if (defined(USB_DEVICE_CONFIG_EHCI) && (USB_DEVICE_CONFIG_EHCI > 0U))
+		/* Clear interrupt flag.*/
+		PIT_ClearStatusFlags(PIT, kPIT_Chnl_0, kPIT_TimerFlag);
+		#if (defined(USB_DEVICE_CONFIG_EHCI) && (USB_DEVICE_CONFIG_EHCI > 0U))
 	    USB_DeviceEhciAttachedDevice(g_composite.deviceHandle);
-	#endif
+		#endif
 		USB_setMidiInTimeoutCount();	/// @note MIDI IN Timeout (100ms)
 	}
 	if (PIT_GetStatusFlags(PIT, kPIT_Chnl_1))
 	{
 	    /* Clear interrupt flag.*/
 	    PIT_ClearStatusFlags(PIT, kPIT_Chnl_1, kPIT_TimerFlag);
-	    adc_start(0);
+	    adcStartFillingOnelap();
 
 #else	//ADC_ENABLE
     /* Clear interrupt flag.*/
@@ -94,21 +94,21 @@ void main(void)
 #endif
 {
 
-    BOARD_ConfigMPU();
-    BOARD_InitPins();
-    BOARD_BootClockRUN();
-    BOARD_AudioInitPllClock();
-    //BOARD_InitDebugConsole();
-    systick_init();	//systick on for JobTime
+	BOARD_ConfigMPU();
+	BOARD_InitPins();
+	BOARD_BootClockRUN();
+	BOARD_AudioInitPllClock();
+	//BOARD_InitDebugConsole();
+	systick_init();	//systick on for JobTime
 	rtt_debugger_init();
 
     /*Clock setting for LPI2C and SAI1 */
 	BOARD_InitClockPinMux();
 
     /*Enable MCLK clock*/
-    BOARD_EnableSaiMclkOutput(true);
+	BOARD_EnableSaiMclkOutput(true);
 
-    APPInit();
+	APPInit();
 
     /// @note [SAI] Implement Amp/Effects
 	{
@@ -176,8 +176,7 @@ void APPInit(void)
 {
 		usb_init();
     Init_Board_Sai_Codec();
-    audio_task_init();
-    trigger_init();
+    //trigger_init();
 
     /* LPUART */
     {
@@ -264,7 +263,7 @@ void APPInit(void)
 
 #ifdef ADC_ENABLE
 
-	    adc_init();
+	    adcInit();
 
 	    /* Set timer period for channel 1 */
 	    PIT_SetTimerPeriod(PIT, kPIT_Chnl_1, NSEC_TO_COUNT(CYCLE_TIMER_NS_TIME, PIT_SOURCE_CLOCK));
@@ -284,5 +283,6 @@ void APPInit(void)
 	}
 
 	trigger_init();
+	audio_task_init();
 
 }

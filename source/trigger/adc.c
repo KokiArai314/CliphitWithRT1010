@@ -109,7 +109,7 @@ static ADSEL_t adsel[] = {
 #endif	//PADSW45CHANGE
 	{ 5, 2},	// 33 PadSw37
 #else	//BOARD_PROTO1
-	{ 0, 0},	//  0
+	{ 0 , 0},	//  0
 	{ 15,1}
 #endif	//BOARD_PROTO1
 };
@@ -382,7 +382,7 @@ void adc_init(void)
 
 void adc_start(int select)
 {
-	if (select == 0)
+	if (select == 0)	//PITch1 called?
 	{	// from timer
 		//jobTimeInterval(0);
 
@@ -398,7 +398,7 @@ void adc_start(int select)
 			g_AdcConversionChannelFlag[GPIO_OFS+i] = 1;
 		}
 #endif	//BOARD_PROTO1
-	}
+}
 	if (select || ((select == 0) && g_AdcConversionDoneFlag))
 	{
 		g_AdcConversionDoneFlag = false;
@@ -489,7 +489,7 @@ uint32_t adc_getFlag(int index1st, int index2nd)
 	return ret;
 }
 
-void adc_clrFlag(int index1st, int index2nd)
+void adc_clearFlag(int index1st, int index2nd)
 {
 	if (index1st >= 0)
 	{

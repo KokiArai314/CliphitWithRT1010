@@ -112,8 +112,8 @@ static int OscStereo(Oscillator_t *ps, float **ppfDst, int samples)
 static int OscMono(Oscillator_t *ps, float **ppfDst, int samples)
 {
 	uint32_t	pitch = ps->Pitch;
-	float *pfDstL = ppfDst[0];
-	float *pfDstR = ppfDst[1];
+	float *pfDstL = ppfDst[0]; 
+	float *pfDstR = ppfDst[1]; 
 	int ret = 0;
 
 	if (pitch)
@@ -122,8 +122,8 @@ static int OscMono(Oscillator_t *ps, float **ppfDst, int samples)
 
 		if (baseAdr)
 		{	// 有効
-			uint32_t	curOfs = ps->CurOfs;
-			uint32_t	curImg = ps->CurImg;
+			uint32_t	curOfs = ps->CurOfs; //pitch操作のためのサンプル位置
+			uint32_t	curImg = ps->CurImg; //pitch操作のためのサンプル位置の小数点分
 			uint32_t	endOfs = ps->EndOfs;
 			uint32_t	loopOfs = ps->LoopOfs;
 			uint32_t	pitchInt = (pitch >> OSCIMGBIT);
@@ -274,7 +274,7 @@ void OnMemoryOscillatorSetup(OnMemOsc_t *ps, SampleData_t *psSampleData)
 }
 
 /**
- *以下x19850 -> ClipHit2移植時にstreamとstretch関連、assignerに関連するものをシュリンクした内容
+ *以下x19850 -> ClipHit2移植時にstreamとstretch関連、assignerに関連するものをシュリンクした
  */
 
 /*

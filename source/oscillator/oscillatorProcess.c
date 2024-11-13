@@ -257,10 +257,11 @@ static int oscillatorProcessSub(Vcb_t *pVcb, float **ppfDst)
 		if (pVcb->flag.onReq)
 		{	// on req
 			if (!pVcb->flag.egMute)
+			
 			{	// not mute
 				pVcb->flag.offReq = 0;	// オフ要求消化
-				pVcb->flag.egMute = 1;
-			}
+				pVcb->flag.egMute = 1;  //on reqなのにeg muteするの?
+			}//eg muteされていたらreqを拒否するのか?
 		}
 		else if (pVcb->flag.offReq)
 		{	// off req
@@ -268,7 +269,7 @@ static int oscillatorProcessSub(Vcb_t *pVcb, float **ppfDst)
 			if (!pVcb->flag.egMute)
 			{	// not mute
 				pVcb->flag.egMute = 1;
-			}
+			}//off reqはactiveを下げるのではなくegをmuteする
 		}
 		if ((pVcb->flag.egMute || pVcb->flag.pauseReq) && (pVcb->msFader.fGoal != 0.0f))
 		{	// mute request
@@ -493,7 +494,7 @@ void oscillatorProcess(float **ppfOut, int fs)
 
 			for (int cnt = 0; cnt < fs; cnt += workSamples)
 			{
-				int outofs = pVcb->runOscParam.outCh * 2;
+				int outofs = pVcb->runOscParam.outCh * 2;	//出力先を見に行ってるのになんで2倍している?　0:main,1:fx1,2:fx2,3:sub
 				float *ppfDWrk[2] = {&ppfOut[outofs][cnt],&ppfOut[outofs+1][cnt]};
 				int stp = oscillatorProcessSub((Vcb_t *)pVcb, ppfDWrk);
 

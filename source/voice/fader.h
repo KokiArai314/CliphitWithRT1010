@@ -6,11 +6,27 @@
 #ifndef FADER_H_
 #define FADER_H_
 
+#include "../definitions.h"
+
 typedef struct fader_t_ {
 	float		fGoal; //最終的に目指す値
 	float		fRate; //1sampleごとにどれだけ値が動くか
 	float		fCur;  //現在のfaderの値
 } Fader_t;
+
+static inline void xfaderSetup(Fader_t *ps){
+	ps->fGoal = ps->fCur = 1.0f;
+	ps->fRate = 0.0f;
+}
+
+static inline void xfaderStop(Fader_t *ps){
+	ps->fGoal = 0.0f;
+	ps->fRate = ps->fCur / (SAMPLING_RATE / 1000);	// 1msec fade
+	if (ps->fCur > ps->fRate)
+	{	// 1st substruct
+		ps->fCur -= ps->fRate;
+	}
+}
 
 /*
 	クロスフェーダー実行部

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<JScopeProject>
+    <FileVersion major="1" minor="1" />
+    <Project>
+        <Configuration>
+            <JLink>
+                <Options Connection="1" IsRTTSession="0" IsRTTWithTimeStamp="0" SamplingPeriod="100" SerialNo="0" JTAG_IRPre="0" JTAG_DRPre="0" IP="" TargetDevice="MIMXRT1011xxx5A" TargetInterface="SWD" InterfaceSpeed="4000" />
+            </JLink>
+            <ElfFile Name="C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\Debug\evkmimxrt1010_dev_composite_audio_midi_bm.axf" />
+            <Scope>
+                <Options TimeResolutionUs="1000000" />
+            </Scope>
+        </Configuration>
+        <Windows>
+            <Graph Show="1" />
+            <Watch Show="1" />
+        </Windows>
+        <SelectedSymbols>
+            <Symbol>
+                <Options Name="active" Address="0x202003F0" Type="unsigned char" TypeID="14" Size="1" GraphColorRed="255" GraphColorGreen="255" GraphColorBlue="0" YMinSampled="0" YMaxSampled="1" YAvgSampled="0.369019" Offset="4" ShowInGraph="1" YOffset="0" IsAutoConfig="0" YResolution="1" MaxValue="0" File="C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\Debug/../source/voice/CLIPHIT2_voice.c" DrawStyle="0" NameWithParents="voice[0].flag.&lt;Anonymous&gt;.active" />
+            </Symbol>
+            <Symbol>
+                <Options Name="active" Address="0x20200418" Type="unsigned char" TypeID="14" Size="1" GraphColorRed="85" GraphColorGreen="0" GraphColorBlue="255" YMinSampled="0" YMaxSampled="1" YAvgSampled="0.228313" Offset="5" ShowInGraph="1" YOffset="0" IsAutoConfig="0" YResolution="1" MaxValue="0" File="C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\Debug/../source/voice/CLIPHIT2_voice.c" DrawStyle="0" NameWithParents="voice[1].flag.&lt;Anonymous&gt;.active" />
+            </Symbol>
+            <Symbol>
+                <Options Name="active" Address="0x20200440" Type="unsigned char" TypeID="14" Size="1" GraphColorRed="255" GraphColorGreen="255" GraphColorBlue="255" YMinSampled="0" YMaxSampled="0" YAvgSampled="0" Offset="6" ShowInGraph="1" YOffset="0" IsAutoConfig="0" YResolution="1" MaxValue="0" File="C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\Debug/../source/voice/CLIPHIT2_voice.c" DrawStyle="0" NameWithParents="voice[2].flag.&lt;Anonymous&gt;.active" />
+            </Symbol>
+            <Symbol>
+                <Options Name="active" Address="0x20200468" Type="unsigned char" TypeID="14" Size="1" GraphColorRed="255" GraphColorGreen="0" GraphColorBlue="0" YMinSampled="0" YMaxSampled="0" YAvgSampled="0" Offset="7" ShowInGraph="1" YOffset="0" IsAutoConfig="0" YResolution="1" MaxValue="0" File="C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\Debug/../source/voice/CLIPHIT2_voice.c" DrawStyle="0" NameWithParents="voice[3].flag.&lt;Anonymous&gt;.active" />
+            </Symbol>
+        </SelectedSymbols>
+    </Project>
+</JScopeProject>

@@ -36,6 +36,34 @@ typedef struct trigscn{
 //		VRPEDAL_t	vrPedal;
 	};
 } TRIGSCN_t;
+/*
+typedef struct {
+	uint8_t			id;
+	uint8_t			onCnt;
+	uint8_t			velWnd;	// sample
+	uint8_t			mskTim;	// sample
+	uint8_t			crsCan;
+	uint16_t		onLvl;
+	MINMAXCONV_t	vel;
+}EXTPAD_t;
+
+typedef struct {
+	uint8_t		flag;
+	uint16_t	maskCount;
+	uint16_t	triggervalue[EXTPAD_ON_COUNT_MAX];
+	int16_t		triggermin;
+	int16_t		triggermax;
+#if INPUTFILTER
+	int16_t		filter1[2];
+#endif	
+#if defined(ENVMASK)
+	int16_t		envMaskCount;
+	int16_t		envTriggerMin;
+	int16_t		envTriggerMax;
+	int16_t		envPreviousLevel;
+#endif	//#if defined(ENVMASK)
+}EXTPADWORK_t;
+*/
 
 void trigger_init(void);
 void trigger_setVelocityCurve(int num, int ofs, int data);

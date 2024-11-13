@@ -3,12 +3,12 @@
 
 #include <stdint.h>
 
-extern int16_t pcm_buff_00[];
+extern const int16_t pcm_buff_00[];
 
-extern  int16_t pcm_buff_01[];
+extern const int16_t pcm_buff_01[];
 
-extern  int16_t pcm_buff_02[];
+extern const int16_t pcm_buff_02[];
 
-extern  int16_t pcm_buff_03[];
+extern const int16_t pcm_buff_03[];
 
 #endif

@@ -36,7 +36,7 @@ static SampleData_t* get_test_sample(){
 
   int samples = 9000;//sizeof(pcm_buff_00)/sizeof(pcm_buff_00[0]);
 
-  extern int16_t pcm_buff_00[];
+  extern const int16_t pcm_buff_00[];
 
   SampleData_t *pSampleData = &sampleData;
   pSampleData->DataPtr = &pcm_buff_00;

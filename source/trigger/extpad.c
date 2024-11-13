@@ -6,7 +6,7 @@
  */
 
 #include <stdint.h>
-#include "adc.h"
+#include "../peripheral/p_adc.h"
 #include "trigger.h"
 #include "extpad.h"
 
@@ -100,12 +100,12 @@ void extPad(TRIGSCN_t *ptrigscn)
 {
 	EXTPAD_t		*pExtPad = &(ptrigscn->extPad);
 	EXTPADWORK_t	*pExtPadWork = &(extPadWork[pExtPad->id]);
-	uint16_t		trigger = adc_getValue(ptrigscn->adcCh1st);
+	uint16_t		trigger = adcGetValue(ptrigscn->adcCh1st);
 	uint16_t		sigmax = pExtPad->vel.smax / 2;
 	MINMAXCONV_t	cnvIn = {2048-sigmax, 2048+sigmax, 0, 4095};
 	MINMAXCONV_t	cnvOut = {0, 4095, pExtPad->vel.tmin, pExtPad->vel.tmax};
 
-	adc_clrFlag(ptrigscn->adcCh1st, ptrigscn->adcCh2nd);
+	adcClearFlag(ptrigscn->adcCh1st, ptrigscn->adcCh2nd);
 #if INPUTFILTER
 	{
 #if (INPUTFILTER == 1)

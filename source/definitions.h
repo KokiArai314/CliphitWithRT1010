@@ -8,6 +8,10 @@
 #ifndef DEFINITIONS_H_
 #define DEFINITIONS_H_
 
+#define MAX_VOICE 4
+#define SAMPLING_RATE 44100
+
+
 /*--- 続いている内の何れかを定義する ---*/
 // 下記で定義することにして、ビルド構成で選択することにしました。
 // Properties -> C/C++ Build -> Settings -> Tool Settings -> Preprocessor -> Defined symbols (-D)

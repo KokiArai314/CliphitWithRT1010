@@ -9,19 +9,19 @@
 
 //__DATA(RAM3)
 
-int16_t pcm_buff_00[]={
+const int16_t const pcm_buff_00[]={
   #include "pcm_00.txt"
 };
 
-int16_t pcm_buff_01[]={
+const int16_t const pcm_buff_01[]={
   #include "pcm_01.txt"
 };
 
-int16_t pcm_buff_02[]={
+const int16_t const pcm_buff_02[]={
   #include "pcm_02.txt"
 };
 
-int16_t pcm_buff_03[]={
+const int16_t const pcm_buff_03[]={
   #include "pcm_03.txt"
 };
 

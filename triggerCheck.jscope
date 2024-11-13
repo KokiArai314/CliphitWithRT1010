@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<JScopeProject>
+    <FileVersion major="1" minor="1" />
+    <Project>
+        <Configuration>
+            <JLink>
+                <Options Connection="1" IsRTTSession="0" IsRTTWithTimeStamp="0" SamplingPeriod="100" SerialNo="0" JTAG_IRPre="0" JTAG_DRPre="0" IP="" TargetDevice="MIMXRT1011xxx5A" TargetInterface="SWD" InterfaceSpeed="4000" />
+            </JLink>
+            <ElfFile Name="C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\Debug\evkmimxrt1010_dev_composite_audio_midi_bm.axf" />
+            <DataFile Name="C:\Users\koki_arai\Documents\tinyDrumADC_1107.csv" />
+            <RawFile Name="" />
+            <Scope>
+                <Options TimeResolutionUs="1000000" />
+            </Scope>
+        </Configuration>
+        <Windows>
+            <Graph Show="1" />
+            <Watch Show="1" />
+        </Windows>
+        <SelectedSymbols>
+            <Symbol>
+                <Options Name="flag" Address="0x20200024" Type="unsigned char" TypeID="6" Size="1" GraphColorRed="255" GraphColorGreen="255" GraphColorBlue="0" YMinSampled="0" YMaxSampled="64" YAvgSampled="0.435377" Offset="4" ShowInGraph="1" YOffset="-3" IsAutoConfig="0" YResolution="50" MaxValue="255" File="C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\Debug/../source/trigger/extpadrev2.c" DrawStyle="0" NameWithParents="extPadWork[0].flag" />
+            </Symbol>
+            <Symbol>
+                <Options Name="maskCount" Address="0x20200026" Type="short unsigned int" TypeID="7" Size="2" GraphColorRed="0" GraphColorGreen="255" GraphColorBlue="0" YMinSampled="0" YMaxSampled="108" YAvgSampled="0.210635" Offset="5" ShowInGraph="1" YOffset="0" IsAutoConfig="0" YResolution="50" MaxValue="65535" File="C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\Debug/../source/trigger/extpadrev2.c" DrawStyle="0" NameWithParents="extPadWork[0].maskCount" />
+            </Symbol>
+            <Symbol>
+                <Options Name="triggermin" Address="0x202000A8" Type="short int" TypeID="11" Size="2" GraphColorRed="255" GraphColorGreen="170" GraphColorBlue="0" YMinSampled="0" YMaxSampled="2072" YAvgSampled="2014.12" Offset="7" ShowInGraph="1" YOffset="-2" IsAutoConfig="0" YResolution="2000" MaxValue="32767" File="C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\Debug/../source/trigger/extpadrev2.c" DrawStyle="0" NameWithParents="extPadWork[0].triggermin" />
+            </Symbol>
+            <Symbol>
+                <Options Name="triggermax" Address="0x202000AA" Type="short int" TypeID="11" Size="2" GraphColorRed="255" GraphColorGreen="170" GraphColorBlue="0" YMinSampled="0" YMaxSampled="3005" YAvgSampled="2079.18" Offset="9" ShowInGraph="1" YOffset="-2" IsAutoConfig="0" YResolution="2000" MaxValue="32767" File="C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\Debug/../source/trigger/extpadrev2.c" DrawStyle="0" NameWithParents="extPadWork[0].triggermax" />
+            </Symbol>
+            <Symbol>
+                <Options Name="envMaskCount" Address="0x202000B4" Type="short int" TypeID="11" Size="2" GraphColorRed="0" GraphColorGreen="0" GraphColorBlue="255" YMinSampled="0" YMaxSampled="174" YAvgSampled="86.8356" Offset="11" ShowInGraph="1" YOffset="0" IsAutoConfig="0" YResolution="100" MaxValue="32767" File="C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\Debug/../source/trigger/extpadrev2.c" DrawStyle="0" NameWithParents="extPadWork[0].envMaskCount" />
+            </Symbol>
+            <Symbol>
+                <Options Name="envTriggerMin" Address="0x202000B6" Type="short int" TypeID="11" Size="2" GraphColorRed="0" GraphColorGreen="0" GraphColorBlue="255" YMinSampled="0" YMaxSampled="2268" YAvgSampled="2005.53" Offset="13" ShowInGraph="1" YOffset="-2" IsAutoConfig="0" YResolution="2000" MaxValue="32767" File="C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\Debug/../source/trigger/extpadrev2.c" DrawStyle="0" NameWithParents="extPadWork[0].envTriggerMin" />
+            </Symbol>
+            <Symbol>
+                <Options Name="envTriggerMax" Address="0x202000B8" Type="short int" TypeID="11" Size="2" GraphColorRed="85" GraphColorGreen="0" GraphColorBlue="255" YMinSampled="0" YMaxSampled="3005" YAvgSampled="2087.59" Offset="15" ShowInGraph="1" YOffset="-2" IsAutoConfig="0" YResolution="2000" MaxValue="32767" File="C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\Debug/../source/trigger/extpadrev2.c" DrawStyle="0" NameWithParents="extPadWork[0].envTriggerMax" />
+            </Symbol>
+            <Symbol>
+                <Options Name="envPreviousLevel" Address="0x202000BA" Type="short int" TypeID="11" Size="2" GraphColorRed="255" GraphColorGreen="0" GraphColorBlue="0" YMinSampled="0" YMaxSampled="2181" YAvgSampled="185.166" Offset="17" ShowInGraph="1" YOffset="0" IsAutoConfig="0" YResolution="1000" MaxValue="32767" File="C:\Users\koki_arai\Documents\MCUXpressoIDE_11.10.0_3148\workspace\evkmimxrt1010_dev_composite_audio_midi_bm\Debug/../source/trigger/extpadrev2.c" DrawStyle="0" NameWithParents="extPadWork[0].envPreviousLevel" />
+            </Symbol>
+        </SelectedSymbols>
+    </Project>
+</JScopeProject>

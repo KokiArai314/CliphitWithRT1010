@@ -495,9 +495,11 @@ void HC_AudioSetCallback(void (*callback)(int32_t *data_l, int32_t *data_r))
 	hcAudioCallback = callback;
 	HC_CRITICAL_SECTION_EXIT();
 }
-#endif	// #if 1	/// @note [SAI] Implement Amp/Effects
+#endif	// #if 1	/// @note [SAI] Implement Amp/Effectsentry
 
 static float saidata[FSL_FEATURE_SAI_FIFO_COUNT];
+static int32_t out;
+static int32_t *pOut = &out;
 static float *pSaidata[2] = {&(saidata[0]),  &(saidata[1])};
 int32_t saiRxdata[FSL_FEATURE_SAI_FIFO_COUNT];
 
@@ -523,17 +525,50 @@ void SAI_UserIRQHandler(void)
 		/* SAI out */
         if (hcAudioCallback != NULL) {
         	int32_t outL,outR;
-			hcAudioCallback(&outL, &outR);
-			SAI_WriteData(BOARD_DEMO_SAI, DEMO_SAI_CHANNEL,(uint32_t)outL);
-			SAI_WriteData(BOARD_DEMO_SAI, DEMO_SAI_CHANNEL,(uint32_t)outR);
+			//hcAudioCallback(&outL, &outR);
+			//SAI_WriteData(BOARD_DEMO_SAI, DEMO_SAI_CHANNEL,(uint32_t)outL);
+			//SAI_WriteData(BOARD_DEMO_SAI, DEMO_SAI_CHANNEL,(uint32_t)outR);
 		}else{
 
-			audio_task(pSaidata, 1);
+			audio_task(pOut);
+            /**
+             * I2S通信
+             * 32bit singed を 24bit singedに変換する必要がある
+             * MSB 1bitが符号ビット
+             * 32bit singedの入れ物に入れるので下位8bitは0になる
+             */
+            //  clip as 24bit signed
+            if (out >  8388607)  out =  8388607;
+            if (out < -8388608)  out = -8388608;
+            out = out * 2;
+            //int32_t ret = out >> 8;
+
+            //左詰め signed
+            uint32_t sign   = out & 0x80000000; //符号bit
+            uint32_t value  = out & 0x007fffff; //値(23bit)
+            uint32_t ret = (value | sign) >> 8;
             
-			for (i = 0; i < FSL_FEATURE_SAI_FIFO_COUNT; i++)
-			{
-                int32_t out = convertOutput(saidata[i]);
-                SAI_WriteData(BOARD_DEMO_SAI, DEMO_SAI_CHANNEL,(uint32_t)out);
+            //左詰め signed
+            //uint32_t sign   = out & 0x80000000; //符号bit
+            //uint32_t value  = out & 0x007fffff; //値(23bit)
+            //uint32_t ret = (uint32_t)((value << 8) | sign);
+
+            //右詰め
+            //uint32_t sign   = (out & (0x80000000)) >> 8; //符号bit
+            //uint32_t value  = out & 0x007fffff; //値(23bit) <-負の値の場合これが補数になるので変なことになるかも
+            //uint32_t ret = (uint32_t)((value ) | sign);
+
+            //右詰め unsigned
+            //uint32_t ret = out + 8388607;
+
+            //左詰め unsigned
+            //uint32_t ret = (out + 8388607) << 8;
+            //ret = ret * 4;
+
+            for (i = 0; i < FSL_FEATURE_SAI_FIFO_COUNT; i++){
+                SAI_WriteData(BOARD_DEMO_SAI, DEMO_SAI_CHANNEL,
+                    (uint32_t)ret
+                );  
 			}
 		}
 
