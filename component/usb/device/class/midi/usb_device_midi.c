@@ -19,7 +19,7 @@
 #include "board.h"	/// @note SUPPORT_USB_HIGH_SPEED
 #if SUPPORT_USB_HIGH_SPEED
 /* Switching of Max Packet Size */
-#include "usb/CLIPHIT2_usb.h"
+#include "peripheral/p_usb.h"
 #include "usb_device_descriptor.h"
 extern usb_device_composite_struct_t g_composite;
 

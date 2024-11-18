@@ -65,7 +65,7 @@ typedef struct {
 }EXTPADWORK_t;
 */
 
-void trigger_init(void);
+void triggerInit(void);
 void trigger_setVelocityCurve(int num, int ofs, int data);
 uint8_t trigger_getVelocityCurve(int num, int ofs);
 uint16_t minmaxconvtbl(uint16_t value, MINMAXCONV_t *cnv, int tblNum);

@@ -13,23 +13,23 @@
 #endif /* SDK_I2C_BASED_COMPONENT_USED */
 #include "fsl_iomuxc.h"
 
-#if defined BOARD_USE_CODEC
-#include "fsl_wm8960.h"
-#endif
+/* Select USB1 PLL (480 MHz) as master lpi2c clock source */
+#define DEMO_LPI2C_CLOCK_SOURCE_SELECT (0U)
+/* Clock divider for master lpi2c clock source */
+#define DEMO_LPI2C_CLOCK_SOURCE_DIVIDER (5U)
+
 
 /*******************************************************************************
  * Variables
  ******************************************************************************/
-
-#if defined BOARD_USE_CODEC
-codec_config_t boardCodecConfig = {
-    .I2C_SendFunc = BOARD_Codec_I2C_Send,
-    .I2C_ReceiveFunc = BOARD_Codec_I2C_Receive,
-    .op.Init = WM8960_Init,
-    .op.Deinit = WM8960_Deinit,
-    .op.SetFormat = WM8960_ConfigDataFormat
+/// @note support 44100Hz
+const clock_audio_pll_config_t audioPllConfig = {
+    .loopDivider = 47,  /* PLL loop divider. Valid range for DIV_SELECT divider value: 27~54. */
+    .postDivider = 4,   /* Divider after the PLL, should only be 1, 2, 4, 8, 16. */
+    .numerator = 1,    /* 30 bit numerator of fractional loop divider. */
+    .denominator = 25, /* 30 bit denominator of fractional loop divider */
 };
-#endif
+
 
 /*******************************************************************************
  * Code
@@ -192,6 +192,18 @@ void BOARD_ConfigMPU(void)
     /* Enable I cache and D cache */
     SCB_EnableDCache();
     SCB_EnableICache();
+}
+
+void BOARD_AudioInitPllClock()
+{
+	CLOCK_InitAudioPll(&audioPllConfig);
+}
+
+void BOARD_InitClockPinMux()
+{
+    /*Clock setting for LPI2C*/
+    CLOCK_SetMux(kCLOCK_Lpi2cMux, DEMO_LPI2C_CLOCK_SOURCE_SELECT);
+    CLOCK_SetDiv(kCLOCK_Lpi2cDiv, DEMO_LPI2C_CLOCK_SOURCE_DIVIDER);
 }
 
 #if defined(SDK_I2C_BASED_COMPONENT_USED) && SDK_I2C_BASED_COMPONENT_USED

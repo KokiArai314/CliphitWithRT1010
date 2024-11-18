@@ -12,7 +12,6 @@
 #include "../data/pcmdata/declare_pcm_buffers.h"
 
 //extern int16_t* getTestPcm();
-extern Vcb_t vcb[];
 extern const int16_t pcm_buff_02[];
 
 /**

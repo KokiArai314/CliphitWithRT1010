@@ -12,20 +12,20 @@
 #include "fsl_common.h"
 #include "fsl_gpio.h"
 
-#define SUPPORT_X19730 1	/// @note X-19730:Replikator
+#define SUPPORT_X19730 1 /// @note X-19730:Replikator
 #define SUPPORT_X19850 0
 
 #if SUPPORT_X19730
 #define SUPPORT_USB_HIGH_SPEED 1
 #define DESCRIPTOR_X19730 1
 #define DESCRIPTOR_X19850 0
-#define SUPPORT_MIDI_IF 1
+//#define SUPPORT_MIDI_IF 1
 #endif
 #if SUPPORT_X19850
 #define SUPPORT_USB_HIGH_SPEED 1
 #define DESCRIPTOR_X19730 0
 #define DESCRIPTOR_X19850 1
-#define SUPPORT_MIDI_IF 1
+//#define SUPPORT_MIDI_IF 1
 #endif
 
 /*******************************************************************************
@@ -50,7 +50,6 @@
 //#define BOARD_UART_BAUDRATE (115200U)
 #define BOARD_UART_BAUDRATE (4000000U)
 
-
 /* @Brief Board accelerator sensor configuration */
 #define BOARD_ACCEL_I2C_BASEADDR LPI2C1
 #define BOARD_ACCEL_I2C_CLOCK_SOURCE_SELECT (0U)
@@ -73,15 +72,15 @@
 #define BOARD_USER_LED_GPIO_PIN (11U)
 #endif
 
-#define USER_LED_INIT(output)                                            \
-    GPIO_PinWrite(BOARD_USER_LED_GPIO, BOARD_USER_LED_GPIO_PIN, output); \
-    BOARD_USER_LED_GPIO->GDIR |= (1U << BOARD_USER_LED_GPIO_PIN) /*!< Enable target USER_LED */
+#define USER_LED_INIT(output)                                          \
+  GPIO_PinWrite(BOARD_USER_LED_GPIO, BOARD_USER_LED_GPIO_PIN, output); \
+  BOARD_USER_LED_GPIO->GDIR |= (1U << BOARD_USER_LED_GPIO_PIN) /*!< Enable target USER_LED */
 #define USER_LED_OFF() \
-    GPIO_PortClear(BOARD_USER_LED_GPIO, 1U << BOARD_USER_LED_GPIO_PIN)                 /*!< Turn off target USER_LED */
+  GPIO_PortClear(BOARD_USER_LED_GPIO, 1U << BOARD_USER_LED_GPIO_PIN)                   /*!< Turn off target USER_LED */
 #define USER_LED_ON() GPIO_PortSet(BOARD_USER_LED_GPIO, 1U << BOARD_USER_LED_GPIO_PIN) /*!<Turn on target USER_LED*/
-#define USER_LED_TOGGLE()                                       \
-    GPIO_PinWrite(BOARD_USER_LED_GPIO, BOARD_USER_LED_GPIO_PIN, \
-                  0x1 ^ GPIO_PinRead(BOARD_USER_LED_GPIO, BOARD_USER_LED_GPIO_PIN)) /*!< Toggle target USER_LED */
+#define USER_LED_TOGGLE()                                     \
+  GPIO_PinWrite(BOARD_USER_LED_GPIO, BOARD_USER_LED_GPIO_PIN, \
+                0x1 ^ GPIO_PinRead(BOARD_USER_LED_GPIO, BOARD_USER_LED_GPIO_PIN)) /*!< Toggle target USER_LED */
 
 /*! @brief Define the port interrupt number for the board switches */
 #ifndef BOARD_USER_BUTTON_GPIO
@@ -137,27 +136,19 @@ void BOARD_ConfigMPU(void);
 #if defined(SDK_I2C_BASED_COMPONENT_USED) && SDK_I2C_BASED_COMPONENT_USED
 void BOARD_InitDebugConsole(void);
 void BOARD_LPI2C_Init(LPI2C_Type *base, uint32_t clkSrc_Hz);
-status_t BOARD_LPI2C_Send(LPI2C_Type *base,
-                          uint8_t deviceAddress,
-                          uint32_t subAddress,
-                          uint8_t subaddressSize,
-                          uint8_t *txBuff,
-                          uint8_t txBuffSize);
-status_t BOARD_LPI2C_Receive(LPI2C_Type *base,
-                             uint8_t deviceAddress,
-                             uint32_t subAddress,
-                             uint8_t subaddressSize,
-                             uint8_t *rxBuff,
-                             uint8_t rxBuffSize);
+status_t BOARD_LPI2C_Send(LPI2C_Type *base, uint8_t deviceAddress, uint32_t subAddress, uint8_t subaddressSize,
+                          uint8_t *txBuff, uint8_t txBuffSize);
+status_t BOARD_LPI2C_Receive(LPI2C_Type *base, uint8_t deviceAddress, uint32_t subAddress, uint8_t subaddressSize,
+                             uint8_t *rxBuff, uint8_t rxBuffSize);
 void BOARD_Accel_I2C_Init(void);
 status_t BOARD_Accel_I2C_Send(uint8_t deviceAddress, uint32_t subAddress, uint8_t subaddressSize, uint32_t txBuff);
-status_t BOARD_Accel_I2C_Receive(
-    uint8_t deviceAddress, uint32_t subAddress, uint8_t subaddressSize, uint8_t *rxBuff, uint8_t rxBuffSize);
+status_t BOARD_Accel_I2C_Receive(uint8_t deviceAddress, uint32_t subAddress, uint8_t subaddressSize, uint8_t *rxBuff,
+                                 uint8_t rxBuffSize);
 void BOARD_Codec_I2C_Init(void);
-status_t BOARD_Codec_I2C_Send(
-    uint8_t deviceAddress, uint32_t subAddress, uint8_t subAddressSize, const uint8_t *txBuff, uint8_t txBuffSize);
-status_t BOARD_Codec_I2C_Receive(
-    uint8_t deviceAddress, uint32_t subAddress, uint8_t subAddressSize, uint8_t *rxBuff, uint8_t rxBuffSize);
+status_t BOARD_Codec_I2C_Send(uint8_t deviceAddress, uint32_t subAddress, uint8_t subAddressSize, const uint8_t *txBuff,
+                              uint8_t txBuffSize);
+status_t BOARD_Codec_I2C_Receive(uint8_t deviceAddress, uint32_t subAddress, uint8_t subAddressSize, uint8_t *rxBuff,
+                                 uint8_t rxBuffSize);
 #endif /* SDK_I2C_BASED_COMPONENT_USED */
 #if defined(__cplusplus)
 }

@@ -71,7 +71,7 @@ static uint8_t velocityCurve[VELOCITYNUMOF][VELOCITYCURVE];
  * Code
  ******************************************************************************/
 
-void trigger_init(void)
+void triggerInit(void)
 {
 	for (int i = 0; i < VELOCITYNUMOF; i++)
 	{
