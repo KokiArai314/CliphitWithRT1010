@@ -1,10 +1,11 @@
 /*
+#include <p_codec.h>
  * p_dac.c
  *
  *  Created on: 2024/11/14
  *      Author: koki_arai
  */
-#include "p_dac.h"
+#include "p_codec.h"
 #include "p_sai.h"
 #include "peripheral/p_adc.h"
 
@@ -33,12 +34,6 @@
 #include "fsl_sai_edma.h"
 #include "fsl_wm8960.h"
 #include "pin_mux.h"
-#define OVER_SAMPLE_RATE (256U)
-
-/**
- * extern veriables from p_usb_audio
- */
-
 
 codec_config_t boardCodecConfig = {.I2C_SendFunc = BOARD_Codec_I2C_Send,
                                    .I2C_ReceiveFunc = BOARD_Codec_I2C_Receive,
@@ -48,30 +43,18 @@ codec_config_t boardCodecConfig = {.I2C_SendFunc = BOARD_Codec_I2C_Send,
 
 codec_handle_t codecHandle = {0};
 
-void BOARD_Codec_Init() {
+/**
+ * CodecをsaiTransferFormatの値を使いながら初期化
+ * codecHandleに値を入れていく
+ * WM8960の初期化
+ */
+void codecInit() {
+    //codecHandle のリセット
   CODEC_Init(&codecHandle, &boardCodecConfig);
-  CODEC_SetFormat(&codecHandle, audioFormat.masterClockHz, audioFormat.sampleRate_Hz, audioFormat.bitWidth);
+  //WM8960_ConfigDataFormatでcodecHanleの値とsaiTransferFormatの値を用いて初期化
+  CODEC_SetFormat(&codecHandle, saiTransferFormat.masterClockHz, saiTransferFormat.sampleRate_Hz,
+                  saiTransferFormat.bitWidth);
+  WM8960_SetProtocol(&codecHandle, kWM8960_BusI2S);
+  WM8960_SetMasterSlave(&codecHandle, false);
+  WM8960_ModifyReg(&codecHandle, WM8960_IFACE1, 0b11110011, WM8960_IFACE1_WL_24BITS);
 }
-
-void WM8960_Config_Audio_Formats(uint32_t samplingRate) {
-  /* Configure the audio audioFormat */
-  /// @note support 24bit
-  audioFormat.bitWidth = kSAI_WordWidth24bits;
-
-  audioFormat.channel = 0U;
-  audioFormat.sampleRate_Hz = samplingRate;
-
-  audioFormat.masterClockHz = OVER_SAMPLE_RATE * audioFormat.sampleRate_Hz;
-  audioFormat.protocol = saiTxConfig.protocol;
-  audioFormat.stereo = kSAI_Stereo;
-#if defined(FSL_FEATURE_SAI_FIFO_COUNT) && (FSL_FEATURE_SAI_FIFO_COUNT > 1)
-#if 1 /// @note FSL_FEATURE_SAI_FIFO_COUNT == 2
-  audioFormat.watermark = FSL_FEATURE_SAI_FIFO_COUNT / 4U;
-#else
-  audioFormat.watermark = FSL_FEATURE_SAI_FIFO_COUNT / 2U;
-#endif
-#endif
-}
-
-/// @note [SAI] enable RX
-void BOARD_USB_Audio_TxRxInit(uint32_t samplingRate) { WM8960_Config_Audio_Formats(samplingRate); }

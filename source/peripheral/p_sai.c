@@ -33,6 +33,8 @@
 #include "fsl_wm8960.h"
 #include "pin_mux.h"
 
+#define OVER_SAMPLE_RATE (256U)
+
 #define BOARD_DEMO_SAI SAI1
 #define DEMO_SAI_IRQ_TX SAI1_IRQn
 /// @note [SAI] enable RX
@@ -51,9 +53,8 @@
    (DEMO_SAI1_CLOCK_SOURCE_PRE_DIVIDER + 1U))
 
 sai_config_t saiTxConfig;
-/// @note [SAI] enable RX
 sai_config_t saiRxConfig;
-sai_transfer_format_t audioFormat;
+sai_transfer_format_t saiTransferFormat;
 
 static float saidata[FSL_FEATURE_SAI_FIFO_COUNT];
 static int32_t out;
@@ -71,17 +72,60 @@ static inline int32_t convertOutput(float fData) {
   return iData;
 }
 
-static void SAI_USB_Audio_TxInit(I2S_Type *SAIBase) {
-  SAI_TxGetDefaultConfig(&saiTxConfig);
+static inline uint32_t endianConversion(int32_t data) {
+  int32_t lowBits = data & 0x0000ffff;
+  int32_t highBits = data & 0xffff0000;
+  return (lowBits << 16) | (highBits >> 16);
+}
 
+/**
+ * SAITxConfigをデフォルト値で初期化 さらにSAI Txをリセット
+ *   config->bclkSource  = kSAI_BclkSourceMclkDiv;
+ *   config->masterSlave = kSAI_Master;
+ *   config->mclkSource  = kSAI_MclkSourceSysclk;
+ *   config->protocol    = kSAI_BusI2S;
+ *   config->syncMode    = kSAI_ModeAsync;
+ */
+static void saiTxInitWithDefault(I2S_Type *SAIBase) {
+  SAI_TxGetDefaultConfig(&saiTxConfig);
   SAI_TxInit(SAIBase, &saiTxConfig);
 }
 
-/// @note [SAI] enable RX
-static void SAI_USB_Audio_RxInit(I2S_Type *SAIBase) {
+/**
+ * SAI RxConfigをデフォルト値で初期化 さらにSAI Rxをリセット
+ *   config->bclkSource  = kSAI_BclkSourceMclkDiv;
+ *   config->masterSlave = kSAI_Master;
+ *   config->mclkSource  = kSAI_MclkSourceSysclk;
+ *   config->protocol    = kSAI_BusI2S;
+ *   config->syncMode    = kSAI_ModeSync;
+ */
+static void saiRxInitWithDefault(I2S_Type *SAIBase) {
   SAI_RxGetDefaultConfig(&saiRxConfig);
-
   SAI_RxInit(SAIBase, &saiRxConfig);
+}
+
+/**
+ * SAI TransferConfigを初期化
+ * SAI TxConfig(SAI Txの現在の状態)とのつじつまを合わせる
+ */
+static void saiTransferFormatInit(uint32_t samplingRate) {
+  /* Configure the audio saiTransferFormat */
+  /// @note support 24bit
+  saiTransferFormat.bitWidth = kSAI_WordWidth24bits;
+
+  saiTransferFormat.channel = 0U;
+  saiTransferFormat.sampleRate_Hz = samplingRate;
+
+  saiTransferFormat.masterClockHz = OVER_SAMPLE_RATE * saiTransferFormat.sampleRate_Hz;
+  saiTransferFormat.protocol = saiTxConfig.protocol;
+  saiTransferFormat.stereo = kSAI_Stereo;
+#if defined(FSL_FEATURE_SAI_FIFO_COUNT) && (FSL_FEATURE_SAI_FIFO_COUNT > 1)
+#if 1 /// @note FSL_FEATURE_SAI_FIFO_COUNT == 2
+  saiTransferFormat.watermark = FSL_FEATURE_SAI_FIFO_COUNT / 4U;
+#else
+  saiTransferFormat.watermark = FSL_FEATURE_SAI_FIFO_COUNT / 2U;
+#endif
+#endif
 }
 
 static uint8_t hcCritSectCount = 0;
@@ -111,12 +155,14 @@ void HC_AudioSetCallback(void (*callback)(int32_t *data_l, int32_t *data_r)) {
 
 /* Initialize the structure information for sai. */
 void saiInit(void) {
-  SAI_USB_Audio_TxInit(BOARD_DEMO_SAI);
-  SAI_USB_Audio_RxInit(BOARD_DEMO_SAI);
+  BOARD_EnableSaiMclkOutput(true); /*Enable MCLK clock*/
 
-  BOARD_USB_Audio_TxRxInit(AUDIO_SAMPLING_RATE);
-  BOARD_Codec_I2C_Init();
-  BOARD_Codec_Init();
+  saiTxInitWithDefault(BOARD_DEMO_SAI);
+  saiRxInitWithDefault(BOARD_DEMO_SAI);
+  saiTransferFormatInit(SAMPLING_RATE); //bitWidth : 24bit
+
+  i2cInit();
+  codecInit();
 
   /*Clock setting for SAI1*/
   CLOCK_SetMux(kCLOCK_Sai1Mux, DEMO_SAI1_CLOCK_SOURCE_SELECT);
@@ -135,8 +181,12 @@ void saiInit(void) {
   }
 
   mclkSourceClockHz = DEMO_SAI_CLK_FREQ;
-  SAI_TxSetFormat(BOARD_DEMO_SAI, &audioFormat, mclkSourceClockHz, audioFormat.masterClockHz);
-  SAI_RxSetFormat(BOARD_DEMO_SAI, &audioFormat, mclkSourceClockHz, audioFormat.masterClockHz);
+  /**
+   * SAIがどのように通信するかをセット
+   */
+  mclkSourceClockHz = DEMO_SAI_CLK_FREQ;
+  SAI_TxSetFormat(BOARD_DEMO_SAI, &saiTransferFormat, mclkSourceClockHz, saiTransferFormat.masterClockHz);
+  SAI_RxSetFormat(BOARD_DEMO_SAI, &saiTransferFormat, mclkSourceClockHz, saiTransferFormat.masterClockHz);
 
   NVIC_SetPriority(DEMO_SAI_IRQ, SAI_INTERRUPT_PRIORITY);
   EnableIRQ(DEMO_SAI_IRQ);
@@ -170,6 +220,7 @@ void SAI_UserIRQHandler(void) {
       // SAI_WriteData(BOARD_DEMO_SAI, DEMO_SAI_CHANNEL,(uint32_t)outL);
       // SAI_WriteData(BOARD_DEMO_SAI, DEMO_SAI_CHANNEL,(uint32_t)outR);
     } else {
+      //out = 0;
       audio_task(pOut);
       /**
        * I2S通信
@@ -178,26 +229,26 @@ void SAI_UserIRQHandler(void) {
        * 32bit singedの入れ物に入れるので下位8bitは0になる
        */
       //  clip as 24bit signed
-      if (out > 8388607) out = 8388607;
-      if (out < -8388608) out = -8388608;
-      out = out * 2;
-      // int32_t ret = out >> 8;
+      out = out * 4;
+      if (out > (int32_t)8388607) out = (int32_t)8388607;
+      if (out < (int32_t)-8388608) out = (int32_t)-8388608;
 
       // 左詰め signed
-      uint32_t sign = out & 0x80000000;  // 符号bit
-      uint32_t value = out & 0x007fffff; // 値(23bit)
-      uint32_t ret = (value | sign) >> 8;
+      //uint32_t sign = out & 0x80000000;  // 符号bit
+      //uint32_t value = out & 0x007fffff; // 値(23bit)
+      //int32_t ret = (((uint32_t)sign >> 8) | value);
+      //int32_t ret = out >> 8;
 
-      // 左詰め signed
-      // uint32_t sign   = out & 0x80000000; //符号bit
-      // uint32_t value  = out & 0x007fffff; //値(23bit)
-      // uint32_t ret = (uint32_t)((value << 8) | sign);
+      // 左詰め signed これが一番普通に音出る
+      uint32_t sign = out & 0x80000000;  //符号bit
+      uint32_t value = out & 0x007fffff; //値(23bit)
+      uint32_t ret = (uint32_t)((value << 8) | sign);
 
       // 右詰め
-      // uint32_t sign   = (out & (0x80000000)) >> 8; //符号bit
-      // uint32_t value  = out & 0x007fffff; //値(23bit)
-      // <-負の値の場合これが補数になるので変なことになるかも uint32_t ret =
-      // (uint32_t)((value ) | sign);
+      //uint32_t sign = (uint32_t)(out & (0x80000000)) >> 8; //符号bit
+      //uint32_t value = out & 0x007fffff;                   //値(23bit)
+      // <-負の値の場合これが補数になるので変なことになるかも
+      //uint32_t ret = (uint32_t)((value) | sign);
 
       // 右詰め unsigned
       // uint32_t ret = out + 8388607;
@@ -205,6 +256,8 @@ void SAI_UserIRQHandler(void) {
       // 左詰め unsigned
       // uint32_t ret = (out + 8388607) << 8;
       // ret = ret * 4;
+
+      //uint32_t conv = endianConversion(ret);
 
       for (i = 0; i < FSL_FEATURE_SAI_FIFO_COUNT; i++) {
         SAI_WriteData(BOARD_DEMO_SAI, DEMO_SAI_CHANNEL, (uint32_t)ret);

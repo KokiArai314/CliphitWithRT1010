@@ -3,7 +3,7 @@
   "C_Cpp.errorSquiggles": "enabled",
   "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
   "C_Cpp.clang_format_style": 
-    "{BasedOnStyle: Google,PointerAlignment: Right, SortIncludes: false,  IndentWidth: 2, ColumnLimit: 120, ReflowComments: false, SpacesBeforeTrailingComments: 1, AlignTrailingComments: true}",
+    "{BasedOnStyle: Google,PointerAlignment: Right, SortIncludes: false,  IndentWidth: 2, ColumnLimit: 120, ReflowComments: false, SpacesBeforeTrailingComments: 1, AlignTrailingComments: true, AlignConsecutiveStyle: true}",
   "editor.formatOnType": true,
   "editor.formatOnSave": true,
   "cmake.useCMakePresets": "always",
@@ -32,6 +32,9 @@
     "usb_device_audio.h": "c",
     "p_adc.h": "c",
     "p_dac.h": "c",
-    "p_sai.h": "c"
+    "p_sai.h": "c",
+    "fsl_dmamux.h": "c",
+    "pin_mux.h": "c"
   },
+  "C_Cpp.default.compilerPath": "C:\\msys64\\mingw64\\bin\\clang.exe",
 }

@@ -1,4 +1,5 @@
 /*
+#include <p_codec.h>
  * CLIPHIT2.c
  *
  *  Created on: 2024/10/03
@@ -12,7 +13,6 @@
 #include "p_usb.h"
 
 #include "p_adc.h"
-#include "p_dac.h"
 #include "p_pit.h"
 #include "p_sai.h"
 
@@ -55,8 +55,8 @@ void main(void)
   BOARD_InitPins();
   BOARD_BootClockRUN();
   BOARD_AudioInitPllClock();
-  BOARD_InitClockPinMux();         /*Clock setting for LPI2C and SAI1 */
-  BOARD_EnableSaiMclkOutput(true); /*Enable MCLK clock*/
+  BOARD_InitClockPinMux(); /*Clock setting for LPI2C and SAI1 */
+
   // BOARD_InitDebugConsole();
   // systick_init();	//systick on for JobTime
   // rtt_debugger_init();
